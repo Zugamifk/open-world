@@ -22,14 +22,34 @@ public class FPSControl : MonoBehaviour {
     private bool moving = false;
 	private Vector3 moveVelocity = Vector3.zero;
 	private Vector3 moveDirection = Vector3.zero;
+    private const float farRaycastPos = 100;
 
-	private bool shouldResolveCollision = false;
+    private Vector3 correction;
+    private bool correcting = false;
 
-	private void ResolveCollision(Collision c) {
-		shouldResolveCollision = true;
+    private void ResolveCollision(Collision c) {
+        foreach (ContactPoint contact in c.contacts)
+        {
+            // Debug.Log(contact.thisCollider.name + " at " + contact.normal);
+            Debug.DrawRay(contact.point, contact.normal, Color.white, 5);
+            correction += GetContactPenetration(contact);
+        }
+        Debug.Log("Contacts: " + c.contacts.Length);
+        correcting = true;
     }
 
-	private IEnumerator Jump() {
+    private Vector3 GetContactPenetration(ContactPoint contact ) {
+		var pos = contact.point;
+		var nrm = contact.normal;
+		RaycastHit info;
+		Ray ray = new Ray(pos - farRaycastPos * nrm, nrm);
+		if (contact.thisCollider.Raycast(ray, out info, farRaycastPos)) {
+             return pos - info.point;
+        }
+        return Vector3.zero;
+    }
+
+    private IEnumerator Jump() {
 		for(float t=0;t<1;t+=Time.deltaTime/jumpTime) {
             velocity += jumpMagnitude * jumpImpulse.Evaluate(t)*Vector3.up;
 			yield return 1;
@@ -37,8 +57,7 @@ public class FPSControl : MonoBehaviour {
 	}
 
 	void Start() {
-		mainCollider.OnCollisionEnterObserver += ResolveCollision;
-		mainCollider.OnCollisionStayObserver += ResolveCollision;
+
 	}
 
     void Update() {
@@ -77,22 +96,19 @@ public class FPSControl : MonoBehaviour {
 
 		velocity += PhysicsManager.Gravity;
 
-		if (shouldResolveCollision) {
-            controlRoot.Translate(
-				mainCollider.LastCollisionVector
-				* collisionCorrectionSpeed
-				* Time.fixedDeltaTime
-			);
-			shouldResolveCollision = false;
-            if (Vector3.Dot(mainCollider.LastCollisionVector, velocity) < 0)
+		if (correcting) {
+            Debug.Log(correction);
+            Debug.DrawLine(controlRoot.position, controlRoot.position+correction, Colorx.darkblue, 5);
+            controlRoot.position += correction;
+            if (Vector3.Dot(correction, velocity) < 0)
             {
-                velocity = Vector3.Reflect(velocity, mainCollider.LastCollisionVector.normalized) * (1 - collisionBounceDamp);
+                velocity = Vector3.Reflect(velocity, correction.normalized) * (1 - collisionBounceDamp);
             }
         }
 		controlRoot.Translate((moveVelocity+velocity) * Time.fixedDeltaTime);
-	}
 
-	void OnDrawGizmos() {
+        correcting = false;
+        correction = Vector3.zero;
+    }
 
-	}
 }

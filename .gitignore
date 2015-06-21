@@ -48,3 +48,5 @@ Temporary Items
 # Folders
 ProjectSettings/
 obj/
+Library/
+Temp/
