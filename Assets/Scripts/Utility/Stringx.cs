@@ -27,12 +27,17 @@ public static class Stringx {
         int max = 0;
         var reg = new Regex(@"(?<=\{)(.*?)(?=\})");
 		foreach(Match m in reg.Matches(format)) {
-            max = Mathf.Max(max, int.Parse(m.Value));
+            max = Mathf.Max(max, int.Parse(m.Value)+1);
         }
         return max;
     }
 
 	public static IEnumerable<string> EnumerableFormat(this string format, params IEnumerable<object>[] objects) {
+        int expected = format.CountFormatArgs();
+        if(expected!=objects.Length) {
+			Debug.LogWarning("String \""+format+"\" expects "+expected+" arguments, given "+objects.Length+".");
+			return null;
+        }
         return objects.ToList().Aggregate(
             Enumerable.Empty<object>().Single(),
             (sets, list) => sets.Cross(list),

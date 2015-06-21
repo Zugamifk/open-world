@@ -107,7 +107,7 @@ public class MeshGeneratorWindow : EditorWindow {
 			CurrentGenerator = NewGenerator(Generators[0]);
 		}
 
-		Debug.Log("Mesh Generator window refreshed");
+		// Debug.Log("Mesh Generator window refreshed");
 	}
 
 	void OnProjectChange() {

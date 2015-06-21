@@ -12,7 +12,9 @@ public class TextGenerator : EditorWindow
     private class WordList {
         public string name;
         public List<string> words;
-		public WordList(string name, params string[] words) {
+        public int repeat;
+        public bool replace;
+        public WordList(string name, params string[] words) {
 			this.name = name;
             this.words = new List<string>();
         	words.ForEach(w => this.words.Add(w));
@@ -21,8 +23,12 @@ public class TextGenerator : EditorWindow
             EditorGUILayout.BeginHorizontal();
             var n = EditorGUILayout.TextField(name);
 			name = n;
-
-			if(GUILayout.Button("+")) {
+            repeat = EditorGUILayout.IntField(repeat, GUILayout.Width(30));
+			if(repeat>1) {
+				EditorGUILayout.LabelField("replace",GUILayout.Width(50));
+				replace=EditorGUILayout.Toggle(replace, GUILayout.Width(10));
+            }
+            if(GUILayout.Button("+", GUILayout.Width(25))) {
                 words.Add("");
             }
 			EditorGUILayout.EndHorizontal();
@@ -40,7 +46,7 @@ public class TextGenerator : EditorWindow
 	        		toReplace = w;
 	            }
 
-                if (GUILayout.Button("-"))
+                if (GUILayout.Button("-", GUILayout.Width(25)))
                	{
                    index = i;
                    toRemove = true;
@@ -66,6 +72,7 @@ public class TextGenerator : EditorWindow
 
 
     private string fileName = "";
+    private TextAsset current;
     private string formatString;
     private List<WordList> options = new List<WordList>();
 
@@ -78,18 +85,32 @@ public class TextGenerator : EditorWindow
         var path = kTextFilePath + fileName + ".txt";
         if (File.Exists(path))
 		{
-			Debug.Log(path +" already exists.");
-			return;
+			Debug.Log("Deleting old copy at "+path);
+			AssetDatabase.DeleteAsset(path);
 		}
+		current = null;
 		var sr = File.CreateText(path);
         formatString.EnumerableFormat(
-			options.Select(wl => wl.words.ToArray()).ToArray()
+			options.Select(
+				wl =>
+					wl.repeat > 1 ?
+						wl.words
+							.Choose(wl.repeat, wl.replace)
+							.Select(
+								repeated => string.Join("", repeated.ToArray())
+							).ToArray()
+						:
+						wl.words.ToArray()
+				).ToArray()
 			).ForEach(
 				line => sr.WriteLine(line)
 			);
 
         sr.WriteLine();
 		sr.Close();
+
+        current = AssetDatabase.LoadAssetAtPath<TextAsset>(path) as TextAsset;
+		AssetDatabase.ImportAsset(path);
     }
 
     private Vector2 scroll;
