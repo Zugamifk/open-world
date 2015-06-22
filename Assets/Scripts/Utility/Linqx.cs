@@ -29,8 +29,6 @@ public static class Linqx {
         }
     }
 
-
-
     public static IEnumerable<IEnumerable<T>> Cross<T>(
         this IEnumerable<IEnumerable<T>> seqA,
         IEnumerable<T> seqB) {
@@ -61,7 +59,6 @@ public static class Linqx {
         Func<IEnumerable<T>, T, bool> filter)
     {
         return seqA.Single().Cross(seqB, filter);
-
     }
 
     public static object[] ToObjectArray<T>(this IEnumerable<T> seq) {

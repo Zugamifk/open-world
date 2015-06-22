@@ -12,4 +12,8 @@ public static class Mathfx {
 		return Mathf.PerlinNoise(p.x, p.y);
 	}
 
+    public static float ClamplessLerp(float from, float to, float t) {
+        return from + (to-from)*t;
+    }
+
 }
