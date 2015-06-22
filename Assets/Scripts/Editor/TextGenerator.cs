@@ -23,6 +23,7 @@ public class TextGenerator : EditorWindow
             EditorGUILayout.BeginHorizontal();
             var n = EditorGUILayout.TextField(name);
 			name = n;
+			EditorGUILayout.LabelField("repeat",GUILayout.Width(50));
             repeat = EditorGUILayout.IntField(repeat, GUILayout.Width(30));
 			if(repeat>1) {
 				EditorGUILayout.LabelField("replace",GUILayout.Width(50));
