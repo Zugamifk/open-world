@@ -43,5 +43,12 @@ namespace MeshGenerator {
 	        }
 		}
 
+		/** Optimize mesh for unity */
+		public static void PostGenerateMesh(Mesh mesh) {
+			mesh.RecalculateNormals();
+			mesh.RecalculateBounds();
+            mesh.Optimize();
+        }
+
 	}
 }

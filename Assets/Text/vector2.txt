@@ -1,0 +1,17 @@
+public static Vector2 xx(this Vector2 a) {
+	return new Vector2(a.x, a.x);
+}
+
+public static Vector2 xy(this Vector2 a) {
+	return new Vector2(a.x, a.y);
+}
+
+public static Vector2 yx(this Vector2 a) {
+	return new Vector2(a.y, a.x);
+}
+
+public static Vector2 yy(this Vector2 a) {
+	return new Vector2(a.y, a.y);
+}
+
+

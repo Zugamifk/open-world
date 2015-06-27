@@ -1,11 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace MeshGenerator
+public interface IMeshGenerator
 {
-    interface IMeshGenerator
-    {
-        string Name { get; }
-        Mesh Generate();
-    }
+    string Name { get; }
+    Mesh Generate();
 }
