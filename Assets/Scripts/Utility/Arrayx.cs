@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 public static class Arrayx {
 
@@ -52,5 +54,34 @@ public static class Arrayx {
 			sub[i] = array[start+i];
     	}
 		return sub;
+	}
+
+	public static IEnumerable<T[]> Permutations<T>(this T[] arr) {
+        T[] result = new T[arr.Length];
+		arr.CopyTo(result, 0);
+        return PermutationGenerator(arr.Length, result);
+    }
+
+	private static IEnumerable<T[]> PermutationGenerator<T>(int N, T[] r)
+	{
+		if (N == 1)
+		{
+			yield return r;
+		} else {
+			for(int i=0;i<N;i++) {
+				foreach (var p in PermutationGenerator(N - 1, r)) {
+					yield return p;
+				}
+				if(N%2==0) {
+					var val = r[N-1];
+					r[N-1] = r[i];
+					r[i] = val;
+				} else {
+					var val = r[0];
+					r[0] = r[N - 1];
+					r[N - 1] = val;
+				}
+			}
+		}
 	}
 }

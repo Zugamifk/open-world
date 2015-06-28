@@ -12,6 +12,7 @@ namespace Demos.Cube
             StartCoroutine(Animation());
         }
 
+        private ColorHSV BG = (ColorHSV)Color.black;
 
         private IEnumerator Animation() {
             yield return new WaitForSeconds(1);
@@ -22,14 +23,29 @@ namespace Demos.Cube
                 t => CameraSingleton.Camera.backgroundColor = Color.Lerp(startCol, Colors.greybeige, t)
             ));
 
+            StartCoroutine(ShiftBG());
             StartCoroutine(Light());
 
             var cubeGO = new GameObject("The Cube");
             cubeGO.transform.OrientTo(transform);
             var cube = cubeGO.AddComponent<Cube>();
+            cube.ScaleObserver += t => BG.s = t;
+            cube.AngleObserver += t => BG.h = (t % 180) / 180;
             yield return StartCoroutine(cube.AnimateAppear());
 
             yield break;
+        }
+
+        private IEnumerator ShiftBG() {
+            var curve = Interpolation.Smooth(2);
+            while (true)
+            {
+                var h0 = ((ColorHSV)(CameraSingleton.Camera.backgroundColor)).h;
+                var h1 = BG.h;
+                yield return StartCoroutine(curve.AnimateValue(3,
+                    t => CameraSingleton.Camera.backgroundColor = new ColorHSV(Mathf.Lerp(h0, h1, t), BG.s, 1)
+                ));
+            }
         }
 
         private IEnumerator Light() {
@@ -46,6 +62,7 @@ namespace Demos.Cube
                 light.transform.localPosition =
                     Quaternion.AngleAxis(180 * Time.deltaTime, Vector3.up) *
                     light.transform.localPosition;
+                light.color = CameraSingleton.Camera.backgroundColor.Complement();
                 yield return 1;
             }
         }
