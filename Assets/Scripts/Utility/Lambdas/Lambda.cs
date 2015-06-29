@@ -8,7 +8,7 @@ namespace Lambdas
     public static partial class Lambda
     {
 
-        public static Func<Ta, Tr> Memoized<Ta, Tr>(Func<Ta, Tr> fun) {
+        public static Func<Ta, Tr> Memoized<Ta, Tr>(this Func<Ta, Tr> fun) {
             Dictionary<Ta, Tr> memoized = new Dictionary<Ta, Tr>();
             return (Ta arg) =>
             {
@@ -22,7 +22,7 @@ namespace Lambdas
             };
         }
 
-        public static Func<Ta, Tr> ObserveCalls<Ta, Tr>(Func<Ta, Tr> fun, Action<Tr> observer) {
+        public static Func<Ta, Tr> ObserveCalls<Ta, Tr>(this Func<Ta, Tr> fun, Action<Tr> observer) {
             return arg =>
             {
                 var result = fun(arg);

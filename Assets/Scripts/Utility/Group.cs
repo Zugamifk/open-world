@@ -55,4 +55,26 @@ public class Group<T> {
         return result;
     }
 
+
+
+}
+
+public static class Group {
+    public static Group<int[]> Symmetric(int num) {
+        var permutations = new HashSet<int[]>();
+        var id = Enumerable.Range(0, num).ToArray();
+        foreach(var p in id.Choose(num, false)) {
+            permutations.Add(p.ToArray());
+        }
+        return new Group<int[]>(
+            permutations,
+            (int[] p0,int[] p1) => p1.Select(p1i => p0[p1i]).ToArray(),
+            (int[] p) => {
+                var inv = new int[p.Length];
+                p.ForEach((pi,i)=>inv[pi]=i);
+                return inv;
+            },
+            id
+        );
+    }
 }

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Linq;
 
 namespace Demos.Cube
 {
@@ -10,6 +11,10 @@ namespace Demos.Cube
         void Start()
         {
             StartCoroutine(Animation());
+            var sy = Group.Symmetric(4);
+            foreach(int[] p in sy.Closure) {
+                Debug.Log(p.Aggregate("", (str, i)=>str+i.ToString()) );
+            }
         }
 
         private ColorHSV BG = (ColorHSV)Color.black;
