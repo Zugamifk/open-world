@@ -13,7 +13,7 @@ public class SlaveCamera : MonoBehaviour {
 	[SerializeField] Camera m_master;
 
 	protected void LateUpdate() {
-		camera.orthographicSize = m_master.orthographicSize;
+		GetComponent<Camera>().orthographicSize = m_master.orthographicSize;
 	}
 
 }

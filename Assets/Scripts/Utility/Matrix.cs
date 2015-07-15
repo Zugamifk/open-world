@@ -251,15 +251,13 @@ public class Matrix
         string[] rows = Regex.Split(s, "\r\n");
         string[] nums = rows[0].Split(' ');
         Matrix matrix = new Matrix(rows.Length, nums.Length);
-        try
+
+        for (int i = 0; i < rows.Length; i++)
         {
-            for (int i = 0; i < rows.Length; i++)
-            {
-                nums = rows[i].Split(' ');
-                for (int j = 0; j < nums.Length; j++) matrix[i, j] = double.Parse(nums[j]);
-            }
+            nums = rows[i].Split(' ');
+            for (int j = 0; j < nums.Length; j++) matrix[i, j] = double.Parse(nums[j]);
         }
-        catch (FormatException exc) { throw new MException("Wrong input format!"); }
+
         return matrix;
     }
 

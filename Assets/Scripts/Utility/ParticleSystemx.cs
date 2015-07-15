@@ -27,13 +27,13 @@ public class ParticleSystemx : MonoBehaviour {
 		}
 	}
 
-	public void Spiral(float speed, Vector3 axis) {
-		InitIfNecessary();
-		particleFunctions.Add( p => {
-			p.position += Vector3.Cross(axis, p.position.normalized)*Time.deltaTime*Mathf.Pow((10-p.position.xy().magnitude)/10, 2);
-				return p;
-			});
-	}
+	// public void Spiral(float speed, Vector3 axis) {
+	// 	InitIfNecessary();
+	// 	particleFunctions.Add( p => {
+	// 		p.position += Vector3.Cross(axis, p.position.normalized)*Time.deltaTime*Mathf.Pow((10-p.position.xy().magnitude)/10, 2);
+	// 			return p;
+	// 		});
+	// }
 
 	public void AddFunction(ParticleFunction function) {
 		particleFunctions.Add(function);
@@ -55,7 +55,7 @@ public class ParticleSystemx : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
-		if(particleSystem.IsAlive()) {
+		if(GetComponent<ParticleSystem>().IsAlive()) {
 			foreach(var f in particleSystemFunctions) {
 				f(system);
 			}

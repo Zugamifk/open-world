@@ -1,0 +1,15 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Text\vectors.txt">
+    <Files>
+      <File FileName="Assets\Text\vectors.txt" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Audio\ToneGenerator.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Audio\IAudioGenerator.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\usfxr\SfxrAudioPlayer.cs" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

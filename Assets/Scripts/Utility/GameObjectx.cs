@@ -21,8 +21,8 @@ public static class GameObjectx {
 	}
 
 	public static void AdjustRenderQueue(this GameObject go, int adjustment) {
-		var rq = go.renderer.material.renderQueue;
-		go.renderer.material.renderQueue = rq + adjustment;
+		var rq = go.GetComponent<Renderer>().material.renderQueue;
+			go.GetComponent<Renderer>().material.renderQueue = rq + adjustment;
 	}
 
 	public static void SetRenderersActive(this GameObject go, bool active) {

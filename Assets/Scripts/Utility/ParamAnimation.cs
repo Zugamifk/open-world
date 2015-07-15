@@ -17,10 +17,10 @@ public class ParamAnimation : MonoBehaviour {
 		}
 		set{
 			m_position = Mathf.Clamp01(value);
-			animation.Play();
-			animation[animation.clip.name].time = Mathf.Clamp01(m_position) * animation.clip.length ;
-			animation.Sample();
-			animation.Stop();
+			GetComponent<Animation>().Play();
+			GetComponent<Animation>()[GetComponent<Animation>().clip.name].time = Mathf.Clamp01(m_position) * GetComponent<Animation>().clip.length ;
+			GetComponent<Animation>().Sample();
+			GetComponent<Animation>().Stop();
 		}
 	}
 	

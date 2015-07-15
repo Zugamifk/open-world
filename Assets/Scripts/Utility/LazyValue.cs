@@ -11,12 +11,13 @@ ____________________________________________________________________________*/ï»
 using UnityEngine;
 using System;
 using System.Collections;
+using Lambdas;
 
 public class LazyValue<T> {
 
-    Lambdas.Getter<T> getter = Lambdas.NullGetter<T>();
-    Lambdas.Setter<T> setter = Lambdas.NullSetter<T>();
-    Lambdas.Truth test = Lambdas.True;
+    Getter<T> getter = Lambda.NullGetter<T>();
+    Setter<T> setter = Lambda.NullSetter<T>();
+    Truth test = Lambda.True;
 
     private bool set = false;
     private T internalValue = default(T);

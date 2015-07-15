@@ -8,6 +8,7 @@ ____________________________________________________________________________*/ï»
 
 using UnityEngine;
 using System.Collections;
+using Lambdas;
 
 public class AnimatedValue<T> {
 
@@ -16,7 +17,7 @@ public class AnimatedValue<T> {
     protected T _internalValue = default(T); // current value in animation
     protected float animationTime = 0; // time to interpolate
     protected float interpolationParameter = 0; // progress through interpolation
-    protected Lambdas.Interpolation<T> interpolation = Lambdas.NullInterpolation<T>(); //function for interpolating
+    protected Interpolation<T> interpolation = Lambda.NullInterpolation<T>(); //function for interpolating
     protected MonoBehaviour animator; // component to use for running animations
 
     /** The "visible" value, set by the animation */

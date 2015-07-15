@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Extensions;
 
 [System.Serializable]
 public class Spline {
@@ -63,7 +64,7 @@ public class Spline {
 		AddPointUpdater(()=>t.position, Mathf.Clamp(i, 0, Points.Count-1));
 	}
 
-	public void AddInterpolatingPointUpdater(Mathfx.ParametricCurve falloff, int index, int influence) {
+	public void AddInterpolatingPointUpdater(ParametricCurve falloff, int index, int influence) {
 		Vector3 op = Points[index];
 		Vector3 step = Vector3.zero;
 		AddUpdaterFunction(()=>{

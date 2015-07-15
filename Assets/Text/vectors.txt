@@ -1,0 +1,61 @@
+public static Vector2 xx(this Vector2 v) {
+	return new Vector2(v.x, v.x);
+}
+
+public static Vector2 xy(this Vector2 v) {
+	return new Vector2(v.x, v.y);
+}
+
+public static Vector2 xn(this Vector2 v) {
+	return new Vector2(v.x, v.n);
+}
+
+public static Vector2 x0(this Vector2 v) {
+	return new Vector2(v.x, v.0);
+}
+
+public static Vector2 x1(this Vector2 v) {
+	return new Vector2(v.x, v.1);
+}
+
+public static Vector2 yx(this Vector2 v) {
+	return new Vector2(v.y, v.x);
+}
+
+public static Vector2 yy(this Vector2 v) {
+	return new Vector2(v.y, v.y);
+}
+
+public static Vector2 yn(this Vector2 v) {
+	return new Vector2(v.y, v.n);
+}
+
+public static Vector2 y0(this Vector2 v) {
+	return new Vector2(v.y, v.0);
+}
+
+public static Vector2 y1(this Vector2 v) {
+	return new Vector2(v.y, v.1);
+}
+
+public static Vector2 nx(this Vector2 v) {
+	return new Vector2(v.n, v.x);
+}
+
+public static Vector2 ny(this Vector2 v) {
+	return new Vector2(v.n, v.y);
+}
+
+public static Vector2 nn(this Vector2 v) {
+	return new Vector2(v.n, v.n);
+}
+
+public static Vector2 n0(this Vector2 v) {
+	return new Vector2(v.n, v.0);
+}
+
+public static Vector2 n1(this Vector2 v) {
+	return new Vector2(v.n, v.1);
+}
+
+

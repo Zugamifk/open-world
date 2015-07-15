@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+namespace Extensions {
+    public delegate float ParametricCurve(float t);
+}
+
 public static class Mathfx {
 
     // _____________________________________/ General math tools \______________

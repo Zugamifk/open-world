@@ -43,7 +43,7 @@ public interface ITestable {
 // put small tests or whatever here
 public class GenericTest : MonoBehaviour, ITestable {
 	public void Test() {
-		var ints = Enumerable.Range(0,100);
+		var ints = Enumerable.Range(0,100).ToArray();
 		int[] cts = new int[100];
 		for(int i=0;i<10000;i++) {
 			cts[ints.Random()]++;
