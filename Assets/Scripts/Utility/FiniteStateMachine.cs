@@ -11,7 +11,7 @@ where Tstate : IComparable
     private Func<Talphabet, Tstate> transition;
     private Func<Tstate, Func<Talphabet, Tstate>> rulebase;
 	public Func<string> lastError = ()=>"No error";
-    private FSM_FLAG error;
+    // private FSM_FLAG error;
 
     public FiniteStateMachine(Tstate start, Func<Tstate, Func<Talphabet, Tstate>> rules) {
 		this.current = start;
@@ -39,7 +39,7 @@ where Tstate : IComparable
     }
 
 	private void SetErrorFlag(FSM_FLAG flag, params string[] args) {
-        error = flag;
+        // error = flag;
     	switch(flag) {
 			case FSM_FLAG.UNSET:
 				lastError = () => "No error";

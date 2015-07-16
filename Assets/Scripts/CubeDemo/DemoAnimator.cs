@@ -5,8 +5,7 @@ using System.Linq;
 namespace Demos.Cube
 {
     public class DemoAnimator : MonoBehaviour
-    {
-
+    {        
         // Use this for initialization
         void Start()
         {
