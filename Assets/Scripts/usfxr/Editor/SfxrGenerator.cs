@@ -57,7 +57,7 @@ public class SfxrGenerator : EditorWindow {
 	private SfxrParams soundParameters;
 
 	private string suggestedName;
-	
+
 	private SfxrSynth synth;
 
 	// ================================================================================================================
@@ -76,7 +76,7 @@ public class SfxrGenerator : EditorWindow {
 			soundParameters = new SfxrParams();
 			soundParameters.Randomize();
 		}
-		
+
 		if (synth == null) {
 			synth = new SfxrSynth();
 		}
@@ -96,7 +96,7 @@ public class SfxrGenerator : EditorWindow {
 		// Ends the UI
 		GUILayout.EndHorizontal();
 		GUILayout.EndScrollView();
-		
+
 		// Play sound if necessary
 		if (soundChanged) {
 			synth.parameters.SetSettingsString(soundParameters.GetSettingsString());
@@ -110,11 +110,11 @@ public class SfxrGenerator : EditorWindow {
 		// Just play the current sound
 		synth.Play();
 	}
-	
+
 	public void CreateWavePreview() {
 		// Creates an image with a preview of the wave
-		
-		/* 
+
+		/*
 		// Create the texture and set its colour.
 		Texture2D blackTexture = new Texture2D(1,1);
 		blackTexture.SetPixel(0,0,Color.black);
@@ -122,7 +122,7 @@ public class SfxrGenerator : EditorWindow {
 		...
 		// Use the texture.
 		GUI.DrawTexture(new Rect(0,0,Screen.width,Screen.height), blackTexture);
-		
+
 		// Anti alias line: http://en.wikipedia.org/wiki/Xiaolin_Wu's_line_algorithm
 		*/
 
@@ -221,7 +221,7 @@ public class SfxrGenerator : EditorWindow {
 
 		return soundChanged;
 	}
-	
+
 	public bool RenderSettingsColumn(SfxrParams parameters) {
 		bool soundChanged = false;
 

@@ -16,6 +16,13 @@ public class ClassSelector<T> where T : class {
 	private bool raisedError = false;
 	private bool initialized = false;
 
+	public delegate void OnDelete();
+	public OnDelete DeleteEvent;
+
+	public T Instance {
+		get { return instance;}
+	}
+
 	public ClassSelector() {
 		Init();
 		// Debug.Log("Mesh Generator window refreshed");
@@ -107,7 +114,9 @@ public class ClassSelector<T> where T : class {
 				return default(T);
 			}
 		}
-
+		if(DeleteEvent!=null && GUILayout.Button("X", GUILayout.Width(25))) {
+			DeleteEvent();
+		}
 		EditorGUILayout.EndHorizontal();
 		if(FieldDrawers!=null) {
 			foreach(var f in FieldDrawers) f();

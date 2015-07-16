@@ -9,24 +9,15 @@ namespace Audio {
 		SQUARE,
 		TRIANGLE
 	}
+
 	public class ToneGenerator : IAudioGenerator {
 		public ToneType type;
 		public float frequency;
 
-		private float sampleRate;
-		private float time;
-
-		public void Init(float rate) {
-			sampleRate = rate;
-			time = 0;
+		public void Init(Player p) {
 		}
 
-		public void Init(ToneType type, float rate) {
-			Init(rate);
-			this.type = type;
-		}
-
-		public void Generate(float[] samples, int channels) {
+		public float Generate(float time) {
 			 Signal signal = new Signal(Math.Const0);
 			 switch(type) {
 				 case ToneType.NONE: break;
@@ -35,15 +26,7 @@ namespace Audio {
 				 case ToneType.TRIANGLE: signal = t => (t*2>1) ? 3-4*t : 4*t-1; break;
 			 }
 
-			 int numSamples = samples.Length / channels;
-			 float dt = frequency/sampleRate;
-			 for(int i = 0; i< numSamples; i++) {
-				 for(int c = 0;c<channels;c++) {
-					 samples[i*channels + c] = signal(time);
-				 }
-				time += dt;
-			 }
-
+			 return signal(time*frequency);
 		}
 	}
 }

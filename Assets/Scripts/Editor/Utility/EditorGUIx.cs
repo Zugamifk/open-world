@@ -190,7 +190,13 @@ public static class EditorGUIx
 		} else
 		if (type == typeof(bool)) {
 			return EditorGUIx.GetFieldDrawerLayout(label, (bool)valueInit(), v=>setCallback(v));
-		} else {
+		} else
+        if(type == typeof(AnimationCurve)) {
+            return EditorGUIx.GetFieldDrawerLayout(label, (AnimationCurve)valueInit(), v=>setCallback(v));
+        } else
+        if (type.IsEnum) {
+            return EditorGUIx.GetFieldDrawerLayout(label, (System.Enum)valueInit(), v=>setCallback(v));
+        } else {
 			return NullDrawerLayout;
 		}
 	}
@@ -376,4 +382,62 @@ public static class EditorGUIx
 	{
 		return GetFieldDrawerLayout("", value, setCallback);
 	}
+
+    // _____________________________________/ enum drawer \_____________________
+    // Full method
+    public static FieldDrawer GetFieldDrawer(string label, Enum value, Action<Enum> setCallback)
+    {
+        return (Rect position) =>
+        {
+            var newVal = EditorGUI.EnumPopup(position, label, value);
+            if (newVal != value)
+            {
+                value = newVal;
+                setCallback(value);
+            }
+        };
+    }
+
+    // Layout version
+    public static FieldDrawerLayout GetFieldDrawerLayout(string label, Enum value, Action<Enum> setCallback)
+    {
+        return () =>
+        {
+            var newVal = EditorGUILayout.EnumPopup(label, value);
+            if (newVal != value)
+            {
+                value = newVal;
+                setCallback(value);
+            }
+        };
+    }
+
+    // _____________________________________/ curve drawer \____________________
+    // Full method
+    public static FieldDrawer GetFieldDrawer(string label, AnimationCurve value, Action<AnimationCurve> setCallback)
+    {
+        return (Rect position) =>
+        {
+            var newVal = EditorGUI.CurveField(position, label, value);
+            if (newVal != value)
+            {
+                value = newVal;
+                setCallback(value);
+            }
+        };
+    }
+
+    // Layout version
+    public static FieldDrawerLayout GetFieldDrawerLayout(string label, AnimationCurve value, Action<AnimationCurve> setCallback)
+    {
+        return () =>
+        {
+            var newVal = EditorGUILayout.CurveField(label, value);
+            if (newVal != value)
+            {
+                value = newVal;
+                setCallback(value);
+            }
+        };
+    }
 }
