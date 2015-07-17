@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Linq;
 
+[RequireComponent(typeof(SuperCharacterController))]
 public class FPSControl : MonoBehaviour
 {
 
@@ -21,6 +22,7 @@ public class FPSControl : MonoBehaviour
     private bool moving = false;
     private Vector3 moveVelocity = Vector3.zero;
     private Vector3 moveDirection = Vector3.zero;
+    private SuperCharacterController controller;
     private FiniteStateMachine<State, StateVars> FSM;
     private enum State
     {
@@ -42,6 +44,9 @@ public class FPSControl : MonoBehaviour
     private IEnumerator Jump()
     {
         jumping = false;
+        controller.DisableClamping();
+        controller.DisableSlopeLimit();
+Debug.Log("wo");
         for (float t = 0; t < 1; t += Time.deltaTime / jumpTime)
         {
             velocity += jumpMagnitude * jumpImpulse.Evaluate(t) * Vector3.up;
@@ -51,6 +56,7 @@ public class FPSControl : MonoBehaviour
 
     void Start()
     {
+        controller = (SuperCharacterController)gameObject.GetComponent(typeof(SuperCharacterController));
         FSM = new FiniteStateMachine<State, StateVars>(
             State.JUMPING,
             state =>
@@ -79,7 +85,14 @@ public class FPSControl : MonoBehaviour
                         return (System.Func<StateVars, State>)
                         (vars =>
                         {
-                            return State.JUMPING;
+                            if (controller.IsClamping())
+                            {
+                                return State.GROUNDED;
+                            }
+                            else
+                            {
+                                return State.JUMPING;
+                            }
                         }
                         );
                 }
@@ -121,10 +134,33 @@ public class FPSControl : MonoBehaviour
             jumping = true;
         }
 
+    }
+
+    void SuperUpdate()
+    {
         var sign = moving ? 1 : -1;
         speed = Mathf.Clamp(speed + acceleration * sign * Time.fixedDeltaTime, 0, maxSpeed);
         moveVelocity = moveDirection.normalized * speed;
+
+        Vector3 normal = Vector3.zero;
+        bool collided = false;
+        foreach(var c in controller.collisionData) {
+            normal += c.normal;
+            collided = true;
+        }
+        if(collided) {
+            if(normal.y > 0 && velocity.y < 0) {
+                controller.EnableSlopeLimit();
+                controller.EnableClamping();
+            }
+            velocity = Vector3.Reflect(velocity, normal.normalized);
+            Debug.Log("waa");
+        }
+
         controlRoot.Translate((moveVelocity + velocity) * Time.fixedDeltaTime);
+
+        FSM.Input(new StateVars(jumping));
+        name = FSM.current.ToString();
     }
 
 }
