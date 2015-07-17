@@ -1,8 +1,8 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Text\vectors.txt">
     <Files>
-      <File FileName="Assets\Scripts\Editor\PlayerEditor.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Control\MouseLook.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Audio\Player.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\Audio\Utils.cs" Line="1" Column="1" />
       <File FileName="Assets\Text\vectors.txt" Line="265" Column="31" />
