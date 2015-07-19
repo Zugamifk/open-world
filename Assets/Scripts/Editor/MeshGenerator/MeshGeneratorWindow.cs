@@ -94,11 +94,12 @@ public class MeshGeneratorWindow : EditorWindow {
 
 	void Init() {
 
-		Generators = Assembly.GetExecutingAssembly()
+		Generators = AppDomain.CurrentDomain.GetAssemblies().SelectMany(
+			assembly => assembly
 		    .GetTypes()
 		    .Where( t =>
 				t != typeof(IMeshGenerator) &&
-				typeof(IMeshGenerator).IsAssignableFrom(t))
+				typeof(IMeshGenerator).IsAssignableFrom(t)))
 		    .ToArray();
 
 		generatorOptions = Generators.Select(g => g.Name.Uncamel()).ToArray();

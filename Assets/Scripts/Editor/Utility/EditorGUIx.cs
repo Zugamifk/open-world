@@ -159,10 +159,38 @@ public static class EditorGUIx
 				}
 			};
 		} else
+        if (type == typeof(AnimationCurve)) {
+			AnimationCurve value = (AnimationCurve)valueInit();
+            return (Rect position) =>
+			{
+				var newVal = label == string.Empty ?
+					EditorGUI.CurveField(position, value) :
+					EditorGUI.CurveField(position, label, value);
+				if (newVal != value)
+				{
+					value = newVal;
+					setCallback(value);
+				}
+			};
+		} else
 		if (typeof(IEditorDrawer).IsAssignableFrom(type)) {
             IEditorDrawer initValue = (IEditorDrawer)valueInit();
             return initValue.GetFieldDrawer(label, initValue, v=>setCallback(v));
 		} else
+        if (typeof(UnityEngine.Object).IsAssignableFrom(type)) {
+            UnityEngine.Object value = (UnityEngine.Object)valueInit();
+            return (Rect position) =>
+            {
+                var newVal = label == string.Empty ?
+                    EditorGUI.ObjectField(position, value, type, true) :
+                    EditorGUI.ObjectField(position, label, value, type, true);
+                if (newVal != value)
+                {
+                    value = newVal;
+                    setCallback(value);
+                }
+            };
+        } else
 		{
 			return NullDrawer;
 		}

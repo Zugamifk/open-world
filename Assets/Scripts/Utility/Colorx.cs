@@ -15,6 +15,12 @@ public static class Colorx {
         }
 	}
 
+	public static Color lightmaroon {
+		get {
+			return FromHex(0x853C43);
+		}
+	}
+
 	public static Color FromHex(int color) {
         var ints = new Color(
 			color/0x10000,

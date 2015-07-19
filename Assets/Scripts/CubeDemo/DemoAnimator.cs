@@ -5,15 +5,15 @@ using System.Linq;
 namespace Demos.Cube
 {
     public class DemoAnimator : MonoBehaviour
-    {        
+    {
         // Use this for initialization
         void Start()
         {
             StartCoroutine(Animation());
-            var sy = Group.Symmetric(4);
-            foreach(int[] p in sy.Closure) {
-                Debug.Log(p.Aggregate("", (str, i)=>str+i.ToString()) );
-            }
+            // var sy = Group.Symmetric(4);
+            // foreach(int[] p in sy.Closure) {
+            //     Debug.Log(p.Aggregate("", (str, i)=>str+i.ToString()) );
+            // }
         }
 
         private ColorHSV BG = (ColorHSV)Color.black;

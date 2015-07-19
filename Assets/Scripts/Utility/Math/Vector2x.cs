@@ -3,6 +3,7 @@ using System.Collections;
 
 namespace Extensions {
 	public static class Vector2x {
+
 		public static Vector2 xx(this Vector2 v) {
 			return new Vector2(v.x, v.x);
 		}

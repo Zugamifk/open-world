@@ -37,6 +37,10 @@ public struct Vector3i : IComparable<Vector3i> {
 		return "("+x+", "+y+", "+z+")";
 	}
 
+	public static Vector3i RoundDown(Vector3 v) {
+		return new Vector3i(v.x-0.5f, v.y-0.5f, v.z-0.5f);
+	}
+
 	// Operators
 
 	public static Vector3i operator+ (Vector3i a, Vector3i b){
@@ -133,8 +137,16 @@ public struct Vector3i : IComparable<Vector3i> {
 		return new Vector3i(v);
 	}
 
+	public static explicit operator Vector3i(Vector2 v){
+		return new Vector3i(v);
+	}
+
 	public static implicit operator Vector3(Vector3i v){
 		return new Vector3(v.x, v.y, v.z);
+	}
+
+	public static implicit operator Vector2(Vector3i v){
+		return new Vector2(v.x, v.y);
 	}
 
 	// Sorting

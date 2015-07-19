@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace MeshGenerator
 {
-    public class Plane : IMeshGenerator
+    public partial class Plane : IMeshGenerator
     {
 
         public bool smooth = true;
@@ -121,7 +121,7 @@ namespace MeshGenerator
             }
 
             // Apply deformations
-            verts = verts.ToEach(v => v -= new Vector3(0.5f, 0, 0.5f)); // recentre
+            // verts = verts.ToEach(v => v -= new Vector3(0.5f, 0, 0.5f)); // recentre
             verts = verts.Select(v => deformationSteps.Aggregate(v, (dv, d) => d.Deform(dv))).ToArray();
 
             // fill new mesh object
@@ -249,6 +249,18 @@ namespace MeshGenerator
 
             public override Vector3 Deform(Vector3 point) {
                 point.y += Mathf.PerlinNoise(point.x*scale, point.z*scale)*magnitude;
+                return point;
+            }
+        }
+
+        public class SphericalScalar : DeformerFunction {
+            [CustomEditorField] private AnimationCurve fallOff = AnimationCurve.Linear(0,0,1,0);
+            [CustomEditorField] private Transform centre;
+
+            public override Vector3 Deform(Vector3 point) {
+                point.y *= fallOff.Evaluate((centre.position - point).magnitude);
+                Debug.Log(point);
+
                 return point;
             }
         }

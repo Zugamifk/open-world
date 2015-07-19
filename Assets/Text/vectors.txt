@@ -1,301 +1,85 @@
-public static Vector3 xxx(this Vector2 v) {
-	return new Vector3(v.x, v.x, v.x);
-}
-
-public static Vector3 xxy(this Vector2 v) {
-	return new Vector3(v.x, v.x, v.y);
-}
-
-public static Vector3 xxn(this Vector2 v) {
-	return new Vector3(v.x, v.x, v.n);
-}
-
-public static Vector3 xx0(this Vector2 v) {
-	return new Vector3(v.x, v.x, v.0);
-}
-
-public static Vector3 xx1(this Vector2 v) {
-	return new Vector3(v.x, v.x, v.1);
-}
-
-public static Vector3 xyx(this Vector2 v) {
-	return new Vector3(v.x, v.y, v.x);
-}
-
-public static Vector3 xyy(this Vector2 v) {
-	return new Vector3(v.x, v.y, v.y);
-}
-
-public static Vector3 xyn(this Vector2 v) {
-	return new Vector3(v.x, v.y, v.n);
-}
-
-public static Vector3 xy0(this Vector2 v) {
-	return new Vector3(v.x, v.y, v.0);
-}
-
-public static Vector3 xy1(this Vector2 v) {
-	return new Vector3(v.x, v.y, v.1);
-}
-
-public static Vector3 xnx(this Vector2 v) {
-	return new Vector3(v.x, v.n, v.x);
-}
-
-public static Vector3 xny(this Vector2 v) {
-	return new Vector3(v.x, v.n, v.y);
-}
-
-public static Vector3 xnn(this Vector2 v) {
-	return new Vector3(v.x, v.n, v.n);
-}
-
-public static Vector3 xn0(this Vector2 v) {
-	return new Vector3(v.x, v.n, v.0);
-}
-
-public static Vector3 xn1(this Vector2 v) {
-	return new Vector3(v.x, v.n, v.1);
-}
-
-public static Vector3 x0x(this Vector2 v) {
-	return new Vector3(v.x, v.0, v.x);
-}
-
-public static Vector3 x0y(this Vector2 v) {
-	return new Vector3(v.x, v.0, v.y);
-}
-
-public static Vector3 x0n(this Vector2 v) {
-	return new Vector3(v.x, v.0, v.n);
-}
-
-public static Vector3 x00(this Vector2 v) {
-	return new Vector3(v.x, v.0, v.0);
-}
-
-public static Vector3 x01(this Vector2 v) {
-	return new Vector3(v.x, v.0, v.1);
-}
-
-public static Vector3 x1x(this Vector2 v) {
-	return new Vector3(v.x, v.1, v.x);
-}
-
-public static Vector3 x1y(this Vector2 v) {
-	return new Vector3(v.x, v.1, v.y);
-}
-
-public static Vector3 x1n(this Vector2 v) {
-	return new Vector3(v.x, v.1, v.n);
-}
-
-public static Vector3 x10(this Vector2 v) {
-	return new Vector3(v.x, v.1, v.0);
-}
-
-public static Vector3 x11(this Vector2 v) {
-	return new Vector3(v.x, v.1, v.1);
-}
-
-public static Vector3 yxx(this Vector2 v) {
-	return new Vector3(v.y, v.x, v.x);
-}
-
-public static Vector3 yxy(this Vector2 v) {
-	return new Vector3(v.y, v.x, v.y);
-}
-
-public static Vector3 yxn(this Vector2 v) {
-	return new Vector3(v.y, v.x, v.n);
-}
-
-public static Vector3 yx0(this Vector2 v) {
-	return new Vector3(v.y, v.x, v.0);
-}
-
-public static Vector3 yx1(this Vector2 v) {
-	return new Vector3(v.y, v.x, v.1);
-}
-
-public static Vector3 yyx(this Vector2 v) {
-	return new Vector3(v.y, v.y, v.x);
-}
-
-public static Vector3 yyy(this Vector2 v) {
-	return new Vector3(v.y, v.y, v.y);
-}
-
-public static Vector3 yyn(this Vector2 v) {
-	return new Vector3(v.y, v.y, v.n);
-}
-
-public static Vector3 yy0(this Vector2 v) {
-	return new Vector3(v.y, v.y, v.0);
-}
-
-public static Vector3 yy1(this Vector2 v) {
-	return new Vector3(v.y, v.y, v.1);
-}
-
-public static Vector3 ynx(this Vector2 v) {
-	return new Vector3(v.y, v.n, v.x);
-}
-
-public static Vector3 yny(this Vector2 v) {
-	return new Vector3(v.y, v.n, v.y);
-}
-
-public static Vector3 ynn(this Vector2 v) {
-	return new Vector3(v.y, v.n, v.n);
-}
-
-public static Vector3 yn0(this Vector2 v) {
-	return new Vector3(v.y, v.n, v.0);
-}
-
-public static Vector3 yn1(this Vector2 v) {
-	return new Vector3(v.y, v.n, v.1);
-}
-
-public static Vector3 y0x(this Vector2 v) {
-	return new Vector3(v.y, v.0, v.x);
-}
-
-public static Vector3 y0y(this Vector2 v) {
-	return new Vector3(v.y, v.0, v.y);
-}
-
-public static Vector3 y0n(this Vector2 v) {
-	return new Vector3(v.y, v.0, v.n);
-}
-
-public static Vector3 y00(this Vector2 v) {
-	return new Vector3(v.y, v.0, v.0);
-}
-
-public static Vector3 y01(this Vector2 v) {
-	return new Vector3(v.y, v.0, v.1);
-}
-
-public static Vector3 y1x(this Vector2 v) {
-	return new Vector3(v.y, v.1, v.x);
-}
-
-public static Vector3 y1y(this Vector2 v) {
-	return new Vector3(v.y, v.1, v.y);
-}
-
-public static Vector3 y1n(this Vector2 v) {
-	return new Vector3(v.y, v.1, v.n);
-}
-
-public static Vector3 y10(this Vector2 v) {
-	return new Vector3(v.y, v.1, v.0);
-}
-
-public static Vector3 y11(this Vector2 v) {
-	return new Vector3(v.y, v.1, v.1);
-}
-
-public static Vector3 nxx(this Vector2 v) {
-	return new Vector3(v.n, v.x, v.x);
+public static Vector2 xx(this Vector3 v) {
+	return new Vector2(v.x, v.x);
 }
-
-public static Vector3 nxy(this Vector2 v) {
-	return new Vector3(v.n, v.x, v.y);
+public static Vector2 xy(this Vector3 v) {
+	return new Vector2(v.x, v.y);
 }
-
-public static Vector3 nxn(this Vector2 v) {
-	return new Vector3(v.n, v.x, v.n);
+public static Vector2 xz(this Vector3 v) {
+	return new Vector2(v.x, v.z);
 }
-
-public static Vector3 nx0(this Vector2 v) {
-	return new Vector3(v.n, v.x, v.0);
+public static Vector2 xn(this Vector3 v) {
+	return new Vector2(v.x, v.n);
 }
-
-public static Vector3 nx1(this Vector2 v) {
-	return new Vector3(v.n, v.x, v.1);
+public static Vector2 xm(this Vector3 v) {
+	return new Vector2(v.x, v.m);
 }
-
-public static Vector3 nyx(this Vector2 v) {
-	return new Vector3(v.n, v.y, v.x);
+public static Vector2 x0(this Vector3 v) {
+	return new Vector2(v.x, v.0);
 }
-
-public static Vector3 nyy(this Vector2 v) {
-	return new Vector3(v.n, v.y, v.y);
+public static Vector2 x1(this Vector3 v) {
+	return new Vector2(v.x, v.1);
 }
-
-public static Vector3 nyn(this Vector2 v) {
-	return new Vector3(v.n, v.y, v.n);
+public static Vector2 yx(this Vector3 v) {
+	return new Vector2(v.y, v.x);
 }
-
-public static Vector3 ny0(this Vector2 v) {
-	return new Vector3(v.n, v.y, v.0);
+public static Vector2 yy(this Vector3 v) {
+	return new Vector2(v.y, v.y);
 }
-
-public static Vector3 ny1(this Vector2 v) {
-	return new Vector3(v.n, v.y, v.1);
+public static Vector2 yz(this Vector3 v) {
+	return new Vector2(v.y, v.z);
 }
-
-public static Vector3 nnx(this Vector2 v) {
-	return new Vector3(v.n, v.n, v.x);
+public static Vector2 yn(this Vector3 v) {
+	return new Vector2(v.y, v.n);
 }
-
-public static Vector3 nny(this Vector2 v) {
-	return new Vector3(v.n, v.n, v.y);
+public static Vector2 ym(this Vector3 v) {
+	return new Vector2(v.y, v.m);
 }
-
-public static Vector3 nnn(this Vector2 v) {
-	return new Vector3(v.n, v.n, v.n);
+public static Vector2 y0(this Vector3 v) {
+	return new Vector2(v.y, v.0);
 }
-
-public static Vector3 nn0(this Vector2 v) {
-	return new Vector3(v.n, v.n, v.0);
+public static Vector2 y1(this Vector3 v) {
+	return new Vector2(v.y, v.1);
 }
-
-public static Vector3 nn1(this Vector2 v) {
-	return new Vector3(v.n, v.n, v.1);
+public static Vector2 zx(this Vector3 v) {
+	return new Vector2(v.z, v.x);
 }
-
-public static Vector3 n0x(this Vector2 v) {
-	return new Vector3(v.n, v.0, v.x);
+public static Vector2 zy(this Vector3 v) {
+	return new Vector2(v.z, v.y);
 }
-
-public static Vector3 n0y(this Vector2 v) {
-	return new Vector3(v.n, v.0, v.y);
+public static Vector2 zz(this Vector3 v) {
+	return new Vector2(v.z, v.z);
 }
-
-public static Vector3 n0n(this Vector2 v) {
-	return new Vector3(v.n, v.0, v.n);
+public static Vector2 zn(this Vector3 v) {
+	return new Vector2(v.z, v.n);
 }
-
-public static Vector3 n00(this Vector2 v) {
-	return new Vector3(v.n, v.0, v.0);
+public static Vector2 zm(this Vector3 v) {
+	return new Vector2(v.z, v.m);
 }
-
-public static Vector3 n01(this Vector2 v) {
-	return new Vector3(v.n, v.0, v.1);
+public static Vector2 z0(this Vector3 v) {
+	return new Vector2(v.z, v.0);
 }
-
-public static Vector3 n1x(this Vector2 v) {
-	return new Vector3(v.n, v.1, v.x);
+public static Vector2 z1(this Vector3 v) {
+	return new Vector2(v.z, v.1);
 }
-
-public static Vector3 n1y(this Vector2 v) {
-	return new Vector3(v.n, v.1, v.y);
+public static Vector2 nx(this Vector3 v) {
+	return new Vector2(v.n, v.x);
 }
-
-public static Vector3 n1n(this Vector2 v) {
-	return new Vector3(v.n, v.1, v.n);
+public static Vector2 ny(this Vector3 v) {
+	return new Vector2(v.n, v.y);
 }
-
-public static Vector3 n10(this Vector2 v) {
-	return new Vector3(v.n, v.1, v.0);
+public static Vector2 nz(this Vector3 v) {
+	return new Vector2(v.n, v.z);
 }
-
-public static Vector3 n11(this Vector2 v) {
-	return new Vector3(v.n, v.1, v.1);
+public static Vector2 nn(this Vector3 v) {
+	return new Vector2(v.n, v.n);
 }
-
+public static Vector2 nm(this Vector3 v) {
+	return new Vector2(v.n, v.m);
+}
+public static Vector2 n0(this Vector3 v) {
+	return new Vector2(v.n, v.0);
+}
+public static Vector2 n1(this Vector3 v) {
+	return new Vector2(v.n, v.1);
+}
 

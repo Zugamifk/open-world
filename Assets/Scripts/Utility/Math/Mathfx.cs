@@ -19,6 +19,11 @@ namespace Extensions {
             return from + (to-from)*t;
         }
 
+        public static float Mod(float num, float mod) {
+            var res = num%mod;
+            return num > 0 ? res : res + mod;
+        }
+
         /** Interval on 0-1 rather than 0-2pi */
         public static float USin(float t) {
             return Mathf.Sin(t*2*Mathf.PI);
