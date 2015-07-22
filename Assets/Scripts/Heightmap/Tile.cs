@@ -8,7 +8,8 @@ namespace Landscape {
 		public Vector2 position;
 		public IHeightMap map;
 		public int gridWidth, gridHeight;
-		public bool smooth, tile;
+		public bool smooth = true;
+		public bool tile;
 
 		private Mesh mesh;
 		private MeshFilter filter;
@@ -121,6 +122,8 @@ namespace Landscape {
             mesh.triangles = tris;
             mesh.uv = uv;
 			mesh.name = Name;
+
+			Utils.PostGenerateMesh(mesh);
 
 			var filter = GetComponent<MeshFilter>();
 			if(filter!=null) filter.mesh = mesh;

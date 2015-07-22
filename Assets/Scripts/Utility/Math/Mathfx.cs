@@ -6,6 +6,9 @@ namespace Extensions {
 
     public static partial class Math {
 
+        public const float Phi = 1.61803398875f;
+        public const float InversePhi = 0.61803398875f;
+
         // _____________________________________/ General math tools \______________
         public static bool Approximately( Vector2 a, Vector2 b ) {
     		return Mathf.Approximately(a.x, b.x) && Mathf.Approximately(a.y, b.y);
@@ -22,6 +25,10 @@ namespace Extensions {
         public static float Mod(float num, float mod) {
             var res = num%mod;
             return num > 0 ? res : res + mod;
+        }
+
+        public static float Place(float min, float max, float num) {
+            return (num-min)/(max-min);
         }
 
         /** Interval on 0-1 rather than 0-2pi */

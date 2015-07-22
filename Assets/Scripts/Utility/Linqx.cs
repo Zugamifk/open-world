@@ -29,6 +29,18 @@ public static class Linqx {
         }
     }
 
+    public static T Second<T>(this IEnumerable<T> seq) {
+        return seq.ElementAt(1);
+    }
+
+    public static T Third<T>(this IEnumerable<T> seq) {
+        return seq.ElementAt(2);
+    }
+
+    public static T Fourth<T>(this IEnumerable<T> seq) {
+        return seq.ElementAt(3);
+    }
+
     public static IEnumerable<IEnumerable<T>> Cross<T>(
         this IEnumerable<IEnumerable<T>> seqA,
         IEnumerable<T> seqB) {

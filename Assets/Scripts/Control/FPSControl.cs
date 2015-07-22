@@ -27,6 +27,7 @@ public class FPSControl : MonoBehaviour
     void Start() {
         controlRoot.position = Vector3.zero;
         Position = Vector3.zero;
+        Ground.GetHeight(Position);
     }
 
     void Update()
@@ -62,7 +63,6 @@ public class FPSControl : MonoBehaviour
         moveVelocity = moveDirection.normalized * speed;
 
         Position += (controlRoot.TransformVector(moveVelocity) + velocity) * Time.fixedDeltaTime;
-
         var pos = Position;
         pos.y = Ground.GetHeight(Position);
         Position = pos;
