@@ -43,6 +43,15 @@ namespace MeshGenerator {
 	        }
 		}
 
+		/** flip triangles facing in a triangleArray array */
+		public static void FlipTriangles(int[] verts) {
+			for(int t = 0;t<verts.Length;t+=3) {
+				var temp = verts[t];
+				verts[t] = verts[t+1];
+				verts[t+1] = temp;
+			}
+		}
+
 		/** Optimize mesh for unity */
 		public static void PostGenerateMesh(Mesh mesh) {
 			mesh.RecalculateNormals();

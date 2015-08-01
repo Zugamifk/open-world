@@ -3,7 +3,7 @@ using System.Collections;
 
 //Rect extension and helper methods
 public static class Rectx {
-	
+
 	//Create Rect from (position, size) as Vector2s
 	public static Rect MakeRect(Vector2 position, Vector2 size) {
 		return new Rect(
@@ -13,17 +13,45 @@ public static class Rectx {
 			size.y
 		);
 	}
-	
+
+	/**Returns the biggest rect ever!*/
+	public static Rect Huge {
+		get {
+			return new Rect(Mathf.NegativeInfinity, Mathf.NegativeInfinity, Mathf.Infinity, Mathf.Infinity);
+		}
+	}
+
+	/**Returns the minus biggest rect ever!*/
+	public static Rect NegativeHuge {
+		get {
+			return new Rect(Mathf.Infinity, Mathf.Infinity, Mathf.NegativeInfinity, Mathf.NegativeInfinity);
+		}
+	}
+
+	/**Returns the a rect of zeros*/
+	public static Rect Zero {
+		get {
+			return new Rect(0, 0, 0, 0);
+		}
+	}
+
+	/**Returns the a rect of area 1*/
+	public static Rect Unit {
+		get {
+			return new Rect(0, 0, 1, 1);
+		}
+	}
+
 	//Get (x,y) as a Vector2
 	public static Vector2 GetPosition(this Rect r) {
 		return new Vector2(r.x, r.y);
 	}
-	
+
 	//Get (width, height) as a Vector2
 	public static Vector2 GetSize(this Rect r) {
 		return new Vector2(r.width, r.height);
 	}
-	
+
 	//Get the bounds of a group of Rects
 	public static Rect BoundingRect(params Rect[] rs) {
 		if (rs.Length == 0) {
@@ -49,7 +77,7 @@ public static class Rectx {
 		}
 		return Rect.MinMaxRect(xMin, yMin, xMax, yMax);
 	}
-	
+
 	//Get the bounds of a group of points
 	public static Rect BoundingRect(params Vector2[] vs) {
 		if (vs.Length == 0) {
@@ -75,7 +103,7 @@ public static class Rectx {
 		}
 		return Rect.MinMaxRect(xMin, yMin, xMax, yMax);
 	}
-	
+
 	//Expand or contract a Rect
 	public static Rect Border(this Rect r, Vector2 borders) {
 		return new Rect(
@@ -85,7 +113,7 @@ public static class Rectx {
 			r.height + 2*borders.y
 		);
 	}
-	
+
 	//Does this Rect contain another?
 	public static bool Contains(this Rect r, Rect other) {
 		return	r.x < other.x &&
@@ -93,7 +121,7 @@ public static class Rectx {
 				r.xMax > other.xMax &&
 				r.yMax > other.yMax;
 	}
-	
+
 	// The centre of the Rect
 	public static Vector2 GetCenter(this Rect r) {
 		return new Vector2(
@@ -101,7 +129,7 @@ public static class Rectx {
 			r.y + r.height*0.5f
 		);
 	}
-	
+
 	//Returns whether two rects intersect
 	public static bool Intersects(this Rect r, Rect other){
 		//Define rects by corner points, with first points less than or equal to second points
@@ -138,10 +166,10 @@ public static class Rectx {
 			oy1 = other.yMax;
 			oy2 = other.y;
 		}
-		
+
 		return rx1 < ox2 && rx2 > ox1 && ry1 < oy2 && ry2 > oy1;
 	}
-	
+
 	//Returns whether two rects intersect and the rect that is the intersection.
 	public static bool Intersection(this Rect r, Rect other, out Rect result){
 		//Define rects by corner points, with first points less than or equal to second points
@@ -178,10 +206,10 @@ public static class Rectx {
 			oy1 = other.yMax;
 			oy2 = other.y;
 		}
-		
+
 		if(rx1 < ox2 && rx2 > ox1 && ry1 < oy2 && ry2 > oy1){
 			float x = Mathf.Max(rx1, ox1);
-			float y = Mathf.Max(ry1, oy1);			
+			float y = Mathf.Max(ry1, oy1);
 			result = new Rect(x, y, Mathf.Min(rx2, ox2) - x, Mathf.Min(ry2, oy2) - y);
 			return true;
 		}

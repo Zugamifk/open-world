@@ -40,10 +40,10 @@ namespace Geometry {
 
 		public class Face {
             public Edge[] edges;
-			string Name;
+			// string Name;
 			public Face(params Edge[] edges) {
 				this.edges = edges;
-				this.Name ="face: " + System.String.Join("\n", edges.Select(e=>e.Name).ToArray());
+				// this.Name ="face: " + System.String.Join("\n", edges.Select(e=>e.Name).ToArray());
 			}
 			public IEnumerable<Vertex> OrderedVertices {
 				get {

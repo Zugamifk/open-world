@@ -4,18 +4,18 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class Graph<T> : IUnitTestable {
-    public class Vertex<T> {
-        public T value;
-        public List<Edge<T>> edges = new List<Edge<T>>();
-        public Vertex(T val) {
+    public class Vertex<Tvalue> {
+        public Tvalue value;
+        public List<Edge<Tvalue>> edges = new List<Edge<Tvalue>>();
+        public Vertex(Tvalue val) {
             value = val;
         }
-        public IEnumerable<Vertex<T>> connected {
+        public IEnumerable<Vertex<Tvalue>> connected {
             get {
                 return edges.Select(e=>e.to==this?e.from:e.to);
             }
         }
-        public bool ConnectedTo(Vertex<T> other) {
+        public bool ConnectedTo(Vertex<Tvalue> other) {
             return connected.FirstOrDefault(c=>c==other) != null;
         }
 
@@ -23,14 +23,14 @@ public class Graph<T> : IUnitTestable {
             return "Vertex "+value;
         }
     }
-    public class Edge<T> {
-        public Vertex<T> from;
-        public Vertex<T> to;
-        public Edge(Vertex<T> a, Vertex<T> b) {
+    public class Edge<Tvertex> {
+        public Vertex<Tvertex> from;
+        public Vertex<Tvertex> to;
+        public Edge(Vertex<Tvertex> a, Vertex<Tvertex> b) {
             from = a;
             to = b;
         }
-        public bool ConnectedTo(Edge<T> other) {
+        public bool ConnectedTo(Edge<Tvertex> other) {
             return from==other.from || from == other.to
                 || to == other.from || to == other.to;
         }
@@ -38,19 +38,19 @@ public class Graph<T> : IUnitTestable {
             return "Edge:\n\t"+from+"\n\t"+to;
         }
     }
-	protected Vertex<T>[] Vertices;
-    protected HashSet<Edge<T>> edges;
+	public Vertex<T>[] Vertices;
+    public HashSet<Edge<T>> Edges;
 
     public Graph(){}
 	public Graph(T[] vertices, int[,] edges) {
         Vertices = vertices.Select(v=>new Vertex<T>(v)).ToArray();
-        this.edges = new HashSet<Edge<T>>();
+        Edges = new HashSet<Edge<T>>();
         for(int e=0;e<edges.GetLength(0);e++) {
             var newEdge = new Edge<T>(
                 Vertices[Mathf.Min(edges[e,0],edges[e,1])],
                 Vertices[Mathf.Max(edges[e,0],edges[e,1])]
              );
-            this.edges.Add(newEdge);
+            Edges.Add(newEdge);
             Vertices[edges[e,0]].edges.Add(newEdge);
             Vertices[edges[e,1]].edges.Add(newEdge);
         }

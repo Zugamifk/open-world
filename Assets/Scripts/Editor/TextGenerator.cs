@@ -73,7 +73,7 @@ public class TextGenerator : EditorWindow
 
 
     private string fileName = "";
-    private TextAsset current;
+    // private TextAsset current;
     private string formatString;
     private List<WordList> options = new List<WordList>();
 
@@ -89,7 +89,7 @@ public class TextGenerator : EditorWindow
 			Debug.Log("Deleting old copy at "+path);
 			AssetDatabase.DeleteAsset(path);
 		}
-		current = null;
+		// current = null;
 		var sr = File.CreateText(path);
         formatString.EnumerableFormat(
 			options.Select(
@@ -110,7 +110,7 @@ public class TextGenerator : EditorWindow
         sr.WriteLine();
 		sr.Close();
 
-        current = AssetDatabase.LoadAssetAtPath<TextAsset>(path) as TextAsset;
+        // current = AssetDatabase.LoadAssetAtPath<TextAsset>(path) as TextAsset;
 		AssetDatabase.ImportAsset(path);
     }
 

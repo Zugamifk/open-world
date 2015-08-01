@@ -3,30 +3,35 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Extensions;
+using MeshGenerator;
 
 namespace Geometry {
-	//TODO: Commence when this is a directed graph
-	public class Polygon : DirectedGraph<Vector2>, IUnitTestable, IMeshGenerator {
+	public class Polygon : DirectedGraph<Vector2>, IUnitTestable {
 
-		public Polygon()
-		: base (
-			new Vector2[]{
-				Vector2.zero, Vector2.right, new Vector2(1,1), Vector2.up
-			},
-			new int[,]{{0,1},{1,2},{2,3},{3,0}}
-		)
-		{}
-
-		public Polygon(Vector2[] vertices, int[,]edges)
-		: base(vertices, edges) {}
+		public Polygon(params Vector2[] vertices) {
+			Vertices = vertices.Select(v=>new Vertex<Vector2>(v)).ToArray();
+			Edges = new HashSet<Edge<Vector2>>();
+			int N = Vertices.Length;
+			for(int i=0;i<N;i++) {
+				AddEdge(Vertices[i], Vertices[(i+1)%N]);
+			}
+		}
 
 		public string Name {
 			get { return Vertices.Length+"-gon"; }
 		}
 
+		public bool IsConvex {
+			get {
+				return Vertices.All(
+					v => Diagonal(Last(v), Next(v))
+				);
+			}
+		}
+
 		public bool IsSimple {
 			get {
-				return edges.Cross(edges)
+				return Edges.Cross(Edges)
 					.Where(pair=>!pair.First().ConnectedTo(pair.Second()))
 					.All(pair=>!Math3D.LineLineIntersection(
 						pair.First().from.value, pair.First().to.value,
@@ -96,19 +101,49 @@ namespace Geometry {
 			var square = new Polygon(
 				new Vector2[]{
 					Vector2.zero, Vector2.right, new Vector2(1,1), Vector2.up
-				},
-				new int[,]{{0,1},{1,2},{2,3},{3,0}}
+				}
 			);
 			square.Triangulate();
 		}
+	}
+
+	public class PolygonGenerator : IMeshGenerator {
+
+		public enum Shape {
+			NONE,
+			NGON,
+			KITE
+		}
+
+		public Polygon polygon;
+		public Shape shape;
+
+		public PolygonGenerator() {
+			polygon = Shapes.Square();
+		}
+
+		public string Name {
+			get { return shape.ToString().Uncamel(); }
+		}
 
 		public Mesh Generate() {
-			var verts = Vertices.Select(v=>(Vector3)v.value).ToArray();
-			var tris = Triangulate().SelectMany(v=>v).ToArray();
+
+			switch(shape) {
+				case Shape.NONE: polygon = Shapes.Monogon(); break;
+				case Shape.NGON: polygon = Shapes.Square(); break;
+				case Shape.KITE: polygon = Shapes.Kite(); break;
+			}
+
+			var verts = polygon.Vertices.Select(v=>(Vector3)v.value).ToArray();
+			var tris = polygon.Triangulate().SelectMany(v=>v).ToArray();
+			Utils.FlipTriangles(tris);
+			var bounds = Rectx.BoundingRect(polygon.Vertices.Select(v=>v.value).ToArray());
+			var uvs = verts.Select(v=>Rect.PointToNormalized(bounds, v)).ToArray();
 
 			var mesh = new Mesh();
 			mesh.vertices = verts;
 			mesh.triangles = tris;
+			mesh.uv = uvs;
 			return mesh;
 		}
 	}

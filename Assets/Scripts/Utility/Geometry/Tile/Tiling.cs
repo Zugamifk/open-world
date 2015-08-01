@@ -1,15 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Tiling : MonoBehaviour {
+namespace Geometry {
+	public class Tiling : IMeshGenerator {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+		public string name;
+
+		private Polygon[] tiles;
+
+		public string Name {
+			get { return name; }
+		}
+
+		public Mesh Generate() {
+			return new Mesh();
+		}
 	}
 }

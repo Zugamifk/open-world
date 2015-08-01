@@ -29,13 +29,6 @@ namespace Landscape {
 		}
 
 		public Mesh Generate() {
-			// Extreme points of plane
-            var pts = new Vector3[] {
-				Vector3.zero,
-				Vector3.forward,
-				new Vector3(1,0,1),
-				Vector3.right
-			};
 
             // width of a tile in the plane
             var xs = 1f / (float)gridWidth;

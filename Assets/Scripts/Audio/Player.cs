@@ -15,7 +15,7 @@ namespace Audio {
 		public float time;
 		public List<IAudioFilter> filters = new List<IAudioFilter>();
 
-		private AudioSource audio;
+		new private AudioSource audio;
 		private float elapsed;
 		private const float samplerate = 44000;
 
