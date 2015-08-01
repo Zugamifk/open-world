@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Extensions;
-
+//TODO GENERATE PROPER FACE NORMALS! 
 namespace Geometry {
 	public static partial class Shapes {
 		public static Polyhedron Icosahedron() {

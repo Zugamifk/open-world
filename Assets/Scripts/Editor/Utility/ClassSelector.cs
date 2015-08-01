@@ -11,6 +11,7 @@ public class ClassSelector<T> where T : class {
 	private T instance;
 	private int selection;
 	private Type[] OptionTypes;
+	private Type[] GenericParameters;
 	private string[] Options;
 	private EditorGUIx.FieldDrawerLayout[] FieldDrawers;
 	private bool raisedError = false;
@@ -23,9 +24,9 @@ public class ClassSelector<T> where T : class {
 		get { return instance;}
 	}
 
-	public ClassSelector() {
+	public ClassSelector(params Type[] genericParams) {
+		GenericParameters = genericParams;
 		Init();
-		// Debug.Log("Mesh Generator window refreshed");
 	}
 
 	public void Init() {
@@ -34,22 +35,29 @@ public class ClassSelector<T> where T : class {
 		    .GetTypes()
 		    .Where( t =>
 				t != typeof(T) &&
-				typeof(T).IsAssignableFrom(t)))
+				typeof(T).IsAssignableFrom(t) &&
+				t.GetConstructor(Type.EmptyTypes)!=null))
+			.Select( t => {
+				if(t.IsGenericTypeDefinition) {
+					if(GenericParameters!=null) {
+						return t.MakeGenericType(GenericParameters);
+					} else {
+						Debug.LogError("Generic Type "+t+" requires a class selector with type arguments!");
+						raisedError = true;
+						return null;
+					}
+				} else {
+					return t;
+				}
+				})
+			.Where( t => t != null)
 		    .ToArray();
 
 		Options = OptionTypes.Select(g => g.Name.Uncamel()).ToArray();
 
 		if (OptionTypes.Length>0) {
-			var constructor = OptionTypes[0].GetConstructor(Type.EmptyTypes);
-			current = OptionTypes[0];
-			if(constructor!=null) {
-				instance = constructor.Invoke(null) as T;
-			} else {
-				Debug.LogWarning(current+" has no empty constructor!");
-				raisedError = true;
-				return;
-			}
-
+			SetCurrent(OptionTypes[0]);
+			Instantiate();
 			RefreshDrawers();
 		} else {
 			FieldDrawers = new EditorGUIx.FieldDrawerLayout[0];
@@ -103,16 +111,8 @@ public class ClassSelector<T> where T : class {
 				return default(T);
 			}
 			selection = nt;
-			current = OptionTypes[nt];
-			var constructor = current.GetConstructor(Type.EmptyTypes);
-			if(constructor!=null) {
-				instance = constructor.Invoke(null) as T;
-			} else {
-				Debug.LogWarning(current+" has no empty constructor!");
-				raisedError = true;
-				EditorGUILayout.EndHorizontal();
-				return default(T);
-			}
+			SetCurrent(OptionTypes[nt]);
+			Instantiate();
 		}
 		if(DeleteEvent!=null && GUILayout.Button("X", GUILayout.Width(25))) {
 			DeleteEvent();
@@ -122,6 +122,30 @@ public class ClassSelector<T> where T : class {
 			foreach(var f in FieldDrawers) f();
 		}
 		return instance;
+	}
+
+	protected void SetCurrent(Type t) {
+		if(t.IsGenericTypeDefinition) {
+			if(GenericParameters!=null) {
+				current = t.MakeGenericType(GenericParameters);
+			} else {
+				Debug.LogError("Generic Type "+t+" requires a class selector with type arguments!");
+				raisedError = true;
+				return;
+			}
+		} else {
+			current = t;
+		}
+	}
+
+	protected void Instantiate() {
+		var constructor = current.GetConstructor(Type.EmptyTypes);
+		if(constructor!=null) {
+			instance = constructor.Invoke(null) as T;
+		} else {
+			Debug.LogWarning(current+" has no empty constructor!");
+			raisedError = true;
+		}
 	}
 
 }

@@ -4,6 +4,18 @@ using System.Collections;
 namespace Extensions {
 	public static class Vector3x {
 
+		public static bool Approximately(this Vector3 self, Vector3 other) {
+			return Mathf.Approximately(self.x, other.x) &&
+				Mathf.Approximately(self.y, other.y) &&
+				Mathf.Approximately(self.z, other.z);
+		}
+
+		public static bool Approximately(this Vector3 self, float value) {
+			return Mathf.Approximately(self.x, value) &&
+				Mathf.Approximately(self.y, value) &&
+				Mathf.Approximately(self.z, value);
+		}
+
 		public static Vector2 xx(this Vector3 v) {
 			return new Vector2(v.x, v.x);
 		}
