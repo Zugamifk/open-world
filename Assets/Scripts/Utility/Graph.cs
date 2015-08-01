@@ -38,12 +38,12 @@ public class Graph<T> : IUnitTestable {
             return "Edge:\n\t"+from+"\n\t"+to;
         }
     }
-	public Vertex<T>[] Vertices;
+	public List<Vertex<T>> Vertices;
     public HashSet<Edge<T>> Edges;
 
     public Graph(){}
 	public Graph(T[] vertices, int[,] edges) {
-        Vertices = vertices.Select(v=>new Vertex<T>(v)).ToArray();
+        Vertices = vertices.Select(v=>new Vertex<T>(v)).ToList();
         Edges = new HashSet<Edge<T>>();
         for(int e=0;e<edges.GetLength(0);e++) {
             var newEdge = new Edge<T>(

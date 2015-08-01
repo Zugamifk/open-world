@@ -6,7 +6,8 @@ namespace Geometry {
 
 		public string name;
 
-		private Polygon[] tiles;
+		private Tile[] tileset;
+		private Graph<Tile> tiling;
 
 		public string Name {
 			get { return name; }

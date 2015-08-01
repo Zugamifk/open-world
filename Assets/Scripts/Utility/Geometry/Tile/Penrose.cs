@@ -7,7 +7,6 @@ using System.Collections.Generic;
 
 namespace Geometry {
 	public static partial class Shapes {
-
 		public static Polygon Kite() {
 			var pt = Vector2.zero;
 			var dir = Vector2.right;

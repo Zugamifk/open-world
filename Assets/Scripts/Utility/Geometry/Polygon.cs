@@ -9,16 +9,16 @@ namespace Geometry {
 	public class Polygon : DirectedGraph<Vector2>, IUnitTestable {
 
 		public Polygon(params Vector2[] vertices) {
-			Vertices = vertices.Select(v=>new Vertex<Vector2>(v)).ToArray();
+			Vertices = vertices.Select(v=>new Vertex<Vector2>(v)).ToList();
 			Edges = new HashSet<Edge<Vector2>>();
-			int N = Vertices.Length;
+			int N = Vertices.Count;
 			for(int i=0;i<N;i++) {
 				AddEdge(Vertices[i], Vertices[(i+1)%N]);
 			}
 		}
 
 		public string Name {
-			get { return Vertices.Length+"-gon"; }
+			get { return Vertices.Count+"-gon"; }
 		}
 
 		public bool IsConvex {
@@ -67,7 +67,7 @@ namespace Geometry {
 
 		/** Generates a graph with diagonals that define a minimally triangulated polygyon */
 		public IEnumerable<int[]> Triangulate() {
-			var verts = new LinkedList<int>(Enumerable.Range(0, Vertices.Length));
+			var verts = new LinkedList<int>(Enumerable.Range(0, Vertices.Count));
 			var ears = Vertices.Select(
 				v => Diagonal(Last(v), Next(v))
 			).ToArray();
