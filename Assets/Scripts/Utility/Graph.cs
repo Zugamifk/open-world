@@ -39,12 +39,12 @@ public class Graph<T> : IUnitTestable {
         }
     }
 	public List<Vertex<T>> Vertices;
-    public HashSet<Edge<T>> Edges;
+    public List<Edge<T>> Edges;
 
     public Graph(){}
 	public Graph(T[] vertices, int[,] edges) {
         Vertices = vertices.Select(v=>new Vertex<T>(v)).ToList();
-        Edges = new HashSet<Edge<T>>();
+        Edges = new List<Edge<T>>();
         for(int e=0;e<edges.GetLength(0);e++) {
             var newEdge = new Edge<T>(
                 Vertices[Mathf.Min(edges[e,0],edges[e,1])],
@@ -56,6 +56,28 @@ public class Graph<T> : IUnitTestable {
         }
         visited = new HashSet<Vertex<T>>();
 	}
+
+    public void AddEdge(Vertex<T> v0, Vertex<T> v1) {
+        var edge = new Edge<T> (v0,v1);
+        Edges.Add(edge);
+        v0.edges.Add(edge);
+        v1.edges.Add(edge);
+    }
+
+    public void RemoveEdge(Vertex<T> v0, Vertex<T> v1) {
+        for(int i=0;i<Edges.Count;i++) {
+            if((Edges[i].from == v0 && Edges[i].to == v1) ||
+                (Edges[i].to == v0 && Edges[i].from == v1)) {
+                Edges.RemoveAt(i);
+            }
+        }
+        v0.edges = v0.edges.Where(e=>e.to!=v1 && e.from!=v1).ToList();
+        v1.edges = v1.edges.Where(e=>e.to!=v0 && e.from!=v0).ToList();
+    }
+
+    public void AddVertex(T vert) {
+        Vertices.Add(new Vertex<T>(vert));
+    }
 
     private HashSet<Vertex<T>> visited;
     public IEnumerable<T> DFS {

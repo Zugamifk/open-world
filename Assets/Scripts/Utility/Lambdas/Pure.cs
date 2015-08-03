@@ -18,7 +18,6 @@ namespace Lambdas
     public static partial class Lambda
     {
 
-
 		public static Pure1<T> Curried<T>(this Action a) {
             return arg =>
             {

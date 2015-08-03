@@ -4,16 +4,22 @@ using System.Collections;
 namespace Geometry {
 	public class Tiling : IMeshGenerator {
 
-		public string name;
+		protected Tile[] tileset;
+		protected Graph<Tile> tiling;
 
-		private Tile[] tileset;
-		private Graph<Tile> tiling;
-
-		public string Name {
-			get { return name; }
+		public virtual string Name {
+			get { return "Empty Tiling"; }
 		}
 
-		public Mesh Generate() {
+		public virtual bool Match(Tile a, Tile b) {
+			return true;
+		}
+
+		public virtual void Iterate() {
+
+		}
+
+		public virtual Mesh Generate() {
 			return new Mesh();
 		}
 	}

@@ -10,7 +10,7 @@ namespace Geometry {
 
 		public Polygon(params Vector2[] vertices) {
 			Vertices = vertices.Select(v=>new Vertex<Vector2>(v)).ToList();
-			Edges = new HashSet<Edge<Vector2>>();
+			Edges = new List<Edge<Vector2>>();
 			int N = Vertices.Count;
 			for(int i=0;i<N;i++) {
 				AddEdge(Vertices[i], Vertices[(i+1)%N]);
@@ -49,6 +49,10 @@ namespace Geometry {
 			var n = v.edges.FirstOrDefault(e=>e.to == v);
 			if(n==null) Debug.LogWarning("Vertex "+v+" has no successor!");
 	  		return n==null?null:n.from;
+		}
+
+		public float Angle(Vertex<Vector2> v) {
+			return Vector2.Angle(v.value-Last(v).value, Next(v).value-v.value);
 		}
 
 		/** detects if an edge is a valid diagonal and does not intersect other edges */
@@ -97,6 +101,22 @@ namespace Geometry {
 			}
 		}
 
+
+		public Mesh GenerateMesh() {
+			var verts = Vertices.Select(v=>(Vector3)v.value).ToArray();
+			var tris = Triangulate().SelectMany(v=>v).ToArray();
+			Utils.FlipTriangles(tris);
+			var bounds = Rectx.BoundingRect(Vertices.Select(v=>v.value).ToArray());
+			var uvs = verts.Select(v=>Rect.PointToNormalized(bounds, v)).ToArray();
+
+			var mesh = new Mesh();
+			mesh.vertices = verts;
+			mesh.triangles = tris;
+			mesh.uv = uvs;
+			return mesh;
+		}
+
+
 		public override void Test() {
 			var square = new Polygon(
 				new Vector2[]{
@@ -134,17 +154,7 @@ namespace Geometry {
 				case Shape.KITE: polygon = Shapes.Kite(); break;
 			}
 
-			var verts = polygon.Vertices.Select(v=>(Vector3)v.value).ToArray();
-			var tris = polygon.Triangulate().SelectMany(v=>v).ToArray();
-			Utils.FlipTriangles(tris);
-			var bounds = Rectx.BoundingRect(polygon.Vertices.Select(v=>v.value).ToArray());
-			var uvs = verts.Select(v=>Rect.PointToNormalized(bounds, v)).ToArray();
-
-			var mesh = new Mesh();
-			mesh.vertices = verts;
-			mesh.triangles = tris;
-			mesh.uv = uvs;
-			return mesh;
+			return polygon.GenerateMesh();
 		}
 	}
 }

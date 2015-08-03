@@ -50,6 +50,10 @@ namespace Lambdas
             return (_0, _1, _2) => default(T);
         }
 
+        public static bool NotNull<T>(T obj) where T : IComparable {
+            return obj.CompareTo(default(T))!=0;
+        }
+
         public static Func<Ta, Tr> Memoized<Ta, Tr>(this Func<Ta, Tr> fun) {
             Dictionary<Ta, Tr> memoized = new Dictionary<Ta, Tr>();
             return (Ta arg) =>

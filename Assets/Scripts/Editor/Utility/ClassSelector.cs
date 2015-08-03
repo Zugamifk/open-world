@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
+using Lambdas;
 
 public class ClassSelector<T> where T : class {
 	private Type current;
@@ -74,6 +75,7 @@ public class ClassSelector<T> where T : class {
 		for(int i=0;i<fields.Length;i++) {
 			FieldDrawers[i] = GetFieldDrawer(fields[i]);
 		}
+		FieldDrawers = FieldDrawers.Where(f=>f!=null).ToArray();
 	}
 
 	private EditorGUIx.FieldDrawerLayout GetFieldDrawer(FieldInfo field) {
@@ -83,6 +85,10 @@ public class ClassSelector<T> where T : class {
 		EditorGUIx.FieldDrawerLayout fieldDrawer = EditorGUIx.NullDrawerLayout;
 		if (typeof(IList).IsAssignableFrom(type)) {
             var list = (IList)field.GetValue(instance);
+			if (list==null) {
+				Debug.LogWarning("Field "+field.Name+" has a list field that has not been instantiated!");
+				return null;
+			}
 			var elementType = list.GetType().GetProperty("Item").PropertyType;
             fieldDrawer = EditorGUIx.GetReorderableListFieldDrawer(name, list, elementType);
         } else {
