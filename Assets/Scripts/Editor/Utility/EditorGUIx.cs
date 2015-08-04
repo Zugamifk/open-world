@@ -77,10 +77,19 @@ public static class EditorGUIx
 				listFieldDrawers[index](rect);
 
 		var constructor = elementType.GetConstructor(Type.EmptyTypes);
-        rList.onAddCallback = rl =>
-        {
-            list.Add(constructor.Invoke(null));
-        };
+        if(!list.IsFixedSize) {
+            rList.onAddCallback = rl =>
+            {
+                var o = constructor != null ?
+                    constructor.Invoke(null) :
+                    elementType.IsValueType && Nullable.GetUnderlyingType(elementType) == null ?
+                    Activator.CreateInstance(elementType) :
+                    null;
+                list.Add(o);
+            };
+        } else {
+            rList.onAddCallback = rl => {Debug.LogWarning("Type "+elementType+" does not have a default constructor!");};
+        }
 
         rList.onChangedCallback = rl =>
         {
@@ -166,6 +175,20 @@ public static class EditorGUIx
 				var newVal = label == string.Empty ?
 					EditorGUI.CurveField(position, value) :
 					EditorGUI.CurveField(position, label, value);
+				if (newVal != value)
+				{
+					value = newVal;
+					setCallback(value);
+				}
+			};
+		} else
+        if (type == typeof(Color)) {
+			Color value = (Color)valueInit();
+            return (Rect position) =>
+			{
+				var newVal = label == string.Empty ?
+					EditorGUI.ColorField(position, value) :
+					EditorGUI.ColorField(position, label, value);
 				if (newVal != value)
 				{
 					value = newVal;

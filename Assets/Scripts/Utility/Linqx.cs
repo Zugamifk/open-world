@@ -9,6 +9,29 @@ public static class Linqx {
         return typeof(T);
     }
 
+    // copied From stackoverflow.com/a/13608408/284795
+    public static bool TryListOfWhat(Type type, out Type innerType)
+    {
+        var interfaceTest = new Func<Type, Type>(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IList<>) ? i.GetGenericArguments().FirstOrDefault() : null);
+
+        innerType = interfaceTest(type);
+        if (innerType != null)
+        {
+            return true;
+        }
+
+        foreach (var i in type.GetInterfaces())
+        {
+            innerType = interfaceTest(i);
+            if (innerType != null)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static void ForEach<T>(this IEnumerable<T> seq, Action<T> func) {
         foreach(var v in seq) func(v);
     }
@@ -119,5 +142,16 @@ public static class Linqx {
 
     public static IEnumerable<KeyValuePair<T, R>> Zip<T, R>(this IEnumerable<T> first, IEnumerable<R> second) {
         return first.Zip(second, (f, s) => new KeyValuePair<T, R>(f, s));
+    }
+
+    public static T Random<T>(this IEnumerable<T> seq) {
+        return seq.ElementAt(UnityEngine.Random.Range(0,seq.Count()));
+    }
+
+    public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> list)
+    {
+        var r = new System.Random((int)DateTime.Now.Ticks);
+        var shuffledList = list.Select(x => new { Number = r.Next(), Item = x }).OrderBy(x => x.Number).Select(x => x.Item);
+        return shuffledList.ToList();
     }
 }

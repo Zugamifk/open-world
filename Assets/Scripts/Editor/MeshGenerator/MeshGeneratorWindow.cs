@@ -31,7 +31,16 @@ public class MeshGeneratorWindow : EditorWindow {
 		EditorGUIx.FieldDrawerLayout fieldDrawer = EditorGUIx.NullDrawerLayout;
 		if (typeof(IList).IsAssignableFrom(type)) {
             var list = (IList)field.GetValue(generator);
-			var elementType = list.GetType().GetProperty("Item").PropertyType;
+			if(list == null) {
+				Debug.LogWarning("list "+field.Name+" has not been instantiated");
+				return EditorGUIx.NullDrawerLayout;
+			}
+			Type elementType = null;
+			bool found = Linqx.TryListOfWhat(list.GetType(), out elementType);
+			if(!found) {
+				Debug.LogWarning("list "+field.Name+" does not appear to implement IList!");
+				return null;
+			}
             fieldDrawer = EditorGUIx.GetReorderableListFieldDrawer(name, list, elementType);
         } else {
 			fieldDrawer = EditorGUIx.GetFieldDrawerLayout(
@@ -119,12 +128,17 @@ public class MeshGeneratorWindow : EditorWindow {
 	int generatorSelection = 0;
 	string[] generatorOptions = new string[]{};
 	void OnGUI() {
+		EditorGUILayout.BeginHorizontal();
 		var gs = EditorGUILayout.Popup("Generator:", generatorSelection, generatorOptions);
 		if (gs!=generatorSelection || CurrentGenerator == null) {
 			if(Generators == null) Init();
 			generatorSelection = gs;
 			CurrentGenerator = NewGenerator(Generators[gs]);
 		}
+		if(GUILayout.Button("Reload")) {
+			CurrentGenerator = NewGenerator(Generators[gs]);
+		}
+		EditorGUILayout.EndHorizontal();
 
 		var ma = (Mesh)EditorGUILayout.ObjectField("Asset:", CurrentMeshAsset, typeof(Mesh), false);
 		if (ma!=CurrentMeshAsset) {
@@ -135,7 +149,7 @@ public class MeshGeneratorWindow : EditorWindow {
 
 		if (gen!=null && CurrentMeshAsset != null) {
 			GUILayout.Label(CurrentMeshAsset.name + " -- " + gen.Name);
-			foreach(var f in GeneratorFieldDrawers) f();
+			foreach(var f in GeneratorFieldDrawers) if(f!=null)f();
 
 			if(GUILayout.Button("Generate Mesh!")) {
 				RegenerateMesh();

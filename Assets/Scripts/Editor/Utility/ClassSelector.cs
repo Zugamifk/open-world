@@ -120,6 +120,9 @@ public class ClassSelector<T> where T : class {
 			SetCurrent(OptionTypes[nt]);
 			Instantiate();
 		}
+		if(GUILayout.Button("Reload")) {
+			Instantiate();
+		}
 		if(DeleteEvent!=null && GUILayout.Button("X", GUILayout.Width(25))) {
 			DeleteEvent();
 		}

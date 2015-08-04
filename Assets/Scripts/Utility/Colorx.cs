@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using Extensions;
 
 public static class Colorx {
 
@@ -52,6 +54,14 @@ public static class Colorx {
     	hsv.h = (hsv.h+0.5f)%1;
 		return hsv;
 	}
+
+	public static IEnumerable<Color> FibonacciHues(Color seed) {
+		var col = (ColorHSV)seed;
+		while(true) {
+			yield return col;
+			col.h = (col.h+Math.InversePhi)%1;
+		}
+ 	}
 
 }
 

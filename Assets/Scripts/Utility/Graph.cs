@@ -41,7 +41,10 @@ public class Graph<T> : IUnitTestable {
 	public List<Vertex<T>> Vertices;
     public List<Edge<T>> Edges;
 
-    public Graph(){}
+    public Graph(){
+        Vertices = new List<Vertex<T>>();
+        Edges = new List<Edge<T>>();
+    }
 	public Graph(T[] vertices, int[,] edges) {
         Vertices = vertices.Select(v=>new Vertex<T>(v)).ToList();
         Edges = new List<Edge<T>>();

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Extensions;
+using Geometry;
 
 namespace Landscape {
 	public class Ground : MonoBehaviour {
@@ -71,6 +72,12 @@ namespace Landscape {
 		}
 
 		void Start() {
+			var tilingGenerator = new Wang();
+			tilingGenerator.width = tileWidth;
+			tilingGenerator.height = tileHeight;
+			tilingGenerator.numColors = 3;
+			tilingGenerator.dropRate = 3;
+
 			Generator.Init();
 			GridPosition = (Vector3i)Vector3.zero;//origin.position;
 			meshes = new  Dictionary<Vector3i, Mesh>();
@@ -83,6 +90,7 @@ namespace Landscape {
 						var tile = (Tile)tileGO.AddComponent<Tile>();
 						tile.position = new Vector2(GridPosition.x+x,GridPosition.z+y);
 						tile.map = Generator;
+						tile.tilingMeshGenerator = tilingGenerator;
 						tile.gridWidth = tileWidth;
 						tile.gridHeight = tileHeight;
 						tileGO.name = tile.Name;
