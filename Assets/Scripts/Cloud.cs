@@ -4,13 +4,11 @@ using Geometry;
 
 public class Cloud : MonoBehaviour {
 
-	Polyhedron shape;
-	Mesh ball;
+	Mesh atom;
 
 	// Use this for initialization
 	void Start () {
-		shape = Shapes.Icosahedron();
-		ball = shape.GenerateMesh();
+
 		shape.ColorVertices(ball);
 		MeshGenerator.Utils.PostGenerateMesh(ball);
 

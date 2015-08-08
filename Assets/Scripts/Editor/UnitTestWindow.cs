@@ -22,6 +22,10 @@ public class UnitTestWindow : EditorWindow {
 		Init();
 	}
 
+	void OnProjectChange() {
+		Init();
+	}
+
 	void OnGUI() {
 		if(Selector!=null)
 			unitTest = Selector.DrawField(unitTest);
