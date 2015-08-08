@@ -9,6 +9,7 @@ public class FPSControl : MonoBehaviour
     public Transform controlRoot;
     public float acceleration;
     public float maxSpeed;
+    public float jumpPower;
 
     private Vector3 velocity = Vector3.zero;
 
@@ -17,23 +18,17 @@ public class FPSControl : MonoBehaviour
     private Vector3 moveVelocity = Vector3.zero;
     private Vector3 moveDirection = Vector3.zero;
 
+    private bool grounded; // can you jump?
+
     public static Vector3 Position { get; protected set; }
 
-    private static FPSControl instance;
-    void Awake() {
-        this.SetInstanceOrKill(ref instance);
+    public void Jump() {
+        if(!grounded) return;
+        velocity += jumpPower*Vector3.up;
+        grounded = false;
     }
 
-    void Start() {
-        controlRoot.position = Vector3.zero;
-        Position = Vector3.zero;
-        Ground.GetHeight(Position);
-    }
-
-    void Update()
-    {
-        moveDirection = Vector3.zero;
-        moving = false;
+    public void GetInput() {
         if (Input.GetKey(KeyCode.W))
         {
             moveDirection += Vector3.forward;
@@ -58,15 +53,59 @@ public class FPSControl : MonoBehaviour
             moving = true;
         }
 
+        if (Input.GetKey(KeyCode.Space)) {
+            Jump();
+        }
+    }
+
+    void UpdateMovement() {
         var sign = moving ? 1 : -1;
         speed = Mathf.Clamp(speed + acceleration * sign * Time.fixedDeltaTime, 0, maxSpeed);
         moveVelocity = moveDirection.normalized * speed;
+    }
 
+    void UpdateVelocity() {
+        if(!grounded){
+            velocity+=PhysicsManager.Gravity;
+        }
+    }
+
+    void UpdatePosition() {
         Position += (controlRoot.TransformVector(moveVelocity) + velocity) * Time.fixedDeltaTime;
         var pos = Position;
-        pos.y = Ground.GetHeight(Position);
+        var groundy = Ground.GetHeight(Position);
+        if(pos.y < groundy) {
+            pos.y = groundy;
+            velocity = Vector3.zero;
+            grounded = true;
+        }
         Position = pos;
-        gameObject.name = "player: "+Ground.TransformPoint(pos);;
+    }
+
+    private static FPSControl instance;
+    void Awake() {
+        this.SetInstanceOrKill(ref instance);
+    }
+
+    void Start() {
+        controlRoot.position = Vector3.zero;
+        Position = Vector3.zero;
+        Ground.GetHeight(Position);
+    }
+
+    void FixedUpdate()
+    {
+        // reset some per-frame values
+        moveDirection = Vector3.zero;
+        moving = false;
+
+        GetInput();
+
+        UpdateMovement();
+        UpdateVelocity();
+        UpdatePosition();
+
+        gameObject.name = "player: "+Ground.TransformPoint(Position);
     }
 
 }

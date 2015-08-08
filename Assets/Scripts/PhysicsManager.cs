@@ -3,21 +3,17 @@ using System.Collections;
 
 public class PhysicsManager : MonoBehaviour {
 
+	public float gravityScalar = 1;
+
 	public static Vector3 Gravity {
 		get {
-            return Physics.gravity * Time.fixedDeltaTime;
+            return Physics.gravity * s_instance.gravityScalar * Time.fixedDeltaTime;
         }
 	}
 
     private static PhysicsManager s_instance;
-
 	void Awake() {
-		if (s_instance!=null) {
-            Debug.Log("Multiple PhysicsMangers! Self-destructing", s_instance);
-            Destroy(this);
-            return;
-        }
-		s_instance = this;
+		this.SetInstanceOrKill(ref s_instance);
 	}
 
 }
