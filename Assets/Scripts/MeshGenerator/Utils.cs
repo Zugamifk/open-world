@@ -59,5 +59,37 @@ namespace MeshGenerator {
             mesh.Optimize();
         }
 
+		// EXTENSION METHODS
+		public static void ColorByVertexIndex(this Mesh mesh, Color startColor, Color endColor) {
+			var colors = new Color[mesh.vertexCount];
+			for(int i=0;i<colors.Length;i++) {
+				colors[i] = Color.Lerp(startColor, endColor, (float)i/(float)colors.Length);
+			}
+			mesh.colors = colors;
+		}
+		public static void ColorByLastTriangleIndex(this Mesh mesh, Color startColor, Color endColor) {
+			var colors = new Color[mesh.vertexCount];
+			var tris = mesh.triangles;
+			for(int i=0;i<tris.Length;i++) {
+				colors[tris[i]] = Color.Lerp(startColor, endColor, (float)i/(float)tris.Length);
+			}
+			mesh.colors = colors;
+		}
+
+		public static void SplitTriangles(this Mesh mesh) {
+			var verts = mesh.vertices;
+			var tris = mesh.triangles;
+			if(verts.Length == tris.Length) return;
+
+			var newVerts = new Vector3[tris.Length];
+			var used = new bool[verts.Length];
+			for(int i=0;i<newVerts.Length;i++) {
+				newVerts[i] = verts[tris[i]];
+				tris[i] = i;
+			}
+			mesh.vertices = newVerts;
+			mesh.triangles = tris;
+		}
+
 	}
 }

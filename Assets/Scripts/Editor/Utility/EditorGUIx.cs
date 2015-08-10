@@ -13,7 +13,7 @@ public static class EditorGUIx
     // _____________________________________/ A generic list drawer \___________
     public static bool ListField<T>(
         string label,
-        bool foldout,
+        ref bool foldout,
         List<T> list,
         bool allowSceneObjects,
         params GUILayoutOption[] options
@@ -29,7 +29,8 @@ public static class EditorGUIx
             foreach (T val in list)
             {
                 GetFieldDrawerLayout(typeof(T), () => val, v => {
-					oldVal = (T)v;
+					newVal = (T)v;
+                    oldVal = val;
                     replace = true;
 				})();
     			if (replace) break;
@@ -44,6 +45,27 @@ public static class EditorGUIx
             }
         }
         return foldout;
+    }
+
+    // _____________________________________/ A generic array drawer \__________
+    public static void ArrayField<T>(
+        string label,
+        ref bool foldout,
+        T[] array,
+        bool allowSceneObjects,
+        params GUILayoutOption[] options
+    )
+    {
+        foldout = EditorGUILayout.Foldout(foldout, label);
+        if (foldout)
+        {
+            for(int i=0;i<array.Length;i++) {
+                var val = array[i];
+                GetFieldDrawerLayout(typeof(T), () => val, v => {
+                    array[i] = (T)v;
+				})();
+            }
+        }
     }
 
 	// ___________________________________/ A generic reorderablelist drawer \__
@@ -168,6 +190,20 @@ public static class EditorGUIx
 				}
 			};
 		} else
+        if (type == typeof(string)) {
+			string value = (string)valueInit();
+            return (Rect position) =>
+			{
+				var newVal = label == string.Empty ?
+					EditorGUI.TextField(position, value) :
+					EditorGUI.TextField(position, label, value);
+				if (newVal != value)
+				{
+					value = newVal;
+					setCallback(value);
+				}
+			};
+		} else
         if (type == typeof(AnimationCurve)) {
 			AnimationCurve value = (AnimationCurve)valueInit();
             return (Rect position) =>
@@ -195,6 +231,25 @@ public static class EditorGUIx
 					setCallback(value);
 				}
 			};
+		} else
+        if (type == typeof(Color)) {
+			Color value = (Color)valueInit();
+            return (Rect position) =>
+			{
+				var newVal = label == string.Empty ?
+					EditorGUI.ColorField(position, value) :
+					EditorGUI.ColorField(position, label, value);
+				if (newVal != value)
+				{
+					value = newVal;
+					setCallback(value);
+				}
+			};
+		} else
+        if (typeof(object[]).IsAssignableFrom(type)) {
+			object[] value = (object[])valueInit();
+            bool foldout = false;
+            return (Rect position) =>ArrayField(label,ref foldout,value,true);
 		} else
 		if (typeof(IEditorDrawer).IsAssignableFrom(type)) {
             IEditorDrawer initValue = (IEditorDrawer)valueInit();
@@ -242,9 +297,23 @@ public static class EditorGUIx
 		if (type == typeof(bool)) {
 			return EditorGUIx.GetFieldDrawerLayout(label, (bool)valueInit(), v=>setCallback(v));
 		} else
+        if (type == typeof(string)) {
+			return EditorGUIx.GetFieldDrawerLayout(label, (string)valueInit(), v=>setCallback(v));
+		} else
+        if(type == typeof(Color)) {
+            return EditorGUIx.GetFieldDrawerLayout(label, (Color)valueInit(), v=>setCallback(v));
+        } else
         if(type == typeof(AnimationCurve)) {
             return EditorGUIx.GetFieldDrawerLayout(label, (AnimationCurve)valueInit(), v=>setCallback(v));
         } else
+        if (typeof(UnityEngine.Object).IsAssignableFrom(type)) {
+            return EditorGUIx.GetFieldDrawerLayout(label, type, (UnityEngine.Object)valueInit(), v=>setCallback(v));
+        } else
+        if (typeof(object[]).IsAssignableFrom(type)) {
+			object[] value = (object[])valueInit();
+            bool foldout = false;
+            return () =>ArrayField(label,ref foldout,value, true);
+		} else
         if (type.IsEnum) {
             return EditorGUIx.GetFieldDrawerLayout(label, (System.Enum)valueInit(), v=>setCallback(v));
         } else {
@@ -345,12 +414,11 @@ public static class EditorGUIx
     }
 
 	// _____________________________________/ Unity Object drawer \_____________
-	public static FieldDrawer GetFieldDrawer<T>(string label, T value, Action<T> setCallback)
-	where T : UnityEngine.Object
+	public static FieldDrawer GetFieldDrawer(string label, Type type, UnityEngine.Object value, Action<UnityEngine.Object> setCallback)
 	{
 		return (Rect position) =>
 		{
-			T newVal = (T)EditorGUI.ObjectField(position, label, value, typeof(T), false);
+			var newVal = EditorGUI.ObjectField(position, label, value, type, true);
 			if (newVal != value)
 			{
 				value = newVal;
@@ -358,19 +426,17 @@ public static class EditorGUIx
 			}
 		};
 	}
-	public static FieldDrawer GetFieldDrawer<T>(T value, Action<T> setCallback)
-	where T : UnityEngine.Object
+	public static FieldDrawer GetFieldDrawer(Type type, UnityEngine.Object value, Action<UnityEngine.Object> setCallback)
 	{
-		return GetFieldDrawer("", value, setCallback);
+		return GetFieldDrawer("", type, value, setCallback);
 	}
 
 	// Layout version
-	public static FieldDrawerLayout GetFieldDrawerLayout<T>(string label, T value, Action<T> setCallback)
-	where T : UnityEngine.Object
+	public static FieldDrawerLayout GetFieldDrawerLayout(string label, Type type, UnityEngine.Object value, Action<UnityEngine.Object> setCallback)
 	{
 		return () =>
 		{
-			T newVal = (T)EditorGUILayout.ObjectField(label, value, typeof(T), false);
+			var newVal = EditorGUILayout.ObjectField(label, value, type, true);
 			if (newVal != value)
 			{
 				value = newVal;
@@ -378,10 +444,9 @@ public static class EditorGUIx
 			}
 		};
 	}
-	public static FieldDrawerLayout GetFieldDrawerLayout<T>(T value, Action<T> setCallback)
-	where T : UnityEngine.Object
+	public static FieldDrawerLayout GetFieldDrawerLayout(Type type, UnityEngine.Object value, Action<UnityEngine.Object> setCallback)
 	{
-		return GetFieldDrawerLayout("", value, setCallback);
+		return GetFieldDrawerLayout("", type, value, setCallback);
 	}
 
 	// _____________________________________/ Class dropdown drawer \_____________
@@ -463,6 +528,35 @@ public static class EditorGUIx
         };
     }
 
+    // _____________________________________/ Color drawer \____________________
+    // Full method
+    public static FieldDrawer GetFieldDrawer(string label, Color value, Action<Color> setCallback)
+    {
+        return (Rect position) =>
+        {
+            var newVal = EditorGUI.ColorField(position, label, value);
+            if (newVal != value)
+            {
+                value = newVal;
+                setCallback(value);
+            }
+        };
+    }
+
+    // Layout version
+    public static FieldDrawerLayout GetFieldDrawerLayout(string label, Color value, Action<Color> setCallback)
+    {
+        return () =>
+        {
+            var newVal = EditorGUILayout.ColorField(label, value);
+            if (newVal != value)
+            {
+                value = newVal;
+                setCallback(value);
+            }
+        };
+    }
+
     // _____________________________________/ curve drawer \____________________
     // Full method
     public static FieldDrawer GetFieldDrawer(string label, AnimationCurve value, Action<AnimationCurve> setCallback)
@@ -484,6 +578,35 @@ public static class EditorGUIx
         return () =>
         {
             var newVal = EditorGUILayout.CurveField(label, value);
+            if (newVal != value)
+            {
+                value = newVal;
+                setCallback(value);
+            }
+        };
+    }
+
+    // _____________________________________/ string drawer \____________________
+    // Full method
+    public static FieldDrawer GetFieldDrawer(string label, string value, Action<string> setCallback)
+    {
+        return (Rect position) =>
+        {
+            var newVal = EditorGUI.TextField(position, label, value);
+            if (newVal != value)
+            {
+                value = newVal;
+                setCallback(value);
+            }
+        };
+    }
+
+    // Layout version
+    public static FieldDrawerLayout GetFieldDrawerLayout(string label, string value, Action<string> setCallback)
+    {
+        return () =>
+        {
+            var newVal = EditorGUILayout.TextField(label, value);
             if (newVal != value)
             {
                 value = newVal;

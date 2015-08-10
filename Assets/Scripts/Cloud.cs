@@ -9,10 +9,10 @@ public class Cloud : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		shape.ColorVertices(ball);
-		MeshGenerator.Utils.PostGenerateMesh(ball);
-
-		var mf = GetComponent<MeshFilter>();
-		mf.mesh = ball;
+		// shape.ColorVertices(ball);
+		// MeshGenerator.Utils.PostGenerateMesh(ball);
+		//
+		// var mf = GetComponent<MeshFilter>();
+		// mf.mesh = ball;
 	}
 }

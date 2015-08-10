@@ -76,9 +76,13 @@ namespace Geometry {
 				v => Diagonal(Last(v), Next(v))
 			).ToArray();
 			var iters = 10000;
-			while(verts.Count > 3 && iters-->0) {
+			bool hasEars = true;
+			while(verts.Count > 3 && iters-->0 && hasEars) {
+				hasEars = false;
+				Debug.Log(verts.Count);
 				foreach(var vi in verts) {
 					if(ears[vi]) {
+						hasEars = true;
 						var v2 = verts.Find(vi);
 						var v1 = v2.PreviousOrLast();
 						var v0 = v1.PreviousOrLast();
@@ -89,13 +93,18 @@ namespace Geometry {
 
 						ears[v1.Value] = Diagonal(Vertices[v0.Value], Vertices[v3.Value]);
 						ears[v3.Value] = Diagonal(Vertices[v1.Value], Vertices[v4.Value]);
-						verts.Remove(v2);
+						if(!verts.Remove(vi)) Debug.LogError("Removing "+vi+" failed!");
 						break;
 					}
 				}
 			}
-			if(iters == 0) {
+			if(!hasEars) {
+				Debug.LogError("Couldn't Find a valid triangle to generate! Unmatched vertices: "+verts.Count);
+			} else
+			if(iters < 0) {
 				Debug.LogError("Exceeded maximum iterations!");
+			} else if (verts.Count!=3) {
+				Debug.LogError("Did not triangulate properly! Degenerate vertex count: "+verts.Count);
 			} else {
 				yield return verts.ToArray();
 			}
@@ -105,6 +114,8 @@ namespace Geometry {
 		public Mesh GenerateMesh() {
 			var verts = Vertices.Select(v=>(Vector3)v.value).ToArray();
 			var tris = Triangulate().SelectMany(v=>v).ToArray();
+			Debug.Log("Triangles: "+tris.Length/3);
+			Debug.Log("Vertices: "+Vertices.Count);
 			Utils.FlipTriangles(tris);
 			var bounds = Rectx.BoundingRect(Vertices.Select(v=>v.value).ToArray());
 			var uvs = verts.Select(v=>Rect.PointToNormalized(bounds, v)).ToArray();
@@ -116,6 +127,14 @@ namespace Geometry {
 			return mesh;
 		}
 
+		private const int maxGizmos = 256;
+		public void DrawGizmos(Color c, Vector3 position) {
+			Gizmos.color = c;
+			for(int i=0;i<Mathf.Min(Vertices.Count, maxGizmos);i++) {
+				Gizmos.DrawSphere(position+(Vector3)Vertices[i].value, 0.2f);
+				Gizmos.DrawLine(position+(Vector3)Vertices[i].value, position+(Vector3)Vertices[(i+1)%Vertices.Count].value);
+			}
+		}
 
 		public override void Test() {
 			var square = new Polygon(

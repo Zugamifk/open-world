@@ -3,11 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+[System.Serializable]
 public class LSystem : IEnumerable<string>, IUnitTestable{
 	public string axiom;
 	public string[] productions;
 
-	public LSystem(){}
+	public LSystem(){
+		productions = new string[256];
+	}
 	public LSystem(string axiom, params string[] productions){
 		this.axiom = axiom;
 		this.productions = new string[256];
@@ -16,8 +19,14 @@ public class LSystem : IEnumerable<string>, IUnitTestable{
 		}
 	}
 
+	public void AddProduction(char c, string succ) {
+		productions[(int)c] = succ;
+	}
+
 	public string Successor(char c) {
-		return productions[(int)c];
+		var prod = productions[(int)c];
+		if(!string.IsNullOrEmpty(prod)) return prod;
+		return c.ToString();
 	}
 
 	public string Derive(string a) {

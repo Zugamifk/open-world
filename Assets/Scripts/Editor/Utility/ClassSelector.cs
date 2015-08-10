@@ -83,14 +83,19 @@ public class ClassSelector<T> where T : class {
 		var type = field.FieldType;
 		var name = field.Name.Uncamel();
 		EditorGUIx.FieldDrawerLayout fieldDrawer = EditorGUIx.NullDrawerLayout;
+		if (typeof(Array).IsAssignableFrom(type)) {
+			object[] value = (object[])field.GetValue(instance);
+            bool foldout = false;
+            return () => EditorGUIx.ArrayField(name, ref foldout, value, true);
+		} else
 		if (typeof(IList).IsAssignableFrom(type)) {
             var list = (IList)field.GetValue(instance);
 			if (list==null) {
 				Debug.LogWarning("Field "+field.Name+" has a list field that has not been instantiated!");
 				return null;
 			}
-			var elementType = list.GetType().GetProperty("Item").PropertyType;
-            fieldDrawer = EditorGUIx.GetReorderableListFieldDrawer(name, list, elementType);
+			// var elementType = list.GetType().GetProperty("Item").PropertyType;
+            fieldDrawer = EditorGUIx.GetReorderableListFieldDrawer(name, list, typeof(object)	);
         } else {
 			fieldDrawer = EditorGUIx.GetFieldDrawerLayout(
 				type,

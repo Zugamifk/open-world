@@ -72,6 +72,13 @@ public struct ColorHSV {
 		this.s = s;
 		this.v = v;
 	}
+	public static ColorHSV Lerp(ColorHSV a, ColorHSV b, float t) {
+		return new ColorHSV(
+			Mathf.Lerp(a.h, b.h, t),
+			Mathf.Lerp(a.s, b.s, t),
+			Mathf.Lerp(a.v, b.v, t)
+		);
+	}
 	public static implicit operator Color(ColorHSV hsv) {
 		float h = hsv.h;
 		float s = hsv.s;
