@@ -6,87 +6,218 @@ using Geometry;
 using Extensions;
 using MeshGenerator;
 
-public class Turtle : MonoBehaviour {
+public class Turtle : MonoBehaviour
+{
 
-	public LSystem system = new LSystem();
-	public readonly string[] alphabet = {
-		"F", "+", "-"
-	};
+    public LSystem system = new LSystem();
+    public readonly string[] alphabet = {
+        "F", "+", "-", "[", "]"
+    };
 
-	public string current = "";
-	public int defaultIterations = 0;
-	public float angleStep;
-	public float step;
-	public float[] unused;
+    public string current = "";
+    public int defaultIterations = 0;
+    public float angleStep;
+    public float step;
+    public float[] unused;
 
-	public static Turtle instance;
-	void Awake() {
-		this.SetInstanceOrKill(ref instance);
-	}
+    public static Turtle instance;
 
-	public Polygon Path(int derivations) {
-		current = system.ElementAt(derivations);
-		var heading = Vector2.up;
-		var angle = 0f;
-		var pos = Vector2.zero;
-		var points = new List<Vector2>();
-		bool turned = true;
-		for(int i=0;i<current.Count();i++) {
-			switch(current[i]) {
-				case 'F': {
-					if(turned) {
-						points.Add(pos);
-						turned = false;
-					}
-					pos += heading.Rotate(angle)*step;
-				} break;
-				case '+': {
-					angle += angleStep;
-					turned = true;
-				} break;
-				case '-': {
-					angle -= angleStep;
-					turned = true;
-				} break;
-				default: Debug.Log("Bad character in string: \'"+current[i]+"\'"); break;
-			}
-		}
-		points.Add(pos);
-		return new Polygon(points.ToArray());
-	}
+    #region bracket stack
+    private struct State
+    {
+        public Vector3 position;
+        public float angle;
+        public int lastI;
+    }
 
-	public class TurtleMesh : IMeshGenerator {
-		public Turtle turtle;
-		public int depth;
-		public Color colorStart;
-		public Color colorEnd;
-		public string Name {
-			get { return "Turtle Path Mesh";}
-		}
-		public Mesh Generate() {
-			var path = turtle.Path(depth);
-			var mesh = path.GenerateMesh();
-			mesh.SplitTriangles();
-			mesh.ColorByVertexIndex(colorStart, colorEnd);
-			turtle.unused = new float[path.Vertices.Count];
-			MeshGenerator.Utils.PostGenerateMesh(mesh);
-			return mesh;
-		}
-	}
-	private const int maxGizmos = 512;
-	public void OnDrawGizmos() {
-		var path = Path(defaultIterations);
-		var startCol = (ColorHSV)Colorx.FromHex(0xFF00FF);
-		var endCol = (ColorHSV)Colorx.FromHex(0x00FF00);
-		var len = Mathf.Min(path.Vertices.Count, maxGizmos);
-		for(int i=0;i<len;i++) {
-			var col = ColorHSV.Lerp(startCol, endCol, (float)i/(float)len);
-			Gizmos.color = col;
-			Gizmos.DrawSphere(transform.position+(Vector3)path.Vertices[i].value, 0.2f);
-			Gizmos.DrawLine(
-				transform.position+(Vector3)path.Vertices[i].value,
-				transform.position+(Vector3)path.Vertices[(i+1)%path.Vertices.Count].value
-			);
-		}
-	}
+    private const int STACK_MAX = 128;
+    private int StackIndex = 0;
+    private State[] StateStack = new State[STACK_MAX];
+
+    private void ResetStack()
+    {
+        StackIndex = 0;
+    }
+
+    private void PushState(Vector3 position, float angle, int i)
+    {
+        if (StackIndex >= STACK_MAX)
+        {
+            throw new System.InvalidOperationException("Stack exceeded capacity! Number of items: " + StackIndex);
+        }
+        StateStack[StackIndex].position = position;
+        StateStack[StackIndex].angle = angle;
+        StateStack[StackIndex].lastI = i;
+        StackIndex++;
+    }
+
+    private State PopState()
+    {
+        if (StackIndex == 0)
+        {
+            throw new System.InvalidOperationException("Stack is empty! Nothing to pop");
+        }
+        StackIndex--;
+        return StateStack[StackIndex];
+    }
+    #endregion bracket stack
+    #region path generation
+    public DirectedGraph<Vector2> Path(int derivations)
+    {
+        ResetStack();
+        current = system.ElementAt(derivations);
+        var heading = Vector2.up;
+        var angle = 0f;
+        var pos = Vector2.zero;
+        var points = new List<Vector2>();
+        var connections = new List<int>();
+        bool turned = true;
+        int lastpt = -1;
+        int currentpt = 0;
+
+        if (current == null)
+        {
+            return null;
+        }
+        for (int i = 0; i < current.Count(); i++)
+        {
+            switch (current[i])
+            {
+                case '+':
+                    {
+                        angle += angleStep;
+                        turned = true;
+                    }
+                    break;
+                case '-':
+                    {
+                        angle -= angleStep;
+                        turned = true;
+                    }
+                    break;
+                case '[':
+                    {
+                        PushState(pos, angle, currentpt);
+                    }
+                    break;
+                case ']':
+                    {
+                        points.Add(pos);
+                        if (lastpt >= 0)
+                        {
+                            connections.Add(lastpt);
+                            connections.Add(currentpt);
+                        }
+                        currentpt++;
+                        
+                        var state = PopState();
+                        pos = state.position;
+                        angle = state.angle;
+                        lastpt = state.lastI;
+                    }
+                    break;
+                default:
+                    {
+                        if (current[i].IsUpper())
+                        {
+                            if (turned)
+                            {
+                                turned = false;
+                                points.Add(pos);
+                                if (lastpt >= 0)
+                                {
+                                    connections.Add(lastpt);
+                                    connections.Add(currentpt);
+                                }
+                                lastpt = currentpt;
+                                currentpt++;
+                            }
+                            pos += heading.Rotate(angle)*step;
+                        }
+                        else
+                        {
+                            Debug.Log("Bad character in string: \'" + current[i] + "\'");
+                        }
+                    }
+                    break;
+            }
+        }
+        points.Add(pos);
+        if (lastpt >= 0)
+        {
+            connections.Add(lastpt);
+            connections.Add(currentpt);
+        }
+        return new DirectedGraph<Vector2>(points, connections);
+    }
+    #endregion path generation
+    void Awake()
+    {
+        this.SetInstanceOrKill(ref instance);
+        StackIndex = 0;
+        StateStack = new State[STACK_MAX];
+    }
+
+    public Polygon DrawPolygon(int derivations)
+    {
+        ResetStack();
+        current = system.ElementAt(derivations);
+        var heading = Vector2.up;
+        var angle = 0f;
+        var pos = Vector2.zero;
+        var points = new List<Vector2>();
+        bool turned = true;
+
+        if (current == null)
+        {
+            return null;
+        }
+        for (int i = 0; i < current.Count(); i++)
+        {
+            switch (current[i])
+            {
+                case '+':
+                    {
+                        angle += angleStep;
+                        turned = true;
+                    }
+                    break;
+                case '-':
+                    {
+                        angle -= angleStep;
+                        turned = true;
+                    }
+                    break;
+                default:
+                    {
+                        Debug.Log("Bad character in string: \'" + current[i] + "\'");
+                    }
+                    break;
+            }
+        }
+        points.Add(pos);
+        return new Polygon(points.ToArray());
+    }
+
+    public class TurtleMesh : IMeshGenerator
+    {
+        public Turtle turtle;
+        public int depth;
+        public Color colorStart;
+        public Color colorEnd;
+        public string Name
+        {
+            get { return "Turtle Path Mesh"; }
+        }
+        public Mesh Generate()
+        {
+            var path = turtle.DrawPolygon(depth);
+            var mesh = path.GenerateMesh();
+            mesh.SplitTriangles();
+            mesh.ColorByVertexIndex(colorStart, colorEnd);
+            turtle.unused = new float[path.Vertices.Count];
+            MeshGenerator.Utils.PostGenerateMesh(mesh);
+            return mesh;
+        }
+    }
 }

@@ -15,4 +15,15 @@ public class DirectedGraph<T> : Graph<T> {
 			 );
 		}
 	}
+
+	public DirectedGraph(IList<T> vertices, IList<int> edges) {
+		Vertices = vertices.Select(v=>new Vertex<T>(v)).ToList();
+		Edges = new List<Edge<T>>();
+		for(int e=0;e<edges.Count;e+=2) {
+			AddEdge(
+				Vertices[edges[e]],
+				Vertices[edges[e+1]]
+			 );
+		}
+	}
 }

@@ -16,7 +16,7 @@ namespace Geometry {
 				AddEdge(Vertices[i], Vertices[(i+1)%N]);
 			}
 		}
-
+		
 		public string Name {
 			get { return Vertices.Count+"-gon"; }
 		}
@@ -56,14 +56,15 @@ namespace Geometry {
 		}
 
 		/** detects if an edge is a valid diagonal and does not intersect other edges */
-		public bool Diagonal(Vertex<Vector2> a, Vertex<Vector2> b) {
+		public bool Diagonal(Vertex<Vector2> a, Vertex<Vector2> b, IEnumerable<int> submesh = null) {
 			if(!Math2D.InCone(a.value,b.value,Last(a).value,Next(a).value) ||
 			 	!Math2D.InCone(b.value,a.value,Last(b).value,Next(b).value)) {
 				return false;
 			}
-			var last = DFS.First();
-			foreach(var v in DFS.Skip(1)) {
-				if(Math2D.LineLineIntersection(a.value,b.value,last,v)) return false;
+			submesh = submesh ?? Enumerable.Range(0, Vertices.Count);
+			var last = submesh.First();
+			foreach(var v in submesh.Skip(1)) {
+				if(Math2D.LineLineIntersection(a.value,b.value,Vertices[last].value,Vertices[v].value)) return false;
 				last = v;
 			}
 			return true;
@@ -91,9 +92,9 @@ namespace Geometry {
 
 						yield return new int[]{v1.Value, v2.Value, v3.Value};
 
-						ears[v1.Value] = Diagonal(Vertices[v0.Value], Vertices[v3.Value]);
-						ears[v3.Value] = Diagonal(Vertices[v1.Value], Vertices[v4.Value]);
 						if(!verts.Remove(vi)) Debug.LogError("Removing "+vi+" failed!");
+						ears[v1.Value] = Diagonal(Vertices[v0.Value], Vertices[v3.Value], verts);
+						ears[v3.Value] = Diagonal(Vertices[v1.Value], Vertices[v4.Value], verts);
 						break;
 					}
 				}

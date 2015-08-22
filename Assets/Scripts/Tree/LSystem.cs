@@ -23,13 +23,13 @@ public class LSystem : IEnumerable<string>, IUnitTestable{
 		productions[(int)c] = succ;
 	}
 
-	public string Successor(char c) {
+	public virtual string Successor(char c) {
 		var prod = productions[(int)c];
 		if(!string.IsNullOrEmpty(prod)) return prod;
 		return c.ToString();
 	}
 
-	public string Derive(string a) {
+	public virtual string Derive(string a) {
 		return System.String.Join("",a.Select(c=>Successor(c)).ToArray());
 	}
 

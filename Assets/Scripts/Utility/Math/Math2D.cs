@@ -45,7 +45,7 @@ namespace Extensions {
         }
 
         public static float TriangleArea(Vector2 a, Vector2 b, Vector2 c) {
-            return (b.x-a.x)*(c.y-a.y)-(c.x-a.x)*(b.y-a.y);
+            return 0.5f*((b.x-a.x)*(c.y-a.y)-(c.x-a.x)*(b.y-a.y));
         }
 
         public static bool InCone(Vector2 a, Vector2 b, Vector2 aPrev, Vector2 aSucc) {

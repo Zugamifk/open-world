@@ -19,6 +19,20 @@ public class Graph<T> : IUnitTestable {
             return connected.FirstOrDefault(c=>c==other) != null;
         }
 
+        public IEnumerable<Edge<Tvalue>> Incoming {
+            get
+            {
+                return edges.Where(e => e.to == this);
+            }
+        }
+
+        public IEnumerable<Edge<Tvalue>> Outgoing {
+            get
+            {
+                return edges.Where(e => e.from == this);
+            }
+        }
+
         public override string ToString() {
             return "Vertex "+value;
         }
