@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections;
 
-[CustomEditor(typeof(Turtle))]
+[CustomEditor(typeof(Turtle), true)]
 public class TurtleEditor : Editor
 {
     string newProduction = "";
@@ -62,6 +62,20 @@ public class TurtleDrawerEditor : Editor {
     {
         DrawDefaultInspector();
         var drawer = target as TurtleDrawer;
+        drawer.autoGenerate = GUILayout.Toggle(drawer.autoGenerate, "Automatically Regenerate");
+
+        if(GUILayout.Button("Generate") || drawer.autoGenerate) {
+            drawer.GeneratePath();
+        }
+    }
+}
+
+[CustomEditor(typeof(TurtleDrawer3D))]
+public class TurtleDrawer3DEditor : Editor {
+    public override void OnInspectorGUI()
+    {
+        DrawDefaultInspector();
+        var drawer = target as TurtleDrawer3D;
         drawer.autoGenerate = GUILayout.Toggle(drawer.autoGenerate, "Automatically Regenerate");
 
         if(GUILayout.Button("Generate") || drawer.autoGenerate) {

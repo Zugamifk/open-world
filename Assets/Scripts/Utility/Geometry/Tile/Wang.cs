@@ -52,7 +52,7 @@ namespace Geometry {
 			for(int i=0;i<tileset.Length;i++) {
 				tileset[i] = new Domino(sideIDs[i][0],sideIDs[i][1],sideIDs[i][2],sideIDs[i][3]);
 			}
-			Debug.Log("Set has "+tileset.Length+" Wang tiles!");
+			// Debug.Log("Set has "+tileset.Length+" Wang tiles!");
 		}
 
 		public void SetColors(params Color[] colors) {
@@ -81,7 +81,7 @@ namespace Geometry {
 					if(legal.Count()>0) {
 						tiles[x][y] = legal.Random();
 					} else {
-						Debug.LogError("Wang Tile Fill error! Couldn't Fill space width current tiles!");
+						// Debug.LogError("Wang Tile Fill error! Couldn't Fill space width current tiles!");
 						return;
 					}
 				}

@@ -89,7 +89,7 @@ public class FPSControl : MonoBehaviour
 
     void Start() {
         controlRoot.position = Vector3.zero;
-        Position = Vector3.zero;
+        Position = new Vector3(0.1f,0f,0.1f);
         Ground.GetHeight(Position);
     }
 

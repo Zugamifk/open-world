@@ -10,9 +10,6 @@ public class Turtle : MonoBehaviour
 {
 
     public LSystem system = new LSystem();
-    public readonly string[] alphabet = {
-        "F", "+", "-", "[", "]"
-    };
 
     public string current = "";
     public int defaultIterations = 0;
@@ -30,8 +27,8 @@ public class Turtle : MonoBehaviour
         public int lastI;
     }
 
-    private const int STACK_MAX = 128;
-    private int StackIndex = 0;
+    protected const int STACK_MAX = 128;
+    protected int StackIndex = 0;
     private State[] StateStack = new State[STACK_MAX];
 
     private void ResetStack()
@@ -66,7 +63,6 @@ public class Turtle : MonoBehaviour
     {
         ResetStack();
         current = system.ElementAt(derivations);
-        var heading = Vector2.up;
         var angle = 0f;
         var pos = Vector2.zero;
         var points = new List<Vector2>();
@@ -109,7 +105,7 @@ public class Turtle : MonoBehaviour
                             connections.Add(currentpt);
                         }
                         currentpt++;
-                        
+
                         var state = PopState();
                         pos = state.position;
                         angle = state.angle;
@@ -132,7 +128,7 @@ public class Turtle : MonoBehaviour
                                 lastpt = currentpt;
                                 currentpt++;
                             }
-                            pos += heading.Rotate(angle)*step;
+                            pos += Vector2.up.Rotate(angle)*step;
                         }
                         else
                         {
@@ -158,66 +154,66 @@ public class Turtle : MonoBehaviour
         StateStack = new State[STACK_MAX];
     }
 
-    public Polygon DrawPolygon(int derivations)
-    {
-        ResetStack();
-        current = system.ElementAt(derivations);
-        var heading = Vector2.up;
-        var angle = 0f;
-        var pos = Vector2.zero;
-        var points = new List<Vector2>();
-        bool turned = true;
-
-        if (current == null)
-        {
-            return null;
-        }
-        for (int i = 0; i < current.Count(); i++)
-        {
-            switch (current[i])
-            {
-                case '+':
-                    {
-                        angle += angleStep;
-                        turned = true;
-                    }
-                    break;
-                case '-':
-                    {
-                        angle -= angleStep;
-                        turned = true;
-                    }
-                    break;
-                default:
-                    {
-                        Debug.Log("Bad character in string: \'" + current[i] + "\'");
-                    }
-                    break;
-            }
-        }
-        points.Add(pos);
-        return new Polygon(points.ToArray());
-    }
-
-    public class TurtleMesh : IMeshGenerator
-    {
-        public Turtle turtle;
-        public int depth;
-        public Color colorStart;
-        public Color colorEnd;
-        public string Name
-        {
-            get { return "Turtle Path Mesh"; }
-        }
-        public Mesh Generate()
-        {
-            var path = turtle.DrawPolygon(depth);
-            var mesh = path.GenerateMesh();
-            mesh.SplitTriangles();
-            mesh.ColorByVertexIndex(colorStart, colorEnd);
-            turtle.unused = new float[path.Vertices.Count];
-            MeshGenerator.Utils.PostGenerateMesh(mesh);
-            return mesh;
-        }
-    }
+    // public Polygon DrawPolygon(int derivations)
+    // {
+    //     ResetStack();
+    //     current = system.ElementAt(derivations);
+    //     var heading = Vector2.up;
+    //     var angle = 0f;
+    //     var pos = Vector2.zero;
+    //     var points = new List<Vector2>();
+    //     bool turned = true;
+    //
+    //     if (current == null)
+    //     {
+    //         return null;
+    //     }
+    //     for (int i = 0; i < current.Count(); i++)
+    //     {
+    //         switch (current[i])
+    //         {
+    //             case '+':
+    //                 {
+    //                     angle += angleStep;
+    //                     turned = true;
+    //                 }
+    //                 break;
+    //             case '-':
+    //                 {
+    //                     angle -= angleStep;
+    //                     turned = true;
+    //                 }
+    //                 break;
+    //             default:
+    //                 {
+    //                     Debug.Log("Bad character in string: \'" + current[i] + "\'");
+    //                 }
+    //                 break;
+    //         }
+    //     }
+    //     points.Add(pos);
+    //     return new Polygon(points.ToArray());
+    // }
+    //
+    // public class TurtleMesh : IMeshGenerator
+    // {
+    //     public Turtle turtle;
+    //     public int depth;
+    //     public Color colorStart;
+    //     public Color colorEnd;
+    //     public string Name
+    //     {
+    //         get { return "Turtle Path Mesh"; }
+    //     }
+    //     public Mesh Generate()
+    //     {
+    //         var path = turtle.DrawPolygon(depth);
+    //         var mesh = path.GenerateMesh();
+    //         mesh.SplitTriangles();
+    //         mesh.ColorByVertexIndex(colorStart, colorEnd);
+    //         turtle.unused = new float[path.Vertices.Count];
+    //         MeshGenerator.Utils.PostGenerateMesh(mesh);
+    //         return mesh;
+    //     }
+    // }
 }
