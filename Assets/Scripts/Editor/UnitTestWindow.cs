@@ -35,5 +35,24 @@ public class UnitTestWindow : EditorWindow {
 			unitTest.Test();
 		}
 		GUI.enabled = true;
-	}
+
+        GUILayout.Space(25);
+		if(GUILayout.Button("Run Mini Test")) {
+            MiniTest();
+        }
+    }
+
+	private struct ttt {
+        public string a, b;
+    }
+	void MiniTest() {
+        var tt = new ttt[] {
+            new ttt {a = "a", b = "b"},
+            new ttt {a="a0", b="b0"}
+        };
+    	var tt2 = new ttt[2];
+        tt2[0] = tt[0];
+        tt2[0].a = "c";
+        Debug.Log(tt[0].a+":"+tt2[0].a);
+    }
 }

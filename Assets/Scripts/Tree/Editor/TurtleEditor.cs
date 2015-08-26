@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 using System.Collections;
+using System.Linq;
 
 [CustomEditor(typeof(Turtle), true)]
 public class TurtleEditor : Editor
@@ -56,6 +57,23 @@ public class TurtleEditor : Editor
     }
 }
 
+[CustomEditor(typeof(PTurtle))]
+public class PTurtleEditor : Editor {
+    public override void OnInspectorGUI() {
+        DrawDefaultInspector();
+        if(GUILayout.Button("Find System")) {
+            var turtle = target as PTurtle;
+            var systemComp = turtle.GetComponent(typeof(IPLSystem)) as IPLSystem;
+            if(systemComp != null) {
+                turtle.system = systemComp.System;
+                systemComp.InitializeSystem();
+                if(turtle.system==null) Debug.LogError("Component does not have a parametric Lsystem!!");
+                turtle.Path(turtle.defaultIterations);
+            }
+        }
+    }
+}
+
 [CustomEditor(typeof(TurtleDrawer))]
 public class TurtleDrawerEditor : Editor {
     public override void OnInspectorGUI()
@@ -80,6 +98,7 @@ public class TurtleDrawer3DEditor : Editor {
 
         if(GUILayout.Button("Generate") || drawer.autoGenerate) {
             drawer.GeneratePath();
+            Debug.Log(drawer.turtle);
         }
     }
 }

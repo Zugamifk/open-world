@@ -3,101 +3,63 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-public class Turtle3D : Turtle	 {
+public class PTurtle : Turtle3D {
 
-	new public static Turtle3D instance;
-
-	#region bracket stack
-	protected struct State
-	{
-		public Vector3 position;
-		public Quaternion rotation;
-		public int lastI;
-	}
-
-	protected State[] StateStack = new State[STACK_MAX];
-
-	protected void ResetStack()
-	{
-		StackIndex = 0;
-	}
-
-	protected void PushState(Vector3 position, Quaternion rotation, int i)
-	{
-		if (StackIndex >= STACK_MAX)
-		{
-			throw new System.InvalidOperationException("Stack exceeded capacity! Number of items: " + StackIndex);
-		}
-		StateStack[StackIndex].position = position;
-		StateStack[StackIndex].rotation = rotation;
-		StateStack[StackIndex].lastI = i;
-		StackIndex++;
-	}
-
-	protected State PopState()
-	{
-		if (StackIndex == 0)
-		{
-			throw new System.InvalidOperationException("Stack is empty! Nothing to pop");
-		}
-		StackIndex--;
-		return StateStack[StackIndex];
-	}
-	#endregion bracket stack
-	#region path generation
-
-	new public virtual DirectedGraph<Vector3> Path(int derivations)
+    new public PLSystem system = new PLSystem();
+    private PLSystem.Word[] currentDerivation;
+    public override DirectedGraph<Vector3> Path(int derivations)
 	{
 		ResetStack();
-		current = system.ElementAt(derivations);
+		currentDerivation = system.ElementAt(derivations);
 
-		var turtleTransform = (new GameObject()).transform;
+        var turtleTransform = (new GameObject()).transform;
 		var points = new List<Vector3>();
 		var connections = new List<int>();
 		bool turned = true;
 		int lastpt = -1;
 		int currentpt = 0;
 
-		if (current == null)
+		if (currentDerivation == null)
 		{
 			return null;
 		}
-		for (int i = 0; i < current.Count(); i++)
+		for (int i = 0; !currentDerivation[i].isTerminator; i++)
 		{
-			switch (current[i])
+            var current = currentDerivation[i];
+            switch (currentDerivation[i].name[0])
 			{
 				case '+':
 					{
-						turtleTransform.Rotate(0,angleStep,0);
+						turtleTransform.Rotate(0,current.param,0);
 						turned = true;
 					}
 					break;
 				case '-':
 					{
-						turtleTransform.Rotate(0,-angleStep,0);
+						turtleTransform.Rotate(0,-current.param,0);
 						turned = true;
 					}
 					break;
 				case '&':
 					{
-						turtleTransform.Rotate(angleStep,0,0);
+						turtleTransform.Rotate(current.param,0,0);
 						turned = true;
 					}
 					break;
 				case '^':
 					{
-						turtleTransform.Rotate(-angleStep,0,0);
+						turtleTransform.Rotate(-current.param,0,0);
 						turned = true;
 					}
 					break;
 				case '<':
 					{
-						turtleTransform.Rotate(0,0,angleStep);
+						turtleTransform.Rotate(0,0,current.param);
 					}
 					break;
 				case '>':
 					{
-						turtleTransform.Rotate(0,0,-angleStep);
+						turtleTransform.Rotate(0,0,-current.param);
 					}
 					break;
 				case '|':
@@ -129,7 +91,7 @@ public class Turtle3D : Turtle	 {
 					break;
 				default:
 					{
-						if (current[i].IsUpper())
+						if (current.name[0].IsUpper())
 						{
 							if (turned)
 							{
@@ -143,11 +105,11 @@ public class Turtle3D : Turtle	 {
 								lastpt = currentpt;
 								currentpt++;
 							}
-							turtleTransform.localPosition += turtleTransform.forward*step;
+							turtleTransform.localPosition += turtleTransform.forward*current.param;
 						}
 						else
 						{
-							Debug.Log("Bad character in string: \'" + current[i] + "\'");
+							Debug.Log("Bad word in string: \'" + current.name + "\'");
 						}
 					}
 					break;
@@ -163,12 +125,12 @@ public class Turtle3D : Turtle	 {
 		DestroyImmediate(turtleTransform.gameObject);
 		return new DirectedGraph<Vector3>(points, connections);
 	}
-	#endregion path generation
-	void Awake()
-	{
-		this.SetInstanceOrKill(ref instance);
-		StackIndex = 0;
-		StateStack = new State[STACK_MAX];
-	}
+
+    public override string ToString() {
+        if(currentDerivation == null) return string.Empty;
+        return string.Join(
+            string.Empty,
+            currentDerivation.TakeWhile(w => !w.isTerminator).Select(d => d.prettyName).ToArray());
+    }
 
 }
