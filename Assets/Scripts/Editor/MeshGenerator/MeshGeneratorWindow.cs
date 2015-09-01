@@ -16,8 +16,11 @@ public class MeshGeneratorWindow : EditorWindow {
 	IMeshGenerator CurrentGenerator;
 	EditorGUIx.FieldDrawerLayout[] GeneratorFieldDrawers;
 	Type[] Generators;
+    Action<Mesh>[] ColorFunctions;
+    Action[] ColorDrawFunctions;
+    int colorSelection = 0;
 
-	[MenuItem("Window/Mesh Generator")]
+    [MenuItem("Window/Mesh Generator")]
 	public static void Open() {
 		MeshGeneratorWindow window = (MeshGeneratorWindow)EditorWindow.GetWindow (typeof (MeshGeneratorWindow));
 		window.Init();
@@ -92,7 +95,8 @@ public class MeshGeneratorWindow : EditorWindow {
 			CurrentMeshAsset.normals = mesh.normals;
 			CurrentMeshAsset.colors = mesh.colors;
 			CurrentMeshAsset.tangents = mesh.tangents;
-			EditorUtility.SetDirty(CurrentMeshAsset);
+            ColorFunctions[colorSelection](mesh);
+            EditorUtility.SetDirty(CurrentMeshAsset);
 			AssetDatabase.SaveAssets();
 		} else {
 			AssetDatabase.CreateAsset(mesh, kModelPath+"New Mesh.asset");
@@ -116,7 +120,30 @@ public class MeshGeneratorWindow : EditorWindow {
 		if (Generators.Length>0) {
 			CurrentGenerator = NewGenerator(Generators[0]);
 		}
-	}
+
+		Color a = Color.black;
+		Color b = Color.black;
+        ColorDrawFunctions = new Action[] {
+            ()=>{},
+			()=>{
+                EditorGUILayout.BeginHorizontal();
+                a = EditorGUILayout.ColorField(a);
+                b = EditorGUILayout.ColorField(b);
+				EditorGUILayout.EndHorizontal();
+            },
+			()=>{
+                EditorGUILayout.BeginHorizontal();
+                a = EditorGUILayout.ColorField(a);
+                b = EditorGUILayout.ColorField(b);
+				EditorGUILayout.EndHorizontal();
+            }
+        };
+        ColorFunctions = new Action<Mesh>[] {
+            m => {},
+			m => m.ColorByVertexIndex(a, b),
+			m => m.ColorByLastTriangleIndex(a, b)
+        };
+    }
 
 	void OnProjectChange() {
 		Init();
@@ -143,7 +170,10 @@ public class MeshGeneratorWindow : EditorWindow {
 			CurrentMeshAsset = ma;
 		}
 
-		var gen = CurrentGenerator;
+        ColorDrawFunctions[colorSelection]();
+        colorSelection = GUILayout.SelectionGrid(colorSelection, new string[] { "None", "Vertex", "Tris" }, 3);
+
+        var gen = CurrentGenerator;
 
 		if (gen!=null && CurrentMeshAsset != null) {
 			GUILayout.Label(CurrentMeshAsset.name + " -- " + gen.Name);

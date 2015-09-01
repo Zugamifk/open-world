@@ -15,7 +15,7 @@ namespace MeshGenerator {
 
 		public static int AddFace(int[] triangleArray, int startIndex, params int[] verts) {
 	        int num = 0;
-			// in the case we only send 2 verts, this is actually a number of successive vertices starting the first, a number equal tot he second
+			// in the case we only send 2 verts, this is actually a number of successive vertices starting from the first, a number equal to the second
 			if (verts.Length == 2) {
 	            verts = Enumerable.Range(verts[0], verts[1]).ToArray();
 	        }
@@ -38,10 +38,27 @@ namespace MeshGenerator {
 		}
 
 		public static void DuplicateVerts(Vector3[] from, Vector3[] to, int startIndex, params int[] fromIndices) {
-			for(int i = 0; i < fromIndices.Length; i++) {
-	            to[startIndex + i] = from[fromIndices[i]];
-	        }
-		}
+			if(fromIndices.Length==2) {
+				if(fromIndices[1]<0) {
+					for (int i = 0; i < -fromIndices[1]; i++)
+                    {
+                        to[startIndex + i] = from[fromIndices[0]-(fromIndices[1] + i + 1)];
+                    }
+				} else
+                {
+                    for (int i = 0; i < fromIndices[1]; i++)
+                    {
+                        to[startIndex + i] = from[fromIndices[0] + i];
+                    }
+                }
+            } else
+            {
+                for (int i = 0; i < fromIndices.Length; i++)
+                {
+                    to[startIndex + i] = from[fromIndices[i]];
+                }
+            }
+        }
 
 		/** flip triangles facing in a triangleArray array */
 		public static void FlipTriangles(int[] verts) {

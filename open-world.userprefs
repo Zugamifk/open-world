@@ -1,22 +1,8 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Heightmap\Ground.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Shaders\VertexColor.shader">
     <Files>
-      <File FileName="Assets\Scripts\Tree\Editor\TurtleEditor3D.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Tests\RotationTest.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Heightmap\Ground.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Control\FPSControl.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Utility\Charx.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Tree\Editor\TurtleEditor.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Cloud.cs" Line="1" Column="1" />
-      <File FileName="Assets\Shaders\Cube Megashader.shader" Line="1" Column="1" />
-      <File FileName="Assets\Text\vectors.txt" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Audio\Player.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Audio\Utils.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Utility\Math\Vector2x.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Audio\ToneGenerator.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\Audio\IAudioGenerator.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\usfxr\SfxrAudioPlayer.cs" Line="1" Column="1" />
+      <File FileName="Assets\Shaders\VertexColor.shader" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

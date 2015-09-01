@@ -20,7 +20,6 @@ public class TurtleDrawer3D : MonoBehaviour {
     private const int maxGizmos = 2048;
 	public void OnDrawGizmos()
 	{
-        Debug.Assert(path != null, "null path!");
         if (path == null) return;
 
 		var startCol = (ColorHSV)Colorx.FromHex(0xFF00FF);
