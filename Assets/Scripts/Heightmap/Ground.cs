@@ -15,6 +15,8 @@ namespace Landscape {
 		public int tileWidth, tileHeight;
 		public Material groundMat;
 
+		private IMeshGenerator groundTileMeshGenerator;
+
 		private static Vector3i _GridPosition;
 		public static Vector3i GridPosition {
 			get { return _GridPosition; }
@@ -31,8 +33,8 @@ namespace Landscape {
 			get { return instance.tileRoot; }
 		}
 
-		private Dictionary<Vector3i, Mesh> meshes;
-		private Tile[,] tiles;
+		private Dictionary<Vector3i, Tile> worldTiles;
+		private VisibleTile[,] tiles;
 
 		public static Vector3 TransformPoint(Vector3 position) {
 			return instance.TileScalar.InverseTransformPoint(position);
@@ -43,16 +45,24 @@ namespace Landscape {
 			return instance.TileScalar.localScale.y*instance.Generator.GetHeight(local.xz());
 		}
 
-		void EnableMesh(Vector3i position) {
-			Mesh mesh = null;
-			var tile = tiles[position.x-GridPosition.x+Radius, position.z-GridPosition.z+Radius];
-			tile.position = position.xz();
-			tile.gameObject.name = tile.Name;
-			if (!meshes.TryGetValue(position, out mesh)) {
-				mesh = tile.Generate();
-				meshes.Add(position, mesh);
+		void SetTile(Vector3i position) {
+			Tile tile = null;
+			if (!worldTiles.TryGetValue(
+				position,
+				out tile)) {
+				tile = new Tile();
+				tile.position = position.xz();
+				tile.map = Generator;
+				tile.meshGenerator = groundTileMeshGenerator;
+				tile.Mesh = tile.Generate();
+				worldTiles.Add(position, tile);
 			}
-			tile.Mesh = mesh;
+			var visible = tiles[
+				position.x-GridPosition.x+Radius,
+				position.z-GridPosition.z+Radius
+			];
+			visible.tile = tile;
+			visible.Refresh();
 		}
 
 		void RefreshTiles() {
@@ -60,7 +70,7 @@ namespace Landscape {
 			for(int x = -Radius; x <= Radius; x++) {
 				for(int y = -Radius; y <= Radius; y++) {
 					if(x*x+y*y<=sqrRadius) {
-						EnableMesh(new Vector3i(GridPosition.x+x, 0,GridPosition.z+y));
+						SetTile(new Vector3i(GridPosition.x+x, 0,GridPosition.z+y));
 					}
 				}
 			}
@@ -72,40 +82,33 @@ namespace Landscape {
 		}
 
 		void Start() {
-			var tilingGenerator = new Wang();
-			tilingGenerator.width = tileWidth;
-			tilingGenerator.height = tileHeight;
-			tilingGenerator.numColors = 3;
-			tilingGenerator.dropRate = 3;
+			var tileMeshGen = new Wang();
+			tileMeshGen.width = tileWidth;
+			tileMeshGen.height = tileHeight;
+			tileMeshGen.numColors = 3;
+			tileMeshGen.dropRate = 3;
+			groundTileMeshGenerator = tileMeshGen;
 
 			Generator.Init();
 			GridPosition = (Vector3i)Vector3.zero;//origin.position;
-			meshes = new  Dictionary<Vector3i, Mesh>();
-			tiles = new Tile[2*Radius+1, 2*Radius+1];
+
+			worldTiles = new  Dictionary<Vector3i, Tile>();
+			tiles = new VisibleTile[2*Radius+1, 2*Radius+1];
+
 			var sqrRadius = Radius * Radius;
 			for(int x = -Radius; x <= Radius; x++) {
 				for(int y = -Radius; y <= Radius; y++) {
 					if(x*x+y*y<=sqrRadius) {
 						var tileGO = new GameObject();
-						var tile = (Tile)tileGO.AddComponent<Tile>();
-						tile.position = new Vector2(GridPosition.x+x,GridPosition.z+y);
-						tile.map = Generator;
-						tile.tilingMeshGenerator = tilingGenerator;
-						tile.gridWidth = tileWidth;
-						tile.gridHeight = tileHeight;
-						tileGO.name = tile.Name;
-
-						var renderer = tileGO.AddComponent<MeshRenderer>();
-						renderer.material = groundMat;
-
-						tileGO.AddComponent<MeshFilter>();
-
-						meshes.Add((Vector3i)tile.position.x0y(), tile.Generate());
-
 						tileGO.transform.OrientTo(tileRoot);
 						tileGO.transform.localPosition = new Vector3(x,0,y);
 
+						var tile = (VisibleTile)tileGO.AddComponent<VisibleTile>();
+						tile.Init();
+						tile.GetComponent<Renderer>().material = groundMat;
+
 						tiles[x+Radius, y+Radius] = tile;
+						SetTile(new Vector3i(GridPosition.x+x,0,GridPosition.z+y));
 					}
 				}
 			}

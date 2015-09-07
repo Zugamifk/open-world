@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Extensions;
+
 namespace MeshGenerator {
 	public static class Utils {
 
@@ -108,5 +110,14 @@ namespace MeshGenerator {
 			mesh.triangles = tris;
 		}
 
+		/** Scale a mesh down so its bounding box is of unit volume */
+		public static void Normalize(this Mesh mesh) {
+			var scale = mesh.bounds.size;
+			var verts = mesh.vertices;
+			for(int i=0;i<mesh.vertexCount;i++) {
+				verts[i] = verts[i].InverseScale(scale);
+			}
+			mesh.vertices = verts;
+		}
 	}
 }

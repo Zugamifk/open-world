@@ -6,21 +6,16 @@ using Extensions;
 using System.Linq;
 
 namespace Landscape {
-	public class Tile : MonoBehaviour, IMeshGenerator {
+	public class Tile : IMeshGenerator {
 
 		public Vector2 position;
 		public IHeightMap map;
-		public Tiling tilingMeshGenerator;
-		public int gridWidth, gridHeight;
+		public IMeshGenerator meshGenerator;
 
 		private Mesh mesh;
-		private MeshFilter filter;
 		public Mesh Mesh {
 			get { return mesh; }
-			set {
-				mesh = value;
-				if(filter != null) filter.mesh = value;
-			}
+			set { mesh = value; }
 		}
 
 		const string _tileNamePrefix = "tile ";
@@ -32,16 +27,15 @@ namespace Landscape {
 
 		public Mesh Generate() {
 
-			var mesh = tilingMeshGenerator.Generate();
-			var verts = mesh.vertices;
+			var mesh = meshGenerator.Generate();
 
-			float ws = 1/(float)gridWidth;
-			float hs = 1/(float)gridHeight;
+			mesh.RecalculateBounds();
+			mesh.Normalize();
+
+			var verts = mesh.vertices;
 
 			for(int i=0;i<verts.Length;i++) {
 				verts[i] = verts[i].x0y();
-				verts[i].x*= ws;
-				verts[i].z*= hs;
 				verts[i].y = map.GetHeight(position.x+verts[i].x, position.y+verts[i].z);
 			}
 
@@ -49,14 +43,7 @@ namespace Landscape {
 
 			Utils.PostGenerateMesh(mesh);
 
-			var filter = GetComponent<MeshFilter>();
-			if(filter!=null) filter.mesh = mesh;
-
 			return mesh;
-		}
-
-		void Start() {
-			filter = GetComponent<MeshFilter>();
 		}
 	}
 }

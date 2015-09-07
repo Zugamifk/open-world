@@ -16,6 +16,23 @@ namespace Extensions {
 				Mathf.Approximately(self.z, value);
 		}
 
+		public static Vector3 Scale(this Vector3 v, Vector3 mul) {
+				return new Vector3(
+					v.x*mul.x,
+					v.y*mul.y,
+					v.z*mul.z
+				);
+		}
+
+		public static Vector3 InverseScale(this Vector3 v, Vector3 div) {
+				return new Vector3(
+					v.x/div.x,
+					v.y/div.y,
+					v.z/div.z
+				);
+		}
+
+#region swizzling
 		public static Vector2 xx(this Vector3 v) {
 			return new Vector2(v.x, v.x);
 		}
@@ -91,5 +108,6 @@ namespace Extensions {
 		public static Vector2 n1(this Vector3 v, float n) {
 			return new Vector2(n, 1);
 		}
+	#endregion swizzling
 	}
 }
