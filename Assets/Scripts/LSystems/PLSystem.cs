@@ -8,33 +8,65 @@ public class PLSystem : IEnumerable<PLSystem.Word[]>
 {
 
     [System.Serializable]
-    public struct Word
+    public class Word
     {
         public string name;
-        public string prettyName;
         public int count;
         public float param;
+        private bool hasCount = false,
+          hasParam = false;
+        public float angle {
+          get { return param; }
+        }
+        public float distance {
+          get { return param; }
+        }
+        public virtual string prettyName {
+          get;
+          private set;
+        }
         public Word(string name) {
             this.name = name;
             prettyName = name;
-            count = 0;
-            param = 0;
         }
         public Word(string name, int count)
         : this(name) {
-            this.prettyName = string.Format("{0}({1})", name, count);
             this.count = count;
+            hasCount = true;
+            prettyName = name+"("+count+")";
         }
         public Word(string name, float param)
         : this(name) {
-            this.prettyName = string.Format("{0}({1})", name, param);
             this.param = param;
+            hasParam = true;
+            prettyName = name+"("+param+")";
         }
         public Word(string name, int count, float param)
         : this(name) {
-            this.prettyName = string.Format("{0}({1},{2})", name, count, param);
             this.param = param;
+            hasParam = true;
             this.count = count;
+            hasCount = true;
+            prettyName = name+"("+count+", "+param+")";
+        }
+        public virtual Word Copy() {
+          if(hasCount) {
+            if(hasParam) {
+              return new Word( name, count, param );
+            } else {
+              return new Word( name, count );
+            }
+          } else {
+            if(hasParam) {
+              return new Word(name, param);
+            } else {
+              return new Word(name);
+            }
+          }
+        }
+        /** Return a terminal version of this word, meant for closing sequences and branches */
+        public virtual Word Terminal() {
+          return new Word(this.name);
         }
         public bool isTerminator
         {
@@ -43,53 +75,64 @@ public class PLSystem : IEnumerable<PLSystem.Word[]>
                 return string.IsNullOrEmpty(name);
             }
         }
+        public static Word Terminator {
+          get {
+            return new Word(null);
+          }
+        }
+        public static implicit operator string(Word word) {
+          return word.name;
+        }
+        public override string ToString() {
+          return prettyName;
+        }
     }
 
-    public delegate void WordScheme(Word pred, ref Word target);
+    public delegate Word WordScheme(Word word);
 
-    public static void IdentityScheme(Word pred, ref Word target) {
-        target = pred;
+    public static Word IdentityScheme(Word word) {
+        return word;
     }
 
-    public static void NullScheme(Word pred, ref Word target) {
-        target = default(Word);
+    public static Word NullScheme(Word word) {
+        return null;
     }
 
     public static WordScheme SetCountScheme(int count) {
-        return (Word w0, ref Word w1) =>
+        return word =>
         {
-            w1 = w0;
-            w1.count = count;
+            word.count = count;
+            return word;
         };
     }
 
-    public static void IncrementCountScheme(Word pred, ref Word target) {
-        target = pred;
-        target.count++;
+    public static Word IncrementCountScheme(Word word) {
+        word.count++;
+        return word;
     }
 
-    public static void DecrementCountScheme(Word pred, ref Word target) {
-        target = pred;
-        target.count--;
+    public static Word DecrementCountScheme(Word word) {
+        word.count--;
+        return word;
     }
 
     public static WordScheme ConstParamScheme(float value) {
-        return (Word w0, ref Word w1) =>
+        return word =>
         {
-            w1 = w0;
-            w1.param = value;
+            word.param = value;
+            return word;
         };
     }
 
-    public static WordScheme ConstScheme(Word word) {
-        return (Word w0, ref Word w1) => w1 = word;
+    public static WordScheme ConstScheme(Word constant) {
+        return word => constant.Copy();
     }
 
     public static WordScheme ParamFuncScheme(Func<float, float> func) {
-        return (Word w0, ref Word w1) =>
+        return word =>
         {
-            w1 = w0;
-            w1.param = func(w0.param);
+            word.param = func(word.param);
+            return word;
         };
     }
 
@@ -110,9 +153,9 @@ public class PLSystem : IEnumerable<PLSystem.Word[]>
             return (string.IsNullOrEmpty(left) || left.Equals(last.name)) &&
                 (string.IsNullOrEmpty(right) || right.Equals(next.name));
         }
-        public int GetSuccessor(Word pred, Word[] dest, int start) {
+        public int GetSuccessor(Word pred, IList<Word> dest, int start) {
             for(int i=0;i<successor.Count;i++) {
-                successor[i](pred, ref dest[start + i]);
+                dest[start + i] = successor[i](pred.Copy());
             }
             return successor.Count;
         }
@@ -133,10 +176,10 @@ public class PLSystem : IEnumerable<PLSystem.Word[]>
         prods.Add(newProd);
     }
 
-    public void Derive(Word[] predecessor, Word[] successor)
+    public void Derive(IList<Word> predecessor, IList<Word> successor)
     {
         List<Production> prods = null;
-        var len = predecessor.Length;
+        var len = predecessor.Count;
         var index = 0;
         bool found = false;
         for (int i = 0; !predecessor[i].isTerminator; i++)
@@ -145,8 +188,8 @@ public class PLSystem : IEnumerable<PLSystem.Word[]>
             found = false;
             if (productions.TryGetValue(predecessor[i].name, out prods))
             {
-                var last = i > 0 ? predecessor[i - 1] : default(Word);
-                var next = i < (len - 1) ? predecessor[i + 1] : default(Word);
+                var last = i > 0 ? predecessor[i - 1] : null;
+                var next = i < (len - 1) ? predecessor[i + 1] : null;
                 foreach (var p in prods)
                 {
                     if (p.CheckContext(last, next))
@@ -159,12 +202,12 @@ public class PLSystem : IEnumerable<PLSystem.Word[]>
             }
             if (!found)
             {
-                successor[index] = predecessor[i];
+                successor[index] = predecessor[i].Copy();
                 index++;
             }
         }
         // null terminator
-        predecessor[index] = default(Word);
+        successor[index] = PLSystem.Word.Terminator;
     }
 
     #region IEnumerable
@@ -201,8 +244,8 @@ public class PLSystem : IEnumerable<PLSystem.Word[]>
             }
             else
             {
-                current[0] = system.axiom;
-                current[1] = default(PLSystem.Word);
+                current[0] = system.axiom.Copy();
+                current[1] = PLSystem.Word.Terminator;
                 initialized = true;
             }
             return true;

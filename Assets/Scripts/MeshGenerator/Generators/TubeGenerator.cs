@@ -5,7 +5,7 @@ using MeshGenerator;
 
 public class TubeGenerator : IMeshGenerator {
 
-    public int sides;
+    public int sides = 6;
 
     private Spline path;
     public struct TubePoint {
@@ -17,6 +17,10 @@ public class TubeGenerator : IMeshGenerator {
 	public void AddPoint(Vector3 position, float radius) {
 		points.Add(new TubePoint{position = position, radius = radius});
 	}
+
+  public void Clear() {
+    points = new List<TubePoint>();
+  }
 
     public string Name {
         get { return "Tube Generator";  }
@@ -34,22 +38,33 @@ public class TubeGenerator : IMeshGenerator {
 		var sideAngle = (Mathf.PI-angle)/2f;
         for (int s = 0; s < points.Count; s++)
         {
-            foreach (var v in Utils.GetRingPoints(sides, path.EvaluateDerivative((float)s), new Vector3(points[s].radius, 0, 0)))
+          var axis = path.EvaluateDerivative((float)s).normalized;
+          var radius = new Vector3(axis.y, -axis.x, 0).normalized;
+          if(Mathf.Approximately(radius.magnitude, 0)) {
+            radius = new Vector3(axis.y, -axis.z, 0).normalized;
+          }
+          Debug.Log(radius+" : "+axis);
+            foreach (var v in Utils.GetRingPoints(sides, axis, radius*points[s].radius))
             {
-                Verts[vi] = v;
+                Verts[vi] = points[s].position+v;
                 vi++;
             }
         }
 
         // Build faces, duplicating vertices for each face so we get hard edges
-        var verts = new Vector3[sides*points.Count*4];
-		var tris = new int[verts.Length*6];
+        var verts = new Vector3[sides*(points.Count-1)*4];
+		var tris = new int[sides*(points.Count-1)*6];
 		System.Func<int, int> wrap = i => (i % sides);
-		for (int i = 0; i < sides; i++)
-		{
-			Utils.DuplicateVerts(Verts, verts, i * 4, i, i + sides, wrap(i + 1) + sides, wrap(i + 1));
-			Utils.AddFace(tris, i * 6, i * 4, 4);
-		}
+    for(int pi = 0;pi<points.Count-1;pi++) {
+      var svi = pi * sides * 4;
+      var sVi = pi * sides;
+      var sti = pi * sides * 6;
+  		for (int i = 0; i < sides; i++)
+  		{
+  			Utils.DuplicateVerts(Verts, verts, svi + i * 4, sVi + i, sVi + wrap(i + 1), sVi + wrap(i + 1) + sides, sVi + i + sides);
+  			Utils.AddFace(tris, sti + i * 6, svi + i * 4, 4);
+  		}
+    }
 
 
 		// UVs mapping sets each face to use the whole texture

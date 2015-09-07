@@ -58,13 +58,25 @@ public class MeshGeneratorWindow : EditorWindow {
     }
 
 	IMeshGenerator NewGenerator(Type generator) {
-		var constructor = generator.GetConstructor(Type.EmptyTypes);
-
 		IMeshGenerator gen = null;
-		if(constructor!=null) {
-			gen = constructor.Invoke(null) as IMeshGenerator;
+		if(isMonoBehaviour) {
+			if(targetGeneratorObject!=null) {
+				var currGen = (IMeshGenerator)targetGeneratorObject.GetComponent(typeof(IMeshGenerator));
+				if(currGen.GetType().Equals(generator)) {
+					gen = currGen;
+				} else {
+					targetGeneratorObject = null;
+				}
+			}
 		} else {
-			Debug.LogWarning(generator+" has no empty constructor!");
+			var constructor = generator.GetConstructor(Type.EmptyTypes);
+			if(constructor!=null) {
+				gen = constructor.Invoke(null) as IMeshGenerator;
+			}
+		}
+
+		if(gen==null) {
+			Debug.LogWarning(generator+" has no instance to use!");
 			return gen;
 		}
 
@@ -81,6 +93,11 @@ public class MeshGeneratorWindow : EditorWindow {
 
 		// Generate mesh
 		Mesh mesh = CurrentGenerator.Generate();
+
+		if(mesh == null) {
+			Debug.Log("Generator \""+CurrentGenerator.Name+"\" generated null! Maybe it hasn't been fully implemented");
+			return;
+		}
 
 		// Generate normals and optimize
 		mesh.RecalculateNormals();
@@ -145,19 +162,22 @@ public class MeshGeneratorWindow : EditorWindow {
         };
     }
 
-	void OnProjectChange() {
+	void OnEnable() {
 		Init();
 	}
 
 	// selector vars
 	int generatorSelection = 0;
 	string[] generatorOptions = new string[]{};
+	GameObject targetGeneratorObject = null;
+	bool isMonoBehaviour = false;
 	void OnGUI() {
 		EditorGUILayout.BeginHorizontal();
 		var gs = EditorGUILayout.Popup("Generator:", generatorSelection, generatorOptions);
-		if (gs!=generatorSelection || CurrentGenerator == null) {
+		if (gs!=generatorSelection) {
 			if(Generators == null) Init();
 			generatorSelection = gs;
+			isMonoBehaviour = typeof(MonoBehaviour).IsAssignableFrom(Generators[gs]);
 			CurrentGenerator = NewGenerator(Generators[gs]);
 		}
 		if(GUILayout.Button("Reload")) {
@@ -165,13 +185,28 @@ public class MeshGeneratorWindow : EditorWindow {
 		}
 		EditorGUILayout.EndHorizontal();
 
+		if(isMonoBehaviour) {
+			var targetGen = (GameObject)EditorGUILayout.ObjectField("Target: ", targetGeneratorObject, typeof(GameObject), true);
+			if(targetGen != targetGeneratorObject) {
+				var mgComp = (IMeshGenerator)targetGen.GetComponent(typeof(IMeshGenerator));
+				if(mgComp == null) {
+					Debug.LogWarning("Target \""+targetGen+"\" does not contain a component that implements IMeshGenerator");
+				} else if(Generators[gs].Equals(mgComp.GetType())) {
+					targetGeneratorObject = targetGen;
+					CurrentGenerator = NewGenerator(Generators[gs]);
+				}
+			}
+		}
+
 		var ma = (Mesh)EditorGUILayout.ObjectField("Asset:", CurrentMeshAsset, typeof(Mesh), false);
 		if (ma!=CurrentMeshAsset) {
 			CurrentMeshAsset = ma;
 		}
 
-        ColorDrawFunctions[colorSelection]();
-        colorSelection = GUILayout.SelectionGrid(colorSelection, new string[] { "None", "Vertex", "Tris" }, 3);
+      if(ColorDrawFunctions!=null && 	ColorDrawFunctions[colorSelection]!=null) {
+				ColorDrawFunctions[colorSelection]();
+			}
+      colorSelection = GUILayout.SelectionGrid(colorSelection, new string[] { "None", "Vertex", "Tris" }, 3);
 
         var gen = CurrentGenerator;
 

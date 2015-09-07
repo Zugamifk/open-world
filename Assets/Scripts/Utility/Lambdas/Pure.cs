@@ -65,5 +65,10 @@ namespace Lambdas
 		public static Pure3<T> Curried<T>(this Func<T, T, T, T> f) {
             return arg1 => arg2 => arg3 => f(arg1, arg2, arg3);
         }
+
+      public static Func<T,T> Curry<T>(this Func<T,T> first, Func<T,T> second) {
+        return arg => second(first(arg));
+      }
     }
+
 }
