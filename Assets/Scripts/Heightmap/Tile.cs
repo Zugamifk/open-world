@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using MeshGenerator;
 using Geometry;
 using Extensions;
@@ -11,6 +12,7 @@ namespace Landscape {
 		public Vector2 position;
 		public IHeightMap map;
 		public IMeshGenerator meshGenerator;
+		public List<WorldObject> worldObjects = new List<WorldObject>();
 
 		private Mesh mesh;
 		public Mesh Mesh {

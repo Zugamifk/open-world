@@ -161,9 +161,15 @@ public class PLSystem : IEnumerable<PLSystem.Word[]>
         }
     }
 
-    public Word axiom;
+    public Word[] axiom;
     public Dictionary<string, List<Production>> productions
         = new Dictionary<string, List<Production>>();
+
+    public void SetAxiom(params Word[] axiom) {
+        this.axiom = new Word[axiom.Length+1];
+        System.Array.Copy(axiom, this.axiom, axiom.Length);
+        this.axiom[axiom.Length] = Word.Terminator;
+    }
 
     public void AddProduction(string name, IList<WordScheme> succcessor) {
         List<Production> prods = null;
@@ -210,6 +216,12 @@ public class PLSystem : IEnumerable<PLSystem.Word[]>
         successor[index] = PLSystem.Word.Terminator;
     }
 
+    public static string DerivationToString(IList<Word> derivation) {
+      return string.Join(
+            string.Empty,
+            derivation.TakeWhile(w => !w.isTerminator).Select(d => d.prettyName).ToArray());
+    }
+
     #region IEnumerable
     public class Enumerator : IEnumerator<Word[]>
     {
@@ -244,8 +256,11 @@ public class PLSystem : IEnumerable<PLSystem.Word[]>
             }
             else
             {
-                current[0] = system.axiom.Copy();
-                current[1] = PLSystem.Word.Terminator;
+                int i=0;
+                for(;!system.axiom[i].isTerminator;i++) {
+                  current[i] = system.axiom[i];
+                }
+                current[i] = system.axiom[i];
                 initialized = true;
             }
             return true;

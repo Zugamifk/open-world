@@ -11,7 +11,6 @@ public class Turtle : MonoBehaviour
 
     public LSystem system = new LSystem();
 
-    public string current = "";
     public int defaultIterations = 0;
     public float angleStep;
     public float step;
@@ -59,10 +58,9 @@ public class Turtle : MonoBehaviour
     }
     #endregion bracket stack
     #region path generation
-    public DirectedGraph<Vector2> Path(int derivations)
+    public DirectedGraph<Vector2> Path(string derivation)
     {
         ResetStack();
-        current = system.ElementAt(derivations);
         var angle = 0f;
         var pos = Vector2.zero;
         var points = new List<Vector2>();
@@ -71,13 +69,13 @@ public class Turtle : MonoBehaviour
         int lastpt = -1;
         int currentpt = 0;
 
-        if (current == null)
+        if (derivation == null)
         {
             return null;
         }
-        for (int i = 0; i < current.Count(); i++)
+        for (int i = 0; i < derivation.Count(); i++)
         {
-            switch (current[i])
+            switch (derivation[i])
             {
                 case '+':
                     {
@@ -114,7 +112,7 @@ public class Turtle : MonoBehaviour
                     break;
                 default:
                     {
-                        if (current[i].IsUpper())
+                        if (derivation[i].IsUpper())
                         {
                             if (turned)
                             {
@@ -132,7 +130,7 @@ public class Turtle : MonoBehaviour
                         }
                         else
                         {
-                            Debug.Log("Bad character in string: \'" + current[i] + "\'");
+                            Debug.Log("Bad character in string: \'" + derivation[i] + "\'");
                         }
                     }
                     break;

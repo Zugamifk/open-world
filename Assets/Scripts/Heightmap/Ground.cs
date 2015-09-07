@@ -45,6 +45,12 @@ namespace Landscape {
 			return instance.TileScalar.localScale.y*instance.Generator.GetHeight(local.xz());
 		}
 
+		public static Tile GetTile(Vector3 position) {
+			Tile tile = null;
+			instance.worldTiles.TryGetValue((Vector3i)position, out tile);
+			return tile;
+		}
+
 		void SetTile(Vector3i position) {
 			Tile tile = null;
 			if (!worldTiles.TryGetValue(
@@ -108,10 +114,19 @@ namespace Landscape {
 						tile.GetComponent<Renderer>().material = groundMat;
 
 						tiles[x+Radius, y+Radius] = tile;
-						SetTile(new Vector3i(GridPosition.x+x,0,GridPosition.z+y));
 					}
 				}
 			}
+
+			RefreshTiles();
+
+			var worldTree = new WorldObject();
+			worldTree.material = groundMat;
+			worldTree.Initialize(new Tree());
+			worldTree.position = new Vector3(0.5f,0.1f,0.5f);
+			GetTile(Vector3.zero).worldObjects.Add(worldTree);
+
+			RefreshTiles();
 		}
 
 		void Update() {

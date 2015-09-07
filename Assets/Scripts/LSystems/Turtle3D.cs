@@ -46,10 +46,9 @@ public class Turtle3D : Turtle	 {
 	#endregion bracket stack
 	#region path generation
 
-	new public virtual DirectedGraph<Vector3> Path(int derivations)
+	new public virtual DirectedGraph<Vector3> Path(string derivation)
 	{
 		ResetStack();
-		current = system.ElementAt(derivations);
 
 		var turtleTransform = (new GameObject()).transform;
 		var points = new List<Vector3>();
@@ -58,13 +57,13 @@ public class Turtle3D : Turtle	 {
 		int lastpt = -1;
 		int currentpt = 0;
 
-		if (current == null)
+		if (derivation == null)
 		{
 			return null;
 		}
-		for (int i = 0; i < current.Count(); i++)
+		for (int i = 0; i < derivation.Count(); i++)
 		{
-			switch (current[i])
+			switch (derivation[i])
 			{
 				case '+':
 					{
@@ -129,7 +128,7 @@ public class Turtle3D : Turtle	 {
 					break;
 				default:
 					{
-						if (current[i].IsUpper())
+						if (derivation[i].IsUpper())
 						{
 							if (turned)
 							{
@@ -147,7 +146,7 @@ public class Turtle3D : Turtle	 {
 						}
 						else
 						{
-							Debug.Log("Bad character in string: \'" + current[i] + "\'");
+							Debug.Log("Bad character in string: \'" + derivation[i] + "\'");
 						}
 					}
 					break;

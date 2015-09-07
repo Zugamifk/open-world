@@ -5,12 +5,17 @@ using System.Linq;
 
 public class PTurtle : Turtle3D {
 
-    new public PLSystem system = new PLSystem();
-    private PLSystem.Word[] currentDerivation;
-    public override DirectedGraph<Vector3> Path(int derivations)
+  new public static PTurtle instance;
+  void Awake()
+	{
+		this.SetInstanceOrKill(ref instance);
+		StackIndex = 0;
+		StateStack = new State[STACK_MAX];
+	}
+
+    public DirectedGraph<Vector3> Path(IList<PLSystem.Word> derivation)
 	{
 		ResetStack();
-		currentDerivation = system.ElementAt(derivations);
 
         var turtleTransform = (new GameObject()).transform;
 		var points = new List<Vector3>();
@@ -19,14 +24,14 @@ public class PTurtle : Turtle3D {
 		int lastpt = -1;
 		int currentpt = 0;
 
-		if (currentDerivation == null)
+		if (derivation == null)
 		{
 			return null;
 		}
-		for (int i = 0; !currentDerivation[i].isTerminator; i++)
+		for (int i = 0; !derivation[i].isTerminator; i++)
 		{
-            var current = currentDerivation[i];
-            switch (currentDerivation[i].name[0])
+            var current = derivation[i];
+            switch (derivation[i].name[0])
 			{
 				case '+':
 					{
@@ -135,25 +140,23 @@ public class PTurtle : Turtle3D {
     }
   }
 
-  public DirectedGraph<AugmentedVertex> PathAugmented(int derivations)
+  public DirectedGraph<AugmentedVertex> InstancePathAugmented(IList<PLSystem.Word> derivation)
 {
   ResetStack();
-  currentDerivation = system.ElementAt(derivations);
-
       var turtleTransform = (new GameObject()).transform;
   var points = new List<AugmentedVertex>();
   var connections = new List<int>();
   int lastpt = -1;
   int currentpt = 0;
 
-  if (currentDerivation == null)
+  if (derivation == null)
   {
     return null;
   }
-  for (int i = 0; !currentDerivation[i].isTerminator; i++)
+  for (int i = 0; !derivation[i].isTerminator; i++)
   {
-          var current = currentDerivation[i];
-          switch (currentDerivation[i].name[0])
+          var current = derivation[i];
+          switch (derivation[i].name[0])
     {
       case '+':
         {
@@ -197,7 +200,7 @@ public class PTurtle : Turtle3D {
         break;
       case ']':
         {
-          points.Add(new AugmentedVertex(turtleTransform.localPosition, currentDerivation[i-1].Terminal()));
+          points.Add(new AugmentedVertex(turtleTransform.localPosition, derivation[i-1].Terminal()));
           if (lastpt >= 0)
           {
             connections.Add(lastpt);
@@ -215,7 +218,7 @@ public class PTurtle : Turtle3D {
         {
           if (current.name[0].IsUpper())
           {
-            points.Add(new AugmentedVertex(turtleTransform.localPosition, currentDerivation[i]));
+            points.Add(new AugmentedVertex(turtleTransform.localPosition, derivation[i]));
             if (lastpt >= 0)
             {
               connections.Add(lastpt);
@@ -244,11 +247,13 @@ public class PTurtle : Turtle3D {
   return new DirectedGraph<AugmentedVertex>(points, connections);
 }
 
+
+  public static DirectedGraph<AugmentedVertex> PathAugmented(IList<PLSystem.Word> derivation) {
+    return instance.InstancePathAugmented(derivation);
+  }
+
     public override string ToString() {
-        if(currentDerivation == null) return string.Empty;
-        return string.Join(
-            string.Empty,
-            currentDerivation.TakeWhile(w => !w.isTerminator).Select(d => d.prettyName).ToArray());
+        return "Parametric L-System Reading Turtle!";
     }
 
 }

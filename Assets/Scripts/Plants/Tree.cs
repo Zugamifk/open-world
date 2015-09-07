@@ -41,14 +41,14 @@ public class Tree : Plant {
         public void InitializeSystem() {
             var system = new PLSystem();
 
-            system.axiom = new TrunkWord("T", 1f, 1f);
+            system.SetAxiom(new PLSystem.Word("^", 90f), new TrunkWord("T", .02f, .01f));
             system.AddProduction(
-                system.axiom,
+                "T",
                 new PLSystem.WordScheme[] {
                     TrunkWord.TrunkRadiusFunc(r=>r*0.75f),
                     PLSystem.ConstScheme(new PLSystem.Word("[")),
                     PLSystem.ConstScheme(new PLSystem.Word("+", 30f)),
-                    PLSystem.ParamFuncScheme(f=>f+1),
+                    PLSystem.ParamFuncScheme(f=>f+0.01f),
                     PLSystem.ConstScheme(new PLSystem.Word("]")),
                     PLSystem.ParamFuncScheme(f=>f*2)
                 }
@@ -106,52 +106,44 @@ public class Tree : Plant {
         combiners[i].mesh = generator.Generate();
       }
       mesh.CombineMeshes(combiners, true, false);
+
       MeshGenerator.Utils.PostGenerateMesh(mesh);
+
+      mesh.name = Name;
+
       return mesh;
     }
 #endregion
 
+#region IWorldObject implementation
+  public override void InitializeWithWorldObject(WorldObject obj) {
+    structure = new DefaultTree();
+    structure.InitializeSystem();
+    SetLevel(4);
+  }
+#endregion
+
+  public DirectedGraph<PTurtle.AugmentedVertex> path = null;
   private int currentLevel = 0;
     string Initialize() {
         structure = new DefaultTree();
         structure.InitializeSystem();
-        turtle.system = structure.System;
         currentLevel = 0;
-        path = turtle.PathAugmented(currentLevel);
-        return turtle.ToString();
+        var derivation = structure.System.First();
+        path = PTurtle.PathAugmented(derivation);
+        return PLSystem.DerivationToString(derivation);
     }
 
     string Derive() {
       currentLevel++;
-      path = turtle.PathAugmented(currentLevel);
-      return turtle.ToString();
+      var derivation = structure.System.ElementAt(currentLevel);
+      path = PTurtle.PathAugmented(derivation);
+      return PLSystem.DerivationToString(derivation);
     }
 
-  private const int maxGizmos = 2048;
-  public DirectedGraph<PTurtle.AugmentedVertex> path = null;
-  public void OnDrawGizmos()
-  {
-      if (path == null) return;
-
-    var startCol = (ColorHSV)Colorx.FromHex(0xFF00FF);
-    var endCol = (ColorHSV)Colorx.FromHex(0x00FF00);
-    var len = Mathf.Min(path.Vertices.Count, maxGizmos);
-    for (int i = 0; i < len; i++)
-    {
-      var col = ColorHSV.Lerp(startCol, endCol, (float)i / (float)len);
-      Gizmos.color = col;
-      var node = path.Vertices[i].value;
-      var trunk = node.word as DefaultTree.TrunkWord;
-      var nodeRadius = trunk!=null?trunk.radius:0.5f;
-      Gizmos.DrawSphere(transform.position + node.position, nodeRadius);
-
-      foreach (var e in path.Vertices[i].Outgoing)
-      {
-        Gizmos.DrawLine(
-          transform.position + e.from.value.position,
-          transform.position + e.to.value.position
-        );
-      }
+    public void SetLevel(int level) {
+      currentLevel = level;
+      var derivation = structure.System.ElementAt(currentLevel);
+      path = PTurtle.PathAugmented(derivation);
     }
-  }
 }

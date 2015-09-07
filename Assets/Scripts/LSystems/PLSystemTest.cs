@@ -10,7 +10,7 @@ public class PLSystemTest : MonoBehaviour, IPLSystem {
 
     public void InitializeSystem() {
         system = new PLSystem();
-        system.axiom = new PLSystem.Word("F", 1f);
+        system.SetAxiom(new PLSystem.Word("F", 1f));
         system.AddProduction(
             "F",
             new PLSystem.WordScheme[] {

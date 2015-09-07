@@ -43,7 +43,6 @@ public class TubeGenerator : IMeshGenerator {
           if(Mathf.Approximately(radius.magnitude, 0)) {
             radius = new Vector3(axis.y, -axis.z, 0).normalized;
           }
-          Debug.Log(radius+" : "+axis);
             foreach (var v in Utils.GetRingPoints(sides, axis, radius*points[s].radius))
             {
                 Verts[vi] = points[s].position+v;
