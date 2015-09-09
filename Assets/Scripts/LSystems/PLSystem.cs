@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 
-public class PLSystem : IEnumerable<PLSystem.Word[]>
+namespace LSystems {
+public partial class PLSystem : IEnumerable<PLSystem.Word[]>
 {
 
     [System.Serializable]
@@ -48,6 +49,9 @@ public class PLSystem : IEnumerable<PLSystem.Word[]>
             this.count = count;
             hasCount = true;
             prettyName = name+"("+count+", "+param+")";
+        }
+        public static Word IniitalizerF(string name, params object[] args) {
+          return new Word(name, (float)args[0]);
         }
         public virtual Word Copy() {
           if(hasCount) {
@@ -281,4 +285,5 @@ public class PLSystem : IEnumerable<PLSystem.Word[]>
         return this.GetEnumerator();
     }
     #endregion
+}
 }

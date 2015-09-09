@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+namespace LSystems {
 public class PTurtle : Turtle3D {
 
   new public static PTurtle instance;
@@ -256,4 +257,5 @@ public class PTurtle : Turtle3D {
         return "Parametric L-System Reading Turtle!";
     }
 
+}
 }

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+namespace LSystems {
 public class PLSystemTest : MonoBehaviour, IPLSystem {
 
     private PLSystem system = new PLSystem();
@@ -26,4 +27,5 @@ public class PLSystemTest : MonoBehaviour, IPLSystem {
     void Awake() {
         InitializeSystem();
     }
+}
 }

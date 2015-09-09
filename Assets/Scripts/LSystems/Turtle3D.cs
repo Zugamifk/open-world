@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+namespace LSystems {
 public class Turtle3D : Turtle	 {
 
 	new public static Turtle3D instance;
@@ -169,5 +170,5 @@ public class Turtle3D : Turtle	 {
 		StackIndex = 0;
 		StateStack = new State[STACK_MAX];
 	}
-
+}
 }

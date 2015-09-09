@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
+using LSystems;
 
 public abstract class Plant : IMeshGenerator, IWorldObject {
     public IPLSystem structure;

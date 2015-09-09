@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+namespace LSystems {
+
 [System.Serializable]
 public class LSystem : IEnumerable<string>, IUnitTestable{
 	public string axiom;
@@ -80,4 +82,5 @@ public class LSystem : IEnumerable<string>, IUnitTestable{
 		system.Take(10).ForEach(Debug.Log);
 	}
 #endregion
+}
 }
