@@ -31,10 +31,33 @@ public class ClassSelector<T> where T : class {
 	}
 
 	public void Init() {
+
+		RefreshOptions();
+
+		if (OptionTypes.Length>0) {
+			SetCurrent(OptionTypes[0]);
+			Instantiate();
+			RefreshDrawers();
+		} else {
+			FieldDrawers = new EditorGUIx.FieldDrawerLayout[0];
+		}
+
+		raisedError = false;
+		initialized = true;
+	}
+
+	public void Refresh() {
+		RefreshOptions();
+		SetCurrent(OptionTypes[selection]);
+		Instantiate();
+		RefreshDrawers();
+	}
+
+	public void RefreshOptions() {
 		OptionTypes = AppDomain.CurrentDomain.GetAssemblies().SelectMany(
 			assembly => assembly
-		    .GetTypes()
-		    .Where( t =>
+				.GetTypes()
+				.Where( t =>
 				t != typeof(T) &&
 				typeof(T).IsAssignableFrom(t) &&
 				t.GetConstructor(Type.EmptyTypes)!=null))
@@ -52,20 +75,9 @@ public class ClassSelector<T> where T : class {
 				}
 				})
 			.Where( t => t != null)
-		    .ToArray();
+				.ToArray();
 
 		Options = OptionTypes.Select(g => g.Name.Uncamel()).ToArray();
-
-		if (OptionTypes.Length>0) {
-			SetCurrent(OptionTypes[0]);
-			Instantiate();
-			RefreshDrawers();
-		} else {
-			FieldDrawers = new EditorGUIx.FieldDrawerLayout[0];
-		}
-
-		raisedError = false;
-		initialized = true;
 	}
 
 	public void RefreshDrawers() {
@@ -122,8 +134,7 @@ public class ClassSelector<T> where T : class {
 				return default(T);
 			}
 			selection = nt;
-			SetCurrent(OptionTypes[nt]);
-			Instantiate();
+			Refresh();
 		}
 		if(GUILayout.Button("Reload")) {
 			Instantiate();

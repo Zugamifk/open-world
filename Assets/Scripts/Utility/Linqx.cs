@@ -52,6 +52,13 @@ public static class Linqx {
         }
     }
 
+    public static IEnumerable<T> Cons<T>(this T head, IEnumerable<T> tail) {
+      yield return head;
+      foreach(var c in tail) {
+        yield return c;
+      }
+    }
+
     public static T Second<T>(this IEnumerable<T> seq) {
         return seq.ElementAt(1);
     }

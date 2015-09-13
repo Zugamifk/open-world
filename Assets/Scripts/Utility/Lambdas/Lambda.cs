@@ -20,6 +20,15 @@ namespace Lambdas
     {
         //___________________________________________________/   Delegate Types \___
 
+        // Atomic lambdas
+        public static T Identity<T>(T input) {
+          return input;
+        }
+
+        public static T Zero<T>(T input) {
+          return default(T);
+        }
+
         // ACTIONS
         public static System.Action Null = () => { };
         public static System.Action Log(System.Func<string> stringFunc) {

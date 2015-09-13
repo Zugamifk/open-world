@@ -101,7 +101,6 @@ namespace MeshGenerator {
 			if(verts.Length == tris.Length) return;
 
 			var newVerts = new Vector3[tris.Length];
-			var used = new bool[verts.Length];
 			for(int i=0;i<newVerts.Length;i++) {
 				newVerts[i] = verts[tris[i]];
 				tris[i] = i;

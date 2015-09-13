@@ -7,7 +7,7 @@ public class UnitTestWindow : EditorWindow {
 	[MenuItem("Window/Unit Test")]
 	public static void Open() {
 		UnitTestWindow window = (UnitTestWindow)EditorWindow.GetWindow (typeof (UnitTestWindow));
-		window.Init();
+		window.Refresh();
 		window.Show();
 	}
 
@@ -18,12 +18,20 @@ public class UnitTestWindow : EditorWindow {
 		Selector = new ClassSelector<IUnitTestable>(typeof(int));
 	}
 
+	void Refresh() {
+		if(Selector!=null) {
+			Selector.Refresh();
+		} else {
+			Init();
+		}
+	}
+
 	void OnEnable() {
-		Init();
+		Refresh();
 	}
 
 	void OnProjectChange() {
-		Init();
+		Refresh();
 	}
 
 	void OnGUI() {
@@ -42,17 +50,8 @@ public class UnitTestWindow : EditorWindow {
         }
     }
 
-	private struct ttt {
-        public string a, b;
-    }
+
 	void MiniTest() {
-        var tt = new ttt[] {
-            new ttt {a = "a", b = "b"},
-            new ttt {a="a0", b="b0"}
-        };
-    	var tt2 = new ttt[2];
-        tt2[0] = tt[0];
-        tt2[0].a = "c";
-        Debug.Log(tt[0].a+":"+tt2[0].a);
-    }
+
+  }
 }

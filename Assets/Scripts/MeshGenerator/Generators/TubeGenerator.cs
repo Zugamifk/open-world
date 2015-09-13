@@ -34,8 +34,6 @@ public class TubeGenerator : IMeshGenerator {
 
 		var Verts = new Vector3[sides*points.Count];
 		int vi = 0;
-		var angle = Mathf.PI*2f/(float)sides;
-		var sideAngle = (Mathf.PI-angle)/2f;
         for (int s = 0; s < points.Count; s++)
         {
           var axis = path.EvaluateDerivative((float)s).normalized;

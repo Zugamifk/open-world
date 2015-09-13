@@ -68,7 +68,6 @@ namespace Geometry {
 			Domino[] dominos = tileset.Select(t=>(Domino)t).ToArray();
 			IEnumerable<int> allLegal = Enumerable.Range(0,dominos.Length);
 			IEnumerable<int> legal = allLegal;
-			var forbidden = tileset.Select(t=>new List<int>()).ToArray();
 			for(int x=0;x<width;x++) {
 				for(int y = 0;y<height;y++) {
 					legal = allLegal;
