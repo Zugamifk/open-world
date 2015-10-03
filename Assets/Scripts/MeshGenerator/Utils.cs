@@ -71,6 +71,20 @@ namespace MeshGenerator {
 			}
 		}
 
+		/** generate a backface for each face */
+		public static int[] GenerateBackfaces(int[] verts) {
+            var newFaces = new int[verts.Length * 2];
+			for(int i=0;i<verts.Length;i+=3) {
+                newFaces[i] = verts[i];
+                newFaces[i + verts.Length] = verts[i];
+				newFaces[i+1] = verts[i+1];
+                newFaces[i + verts.Length+1] = verts[i+2];
+				newFaces[i+2] = verts[i+2];
+                newFaces[i + verts.Length+2] = verts[i+1];
+            }
+			return newFaces;
+		}
+
 		/** Optimize mesh for unity */
 		public static void PostGenerateMesh(Mesh mesh) {
 			mesh.RecalculateNormals();
@@ -118,5 +132,14 @@ namespace MeshGenerator {
 			}
 			mesh.vertices = verts;
 		}
+
+		/** transform a mesh's points */
+		public static void TransformMesh(this Mesh mesh, Matrix4x4 mat) {
+            var verts = mesh.vertices;
+			for(int i=0;i<mesh.vertexCount;i++) {
+                verts[i] = mat.MultiplyPoint3x4(verts[i]);
+            }
+			mesh.vertices = verts;
+        }
 	}
 }

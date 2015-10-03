@@ -175,14 +175,14 @@ public partial class PLSystem : IEnumerable<PLSystem.Word[]>
         this.axiom[axiom.Length] = Word.Terminator;
     }
 
-    public void AddProduction(string name, IList<WordScheme> succcessor) {
+    public void AddProduction(string name, params WordScheme[] successor) {
         List<Production> prods = null;
         if(!productions.TryGetValue(name, out prods)) {
             prods = new List<Production>();
             productions[name] = prods;
         }
         var newProd = new Production();
-        newProd.successor = succcessor;
+        newProd.successor = successor;
         prods.Add(newProd);
     }
 
