@@ -136,8 +136,8 @@ namespace Grammars {
 		public static Parser<char> Upper = Sat(c=>c>='A'&&c<='Z');
 		public static Parser<char> Space = Sat(c=>c==' '||c=='\n'||c=='\t');
 
-		public static Parser<T> Plus<T>(this Parser<T> self, Parser<T> other) {
-			return state => self(state).Concat(other(state));
+		public static Parser<T> Plus<T>(this Parser<T> self, params Parser<T>[] others) {
+			return state => self(state).Concat(others.SelectMany(fun=>fun(state)));
 		}
 
 		public static Parser<char> Letter = Lower.Plus(Upper);
@@ -179,6 +179,13 @@ namespace Grammars {
 			Char('-').Bind<char, Func<int,int>>(c=>Result<Func<int,int>>(n=>-n))
 			.Plus(Result<Func<int,int>>(Lambda.Identity<int>))
 			.Bind<Func<int,int>, int>(f=>Nat.Bind<int,int>(n=>Result(f(n))));
+		public static Parser<float> Flt = Int.Bind<int, float>(whole =>
+			Char('.').Skip(
+				Digit.Bind<char, float>(n=>Result((float)(n-'0')*0.1f))
+				.ChainL1(Result<Func<float,float,float>>((n,m)=>n*0.1f+m))
+				.Bind<float, float>(frac => Result((float)whole+frac))
+			).Plus(Result((float)whole))
+		);
 
 		public static Parser<T> Skip<S,T>(this Parser<S> skip, Parser<T> next) {
 			return skip.Bind<S,T>(_=>next);
@@ -311,8 +318,8 @@ namespace Grammars {
 				};
 			}
 
-			public static Parser<T> PlusDet<T>(this Parser<T> a, Parser<T> b) {
-				return a.Plus(b).First();
+			public static Parser<T> PlusDet<T>(this Parser<T> a, params Parser<T>[] others) {
+				return a.Plus(others).First();
 			}
 
 			public static Parser<string> Junk = Spaces;
@@ -329,6 +336,7 @@ namespace Grammars {
 
 			public static Parser<int> Natural = Nat.Tokenize();
 			public static Parser<int> Integer = Int.Tokenize();
+			public static Parser<float> Float = Flt.Tokenize();
 
 			public static Parser<string> String(string str) {
 				return Word.Bind<string, string>(w=>str == w ? Result(str) : Zero<string>());
@@ -346,6 +354,40 @@ namespace Grammars {
 				return Ident.First().Cond<string>(w=>!keywords.Contains(w)).Tokenize();
 			}
 
+			public static Parser<IEnumerable<T>> With<S,T,U>(Func<S, Parser<T>> selector, Parser<U> separator, params S[] values) {
+				var result = selector(values[0]).Bind<T, IEnumerable<T>>(v=>Result(v.Single()));
+				for(int i=1;i<values.Length;i++) {
+					result = result.Bind<IEnumerable<T>, IEnumerable<T>>(xs=>
+						separator.Skip(
+							selector(values[i]).Bind<T, IEnumerable<T>>( x =>
+								Result(x.Cons(xs))
+							)
+						)
+					);
+				}
+				return result;
+			}
+
+			public class LambdaExpression<T> {
+				public Parser<Func<T,T>> Parser {
+					get {
+						return Expression;
+					}
+				}
+
+				public Parser<Func<T,T>> Variable {
+					get {
+						return Result<Func<T,T>>(Lambda.Identity<T>);
+					}
+				}
+
+				public Parser<Func<T,T>> Expression {
+					get {
+						return Variable;
+					}
+				}
+			}
+
 			public class ParserTest : IUnitTestable {
 				public string input = "";
 				public void Test() {
@@ -361,7 +403,7 @@ namespace Grammars {
 					// 			i1 => Result(i0.Concat(i1))
 					// 	)));
 
-					var test = Identifier("hello").Many();
+					var test = Float;
 					LogParserOutput(test(input));
 				}
 			}

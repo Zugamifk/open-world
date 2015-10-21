@@ -30,4 +30,17 @@ public static class Debugx {
             return a + b.vector;
         }
     }
+
+	public static void DrawCross(UnityEngine.Vector3 position, float size, Color color, float duration = 0, bool depthTest = false) {
+		Debug.DrawLine(	position + UnityEngine.Vector3.up * size,
+						position + UnityEngine.Vector3.down * size,
+						color,
+						duration,
+						depthTest);
+		Debug.DrawLine(	position + UnityEngine.Vector3.left * size,
+						position + UnityEngine.Vector3.right * size,
+						color,
+						duration,
+						depthTest);
+	}
 }
