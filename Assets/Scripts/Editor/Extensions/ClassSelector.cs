@@ -8,7 +8,8 @@ using System.Linq;
 using Lambdas;
 
 public class ClassSelector<T> where T : class {
-	private Type current;
+    private string name;
+    private Type current;
 	private T instance;
 	private int selection;
 	private Type[] OptionTypes;
@@ -27,6 +28,10 @@ public class ClassSelector<T> where T : class {
 
 	public ClassSelector(params Type[] genericParams) {
 		GenericParameters = genericParams;
+
+        name = typeof(T).ToString();
+        name = name.Substring(name.LastIndexOf('.')+1);
+
 		Init();
 	}
 
@@ -122,7 +127,7 @@ public class ClassSelector<T> where T : class {
 
 	public T DrawField(T value) {
 		EditorGUILayout.BeginHorizontal();
-		EditorGUILayout.PrefixLabel(typeof(T)+": "+value);
+		EditorGUILayout.PrefixLabel(name+": "+value);
 		if(!initialized) return default(T);
 		var nt = EditorGUILayout.Popup(selection, Options);
 		if (!raisedError &&
@@ -171,6 +176,6 @@ public class ClassSelector<T> where T : class {
 			Debug.LogWarning(current+" has no empty constructor!");
 			raisedError = true;
 		}
-	}
+    }
 
 }

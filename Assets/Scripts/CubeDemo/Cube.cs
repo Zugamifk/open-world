@@ -25,7 +25,7 @@ namespace Demos.Cube
         }
 		public IEnumerator AnimateAppear() {
 
-            var popI = Interpolation.Power(2);
+            var popI = AnimatedCurve.Power(2);
             var appears = popI.AnimateValue(
                 0.5f,
 				t => transform.localScale = Vector3.one * t
@@ -34,8 +34,8 @@ namespace Demos.Cube
 
             Quaternion rot = transform.localRotation;
             Quaternion to = Random.rotation;
-            var spinI = Interpolation.Smooth(14);
-            var bounceI = new Interpolation(t => (1 - t) * (1 - t) * t * 27 / 4);
+            var spinI = AnimatedCurve.Smooth(14);
+            var bounceI = new AnimatedCurve(t => (1 - t) * (1 - t) * t * 27 / 4);
             //DebugDrawer.DrawCalls += spinI.Draw;
             while(true) {
                 var mag = Random.value*3;

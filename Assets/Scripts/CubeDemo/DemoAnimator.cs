@@ -21,7 +21,7 @@ namespace Demos.Cube
         private IEnumerator Animation() {
             yield return new WaitForSeconds(1);
 
-            var curve = Interpolation.Power(2);
+            var curve = AnimatedCurve.Power(2);
             var startCol = CameraSingleton.Camera.backgroundColor;
             yield return StartCoroutine(curve.AnimateValue(3,
                 t => CameraSingleton.Camera.backgroundColor = Color.Lerp(startCol, Colors.greybeige, t)
@@ -41,7 +41,7 @@ namespace Demos.Cube
         }
 
         private IEnumerator ShiftBG() {
-            var curve = Interpolation.Smooth(2);
+            var curve = AnimatedCurve.Smooth(2);
             while (true)
             {
                 var h0 = ((ColorHSV)(CameraSingleton.Camera.backgroundColor)).h;

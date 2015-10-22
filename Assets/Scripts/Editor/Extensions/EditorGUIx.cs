@@ -561,6 +561,11 @@ public static class EditorGUIx
     // Full method
     public static FieldDrawer GetFieldDrawer(string label, AnimationCurve value, Action<AnimationCurve> setCallback)
     {
+        if (value == null)
+        {
+            value = AnimationCurve.Linear(0, 1, 1, 1);
+            setCallback(value);
+        }
         return (Rect position) =>
         {
             var newVal = EditorGUI.CurveField(position, label, value);
@@ -575,6 +580,11 @@ public static class EditorGUIx
     // Layout version
     public static FieldDrawerLayout GetFieldDrawerLayout(string label, AnimationCurve value, Action<AnimationCurve> setCallback)
     {
+        if (value == null)
+        {
+            value = AnimationCurve.Linear(0, 1, 1, 1);
+            setCallback(value);
+        }
         return () =>
         {
             var newVal = EditorGUILayout.CurveField(label, value);

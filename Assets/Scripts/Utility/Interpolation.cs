@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Interpolation {
+public class AnimatedCurve {
 	// _________________________________________________/ Fields \______________
 
     public delegate float Curve(float t);
@@ -62,62 +62,62 @@ public class Interpolation {
     }
 
 	// _____________________________________________/ Curve generators \________
-	public static Interpolation Power(float e) {
-        return new Interpolation(
+	public static AnimatedCurve Power(float e) {
+        return new AnimatedCurve(
             t => Mathf.Pow(t, e)
 		);
     }
 
-	public static Interpolation Smooth(float e) {
+	public static AnimatedCurve Smooth(float e) {
         var cr = Mathf.Exp(e*0.5f);
-        return new Interpolation(
+        return new AnimatedCurve(
             t => Mathf.Exp(e * t) / (cr + Mathf.Exp(e * t))
 		);
     }
 
-    public static Interpolation Bump(float i, float o) {
-        return new Interpolation(
+    public static AnimatedCurve Bump(float i, float o) {
+        return new AnimatedCurve(
             t => Mathf.Pow(t,i) * Mathf.Pow(1 - t, o)
         );
     }
 
 	// ___________________________________________/ Constructors \______________
 
-	public Interpolation(Curve curve) {
+	public AnimatedCurve(Curve curve) {
 		this.curve = curve;
 	}
 
-	public Interpolation(AnimationCurve curve) {
+	public AnimatedCurve(AnimationCurve curve) {
         this.curve = t => curve.Evaluate(t);
     }
 
 	// ___________________________________________/ Operator Overloads \________
 
-	public static Interpolation operator +(Interpolation a, Interpolation b) {
-        return new Interpolation(t => a.curve(t) + b.curve(t));
+	public static AnimatedCurve operator +(AnimatedCurve a, AnimatedCurve b) {
+        return new AnimatedCurve(t => a.curve(t) + b.curve(t));
     }
 
-	public static Interpolation operator -(Interpolation a, Interpolation b) {
-		return new Interpolation(t => a.curve(t) - b.curve(t));
+	public static AnimatedCurve operator -(AnimatedCurve a, AnimatedCurve b) {
+		return new AnimatedCurve(t => a.curve(t) - b.curve(t));
 	}
 
-	public static Interpolation operator *(Interpolation a, Interpolation b) {
-		return new Interpolation(t => a.curve(t) * b.curve(t));
+	public static AnimatedCurve operator *(AnimatedCurve a, AnimatedCurve b) {
+		return new AnimatedCurve(t => a.curve(t) * b.curve(t));
 	}
 
-	public static Interpolation operator /(Interpolation a, Interpolation b) {
-		return new Interpolation(t => a.curve(t) / b.curve(t));
+	public static AnimatedCurve operator /(AnimatedCurve a, AnimatedCurve b) {
+		return new AnimatedCurve(t => a.curve(t) / b.curve(t));
 	}
 
-	public static implicit operator Interpolation(float f) {
-        return new Interpolation(t => f);
+	public static implicit operator AnimatedCurve(float f) {
+        return new AnimatedCurve(t => f);
     }
 
-	public static implicit operator Interpolation(AnimationCurve c) {
-		return new Interpolation(c);
+	public static implicit operator AnimatedCurve(AnimationCurve c) {
+		return new AnimatedCurve(c);
 	}
 
-    public static implicit operator Interpolation(Curve c) {
-		return new Interpolation(c);
+    public static implicit operator AnimatedCurve(Curve c) {
+		return new AnimatedCurve(c);
 	}
 }

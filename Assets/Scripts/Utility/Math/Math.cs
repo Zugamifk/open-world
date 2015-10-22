@@ -46,8 +46,28 @@ namespace Extensions {
         }
 
         /** Interval on 0-1 rather than 0-2pi */
-        public static float UCos(float t) {
+        public static float Cos(float t) {
             return Mathf.Cos(t*2*Mathf.PI);
+        }
+
+        /** Normalized Sine */
+        public static float NSin(float t) {
+            return 0.5f+0.5f*Mathf.Sin(t);
+        }
+
+        /** Normalized Cosine */
+        public static float NCos(float t) {
+            return 0.5f+0.5f*Mathf.Cos(t);
+        }
+
+        /** Normalized Sine with interval on 0-1 rather than 0-2pi */
+        public static float UNSin(float t) {
+            return 0.5f+0.5f* Mathf.Sin(t*2*Mathf.PI);
+        }
+
+        /** Normalized Cosine on interval on 0-1 rather than 0-2pi */
+        public static float UNCos(float t) {
+            return 0.5f+0.5f*Mathf.Cos(t*2*Mathf.PI);
         }
 
         public static int IntPow(int x, int pow)
@@ -61,6 +81,14 @@ namespace Extensions {
                 pow >>= 1;
             }
             return ret;
+        }
+
+        public static float Repeat(float t, float length) {
+            if(t<0) {
+                return length - Mathf.Repeat(-t, length);
+            } else {
+                return Mathf.Repeat(t, length);
+            }
         }
 
     }
