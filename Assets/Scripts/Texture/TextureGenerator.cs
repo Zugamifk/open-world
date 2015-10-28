@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace TextureGenerator {
+namespace Textures {
 	public abstract class TextureGenerator {
         public int width = 256;
         public int height = 256;
@@ -20,6 +20,7 @@ namespace TextureGenerator {
             var tex = new Texture2D(width, height);
             var pixels = GetPixels().ToArray();
             tex.SetPixels(pixels);
+			tex.name = name;
             tex.Apply();
 			return tex;
         }

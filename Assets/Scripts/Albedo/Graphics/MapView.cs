@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace Albedo.World {
+namespace Albedo.Graphics {
+	using World = Albedo.World;
 	public class MapView : MonoBehaviour {
         [SerializeField]
         protected int tileWidth;
@@ -10,7 +11,19 @@ namespace Albedo.World {
 
         private Vector2 centrePosition;
 
-        private Tile[,] visibleTiles;
+        private World.Tile[,] worldTiles;
+        private Ground.Tile[,] groundTiles;
+
+        private static MapView main;
+        public static MapView Main {
+            get
+            {
+                return main;
+            }
+        	protected set {
+				main = value;
+			}
+        }
 
         public Rect ViewRect {
 			get {
@@ -23,8 +36,15 @@ namespace Albedo.World {
             }
 		}
 
+		public Vector2 CentrePosition {
+			get {
+                return centrePosition;
+            }
+		}
+
 		void Awake() {
-            visibleTiles = new Tile[tileWidth + 1, tileHeight + 1];
+            worldTiles = new World.Tile[tileWidth + 1, tileHeight + 1];
+            this.SetInstanceOrKill(ref main);
         }
 
 		void Update() {
@@ -33,10 +53,10 @@ namespace Albedo.World {
         }
 
 		void Draw() {
-			Map.GetTiles(ViewRect, ref visibleTiles);
+			World.Map.GetTiles(ViewRect, ref worldTiles);
 			for(int x=0;x<(int)ViewRect.width;x++) {
 				for(int y=0;y<(int)ViewRect.height;y++) {
-                    visibleTiles[x, y].Draw(centrePosition);
+                    worldTiles[x, y].Draw(centrePosition);
                 }
 			}
 		}

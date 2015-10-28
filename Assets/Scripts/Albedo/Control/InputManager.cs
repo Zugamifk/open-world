@@ -16,9 +16,9 @@ namespace Albedo {
         LOOK_HORIZONTAL,
         LOOK_VERTICAL,
         BUTTON0,
+        BUTTON1,
         BUTTON2,
         BUTTON3,
-        BUTTON4,
     }
 
     public class InputManager : MonoBehaviour {

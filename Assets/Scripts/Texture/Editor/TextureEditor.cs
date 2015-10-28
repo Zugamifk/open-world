@@ -5,7 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Collections;
 
-namespace TextureGenerator {
+namespace Textures {
 	public class TextureEditor : EditorWindow {
 
         const string kTexturePath = "Assets/Textures/";
