@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Extensions;
 
 namespace Albedo.Graphics {
 	using World = Albedo.World;
@@ -57,6 +58,18 @@ namespace Albedo.Graphics {
 			for(int x=0;x<(int)ViewRect.width;x++) {
 				for(int y=0;y<(int)ViewRect.height;y++) {
                     worldTiles[x, y].Draw(centrePosition);
+                }
+			}
+		}
+
+		void OnDrawGizmos(){
+			if(!EditorProtection.IsPlaying) return;
+			for(int x=0;x<(int)ViewRect.width;x++) {
+				for(int y=0;y<(int)ViewRect.height;y++) {
+                    var col = new ColorHSV(2*(centrePosition.x + (float)x) / ViewRect.width, Math.UNSin((float)y / ViewRect.height), 1);
+                    Gizmos.color = (Color)col;
+                    // Debug.Log(col);
+                    Gizmos.DrawSphere(worldTiles[x,y].position-centrePosition, 0.25f);
                 }
 			}
 		}

@@ -15,6 +15,10 @@ public struct ColorHSV {
 			Mathf.Lerp(a.v, b.v, t)
 		);
 	}
+
+	public override string ToString() {
+        return string.Format("ColorHSV ({0}, {1}, {2})", h, s, v);
+    }
 	public static implicit operator Color(ColorHSV hsv) {
 		float h = hsv.h;
 		float s = hsv.s;
@@ -24,7 +28,7 @@ public struct ColorHSV {
 			return Color.white*v;
 		}
 
-		h *= 6;
+		h = Extensions.Math.Repeat(h,1) * 6;
 		int i = Mathf.FloorToInt(h);
 		float f = h - i;
 		float p = v * (1 - s);

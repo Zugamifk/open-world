@@ -25,6 +25,10 @@ namespace Albedo {
 			get {
                 return instance.position;
             }
+			protected set {
+                // Debug.Log(instance.position + " -> " + value+" : "+Time.deltaTime+" : "+instance.velocity);
+                instance.position = value;
+            }
 		}
 
 	    void Awake() {
@@ -35,13 +39,14 @@ namespace Albedo {
         }
 
 		void Start() {
-            position = Map.Middle;
+            Position = Map.Middle;
+			Albedo.Crunching.CrunchManager.UpdateStatus(Constants.PlayerControlInitialized, true);
         }
 
 		void Update() {
 	        UpdateVelocity();
 
-			position += velocity * Time.deltaTime;
+			Position += velocity * Time.deltaTime;
 			Debugx.DrawCross(transform.position, 1, Colorx.lightmaroon);
         }
 

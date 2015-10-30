@@ -15,5 +15,10 @@ namespace Albedo {
 
         /** Sprite pixels-per-unit */
         public const int SpritePPU = 16;
+
+        /** STRINGS */
+
+        /** game conditions */
+        public const string PlayerControlInitialized = "Player Control Initialized";
     }
 }

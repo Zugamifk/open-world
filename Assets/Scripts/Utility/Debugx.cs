@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Diagnostics;
 
 public static class Debugx {
 
@@ -26,21 +27,45 @@ public static class Debugx {
             return new Vector3(v);
         }
 		public static UnityEngine.Vector3 operator+(UnityEngine.Vector3 a, Vector3 b) {
-			Debug.DrawLine(a, b.vector, b.color);
+			UnityEngine.Debug.DrawLine(a, b.vector, b.color);
             return a + b.vector;
         }
     }
 
 	public static void DrawCross(UnityEngine.Vector3 position, float size, Color color, float duration = 0, bool depthTest = false) {
-		Debug.DrawLine(	position + UnityEngine.Vector3.up * size,
+		UnityEngine.Debug.DrawLine(	position + UnityEngine.Vector3.up * size,
 						position + UnityEngine.Vector3.down * size,
 						color,
 						duration,
 						depthTest);
-		Debug.DrawLine(	position + UnityEngine.Vector3.left * size,
+		UnityEngine.Debug.DrawLine(	position + UnityEngine.Vector3.left * size,
 						position + UnityEngine.Vector3.right * size,
 						color,
 						duration,
 						depthTest);
 	}
+
+    public static Stopwatch timer;
+    public static void Tick() {
+        timer = Stopwatch.StartNew();
+    }
+
+	public static void Tock() {
+		if(timer==null) {
+            UnityEngine.Debug.LogError("Timer not started!");
+            return;
+        } else {
+            UnityEngine.Debug.Log("TIME: " + timer.Elapsed.Milliseconds+" ms");
+        }
+	}
+
+    public static System.Action StartTimer()
+    {
+        var timer = Stopwatch.StartNew();
+        return () =>
+        {
+            UnityEngine.Debug.Log("TIME: " + timer.Elapsed.Milliseconds+" ms");
+            timer = Stopwatch.StartNew();
+        };
+    }
 }
