@@ -14,6 +14,9 @@ namespace Albedo.Graphics {
         public Gradient Colors { get; set; }
 
         public GroundTexture(int unitWidth, int unitHeight) {
+            GenerateMipMaps = false;
+            AnisoLevel = 0;
+
             UnitScale = new Vector2(unitWidth, unitHeight);
             width = unitWidth * Constants.TileWidthPixels;
 			height = unitHeight * Constants.TileHeightPixels;

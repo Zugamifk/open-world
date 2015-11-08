@@ -15,9 +15,41 @@ namespace Textures {
             }
 		}
 
-		public abstract IEnumerable<Color> GetPixels();
+        protected TextureFormat format = TextureFormat.ARGB32;
+        public TextureFormat Format {
+			get {
+				return format;
+			}
+			set {
+				format = value;
+			}
+		}
+
+		protected bool generateMipMaps = true;
+		public bool GenerateMipMaps{
+			get {
+                return generateMipMaps;
+            }
+			set {
+				generateMipMaps = value;
+			}
+		}
+
+        protected int anisoLevel;
+		public int AnisoLevel {
+			get {
+                return anisoLevel;
+            }
+			set {
+				anisoLevel = value;
+			}
+		}
+
+        public abstract IEnumerable<Color> GetPixels();
         public virtual Texture2D Generate() {
-            var tex = new Texture2D(width, height);
+            var tex = new Texture2D(width, height, Format, GenerateMipMaps);
+            tex.anisoLevel = anisoLevel;
+
             var pixels = GetPixels().ToArray();
             tex.SetPixels(pixels);
 			tex.name = name;

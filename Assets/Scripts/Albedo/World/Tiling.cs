@@ -16,7 +16,7 @@ namespace Albedo.World {
 			for(int x=0;x<1024;x++) {
 				for(int y=0;y<1024;y++) {
                     var tile = new Tile();
-                    tile.position = new Vector2(x, y);
+                    tile.position = new Vector3i(x, y,0);
                     tiles[x, y] = tile;
                 }
 			}

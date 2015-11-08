@@ -148,9 +148,11 @@ namespace Albedo.Graphics {
 			var basePos = (Vector2)lookupPosition;
 
             if(!spriteLookup.TryGetValue(lookupPosition, out sprite)) {
+				Debugx.Tick();
                 groundTextureGenerator.Position = basePos;
                 var tex = groundTextureGenerator.Generate();
-                tex.filterMode = FilterMode.Point;
+				tex.filterMode = FilterMode.Point;
+
                 sprite = Sprite.Create(
                     tex,
                     TilePixelRect,
@@ -158,6 +160,7 @@ namespace Albedo.Graphics {
                     Constants.SpritePPU);
                 spriteLookup.Add(lookupPosition, sprite);
                 generatedTileCount = spriteLookup.Count;
+				Debugx.Tock();				
             }
 			return sprite;
 		}

@@ -1,8 +1,8 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="../../Desktop/Cyoob/Assets/Scripts/AnimationTriggerTester.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\Albedo\World\Object.cs">
     <Files>
-      <File FileName="../../Desktop/Cyoob/Assets/Scripts/AnimationTriggerTester.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Albedo\World\Object.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
