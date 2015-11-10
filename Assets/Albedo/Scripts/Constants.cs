@@ -7,6 +7,11 @@ using System.Collections;
 namespace Albedo {
     public static class Constants {
 
+        /** COUNTS */
+        public const int MaxTileObjects = 8;
+
+        /** UNIT MEASURES */
+
         /** Tile width in pixel units */
         public const int TileWidthPixels = 16;
 
@@ -15,6 +20,14 @@ namespace Albedo {
 
         /** Sprite pixels-per-unit */
         public const int SpritePPU = 16;
+
+        /** Sprite sorting orders */
+
+        public const int GroundSortingOrder = 0;
+        public const int GroundSurfaceSortingOrder = 1;
+        public const int PlayerSortingOrder = 2;
+        public const int OverPlayerSortingOrder = 3;
+        public const int HighSortingOrder = 4;
 
         /** STRINGS */
 

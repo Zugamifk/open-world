@@ -13,6 +13,8 @@ namespace Albedo.Graphics {
 		[SerializeField][Readonly]
         private State m_state;
 
+        new private SpriteRenderer renderer;
+
         protected State state {
 			get {
 				return m_state;
@@ -29,6 +31,8 @@ namespace Albedo.Graphics {
         // Use this for initialization
         void Awake () {
             base.Awake();
+            renderer = GetComponent<SpriteRenderer>();
+            renderer.sortingOrder = Constants.PlayerSortingOrder;
             m_state = State.IDLE;
 		}
 

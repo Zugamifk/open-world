@@ -2,10 +2,11 @@
 using System.Collections;
 
 namespace Albedo.World {
-	public class TileObject : MonoBehaviour {
+	public class TileObject {
 
+        public string name = "Unnamed";
         public Tile tile;
-        new public Renderer renderer;
-		
+        public Sprite graphic;
+
     }
 }

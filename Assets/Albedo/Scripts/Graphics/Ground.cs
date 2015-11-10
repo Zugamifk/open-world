@@ -49,6 +49,7 @@ namespace Albedo.Graphics {
 
             void Awake() {
                 renderer = GetComponent<SpriteRenderer>();
+                renderer.sortingOrder = Constants.GroundSortingOrder;
             }
 
 			public void SetTiles(World.Tile[,] tiles) {
@@ -160,7 +161,7 @@ namespace Albedo.Graphics {
                     Constants.SpritePPU);
                 spriteLookup.Add(lookupPosition, sprite);
                 generatedTileCount = spriteLookup.Count;
-				Debugx.Tock();				
+				Debugx.Tock();
             }
 			return sprite;
 		}
