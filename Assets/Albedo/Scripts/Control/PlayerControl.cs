@@ -35,7 +35,15 @@ namespace Albedo {
             }
 		}
 
-	    void Awake() {
+        public static Rect BoundingBox = new Rect(-0.25f, -0.25f, .5f, .5f);
+        public static Vector2[] Corners = new Vector2[] {
+            new Vector2(-0.25f, -0.25f),
+            new Vector2(-0.25f, 0.25f),
+            new Vector2(0.25f, 0.25f),
+            new Vector2(0.25f, -0.25f)
+        };
+
+        void Awake() {
             if (this.SetInstanceOrKill(ref instance))
             {
 				m_movementControl.RegisterVelocityUpdate(UpdateMovementVelocity);
@@ -52,7 +60,7 @@ namespace Albedo {
 
             RaycastHit info;
 
-            if (MapView.Raycast(position, position + velocity * Time.deltaTime, an => an.Tile.Collides, out info))
+            if (CheckCorners(out info))
             {
                 var newvelocity = (Vector2)(info.point+info.normal*Constants.PixelSize*0.5f) - position;
                 Debug.Log(info.point + " : " + info.normal+ " : "+(Vector2)(info.point+info.normal*Constants.PixelSize*2));
@@ -60,9 +68,32 @@ namespace Albedo {
                 position += newvelocity;
                 velocity -= Vector2.Dot(-velocity, (Vector2)info.normal) * (Vector2)info.normal;
             } else {
-            	position += (Vector2)info.point - position;
+            	position += velocity * Time.deltaTime;
 			}
-			Debugx.DrawCross(transform.position, 1, Colorx.lightmaroon);
+			Debugx.DrawRect(BoundingBox, Colorx.lightmaroon);
+        }
+
+		bool CheckCorners(out RaycastHit info) {
+            RaycastHit hit;
+            info = new RaycastHit();
+            int collisionCorner = -1;
+            for (int i = 0; i < 4; i++)
+            {
+                if(MapView.Raycast(position + Corners[i], position + Corners[i] + velocity * Time.deltaTime, an => an.Tile.Collides, out hit)) {
+					if(collisionCorner<0 || hit.distance < info.distance) {
+						info = hit;
+                        Debug.Log(hit.distance);
+                        collisionCorner = i;
+                    }
+				}
+            }
+			if(collisionCorner<0) {
+				return false;
+			} else
+            {
+                info.point -= (Vector3)Corners[collisionCorner];
+				return true;
+            }
         }
 
 		void UpdateMovementVelocity(Vector2 velocity) {

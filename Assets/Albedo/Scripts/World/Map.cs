@@ -30,8 +30,8 @@ namespace Albedo.World {
                 return;
             }
 
-            var rx = (int)rect.x;
-            var ry = (int)rect.y;
+            var rx = (int)Mathf.Max(rect.x,0);
+            var ry = (int)Mathf.Max(rect.y,0);
             for(int x=0;x<X;x++) {
 				for(int y=0;y<Y;y++) {
                     tiles[x, y] = instance.tiles.Tiles[rx + x, ry + y];

@@ -116,6 +116,7 @@ namespace Albedo.Graphics {
                 }
             }
             info.point = start + line;
+            info.distance = line.magnitude;
             info.normal = normal;
             return hit;
 		}
