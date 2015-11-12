@@ -39,6 +39,10 @@ namespace Albedo.World {
 			}
 		}
 
+		public static Tile GetTile(Vector3i position) {
+            return instance.tiles.Tiles[position.x, position.y];
+        }
+
         void Awake() {
             this.SetInstanceOrKill(ref instance);
             tiles = new Tiling();

@@ -43,6 +43,12 @@ namespace Albedo {
                 return KeyStrings[i];
         }
 
+        public static Vector3 MouseScreenPosition {
+            get {
+                return Input.mousePosition;
+            }
+        }
+
         public static void RegisterAxisUpdateCallback(InputKey axis, AxisUpdate callback) {
             var key = GetKeyString(axis);
             instance.AxisUpdateCallbacks[key] += callback;

@@ -42,6 +42,16 @@ namespace Albedo.Graphics {
             name = string.Format("Tile [{0},{1}]", WorldPosition.x, WorldPosition.y);
         }
 
+		void Update() {
+			if(MapView.Selected==tile) {
+				DrawOutline(Color.green);
+			}
+		}
+
+		public void DrawOutline(Color color) {
+			Debugx.DrawRect(new Rect(transform.position.x, transform.position.y, 1, 1), color);
+		}
+
         public void SetTile(World.Tile tile) {
 			this.tile = tile;
 			worldPosition = tile.position;

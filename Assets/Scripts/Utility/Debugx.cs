@@ -45,6 +45,13 @@ public static class Debugx {
 						depthTest);
 	}
 
+    public static void DrawRect(Rect rect, Color color, float duration = 0, bool depthTest = false) {
+		UnityEngine.Debug.DrawLine(new Vector3(rect.xMin, rect.yMin, 0), new Vector3(rect.xMin, rect.yMax, 0), color, duration, depthTest);
+		UnityEngine.Debug.DrawLine(new Vector3(rect.xMin, rect.yMax, 0), new Vector3(rect.xMax, rect.yMax, 0), color, duration, depthTest);
+		UnityEngine.Debug.DrawLine(new Vector3(rect.xMax, rect.yMax, 0), new Vector3(rect.xMax, rect.yMin, 0), color, duration, depthTest);
+        UnityEngine.Debug.DrawLine(new Vector3(rect.xMin, rect.yMin, 0), new Vector3(rect.xMax, rect.yMin, 0), color, duration, depthTest);
+    }
+
     public static Stopwatch timer;
     public static void Tick() {
         timer = Stopwatch.StartNew();

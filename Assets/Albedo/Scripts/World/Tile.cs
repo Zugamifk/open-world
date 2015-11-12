@@ -8,6 +8,11 @@ namespace Albedo.World {
         public TileObject[] objects;
         public int objectCount;
 
+        public bool Collides {
+            get;
+            protected set;
+        }
+
         public Tile() {
             objects = new TileObject[Constants.MaxTileObjects];
             objectCount = 0;
@@ -18,6 +23,7 @@ namespace Albedo.World {
 
                 objects[0] = to;
                 objectCount++;
+				Collides = true;
             }
         }
 

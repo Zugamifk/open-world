@@ -31,8 +31,10 @@ namespace Albedo.Graphics {
             }
         }
 
-		public void DebugDraw() {
-			Debugx.DrawCross(transform.position, 0.3f, Color.red);
+		public void Update() {
+			if(tileObject!=null) {
+				Debugx.DrawRect(new Rect(transform.position.x, transform.position.y, 1, 1), Color.green );
+			}
 		}
 	}
 }

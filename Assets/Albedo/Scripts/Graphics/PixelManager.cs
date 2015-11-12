@@ -17,8 +17,8 @@ namespace Albedo.Graphics {
 
 		public static Vector2 SnapVector(Vector2 input) {
             return new Vector2(
-                Mathf.Floor(input.x * PPUfloat) / PPUfloat,
-                Mathf.Floor(input.y * PPUfloat) / PPUfloat
+                Mathf.Round(input.x * PPUfloat) / PPUfloat,
+                Mathf.Round(input.y * PPUfloat) / PPUfloat
             );
         }
 	}

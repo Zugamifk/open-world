@@ -29,14 +29,13 @@ namespace Albedo.Graphics {
     	}
 
         // Use this for initialization
-        void Awake () {
+        new void Awake () {
             base.Awake();
             renderer = GetComponent<SpriteRenderer>();
             renderer.sortingOrder = Constants.PlayerSortingOrder;
             m_state = State.IDLE;
 		}
 
-        private Vector2 lastVelocity = Vector2.zero;
         public void UpdateState(Vector2 velocity) {
 			if(!Math.Approximately(velocity, Vector2.zero)) {
 				SetDirection(velocity);

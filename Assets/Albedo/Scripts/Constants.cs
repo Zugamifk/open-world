@@ -21,6 +21,9 @@ namespace Albedo {
         /** Sprite pixels-per-unit */
         public const int SpritePPU = 16;
 
+        /** size of a pixel in world units */
+        public const float PixelSize = 1f / 16f;
+
         /** Sprite sorting orders */
 
         public const int GroundSortingOrder = 0;

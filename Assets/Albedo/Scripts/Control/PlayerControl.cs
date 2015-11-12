@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using Albedo.World;
 using Albedo.Graphics;
 
@@ -41,7 +42,7 @@ namespace Albedo {
             }
         }
 
-		void Start() {
+        void Start() {
             Position = Map.Middle;
 			Albedo.Crunching.CrunchManager.UpdateStatus(Constants.PlayerControlInitialized, true);
         }
@@ -49,7 +50,18 @@ namespace Albedo {
 		void Update() {
 	        UpdateVelocity();
 
-			position += velocity * Time.deltaTime;
+            RaycastHit info;
+
+            if (MapView.Raycast(position, position + velocity * Time.deltaTime, an => an.Tile.Collides, out info))
+            {
+                var newvelocity = (Vector2)(info.point+info.normal*Constants.PixelSize*0.5f) - position;
+                Debug.Log(info.point + " : " + info.normal+ " : "+(Vector2)(info.point+info.normal*Constants.PixelSize*2));
+
+                position += newvelocity;
+                velocity -= Vector2.Dot(-velocity, (Vector2)info.normal) * (Vector2)info.normal;
+            } else {
+            	position += (Vector2)info.point - position;
+			}
 			Debugx.DrawCross(transform.position, 1, Colorx.lightmaroon);
         }
 
