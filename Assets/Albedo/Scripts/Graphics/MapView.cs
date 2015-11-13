@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using Extensions;
 
 namespace Albedo.Graphics {
@@ -22,6 +23,8 @@ namespace Albedo.Graphics {
 		protected Vector3i bottomLeftTile;
 
         private Ground.Tile[,] groundTiles;
+
+        public static Dictionary<Vector3i, System.Action<TileAnimator>> DebugTiles;
 
         private static MapView main;
         public static MapView Main {
@@ -134,12 +137,18 @@ namespace Albedo.Graphics {
 
             worldTiles = new TileAnimator[visibleTilesWidth, visibleTilesHeight];
 
+            DebugTiles = new Dictionary<Vector3i, System.Action<TileAnimator>>();
+
             this.SetInstanceOrKill(ref main);
         }
 
 		void Start() {
 			InitializeTiles();
-		}
+			foreach(var pt in Math2D.CirclePoints(new Vector3i(512,512,0), 10)) {
+				DebugTiles[pt] = tile =>tile.DrawOutline(Color.blue);
+			}
+            VisionRadius.Initialize(visibleTilesWidth, visibleTilesHeight);
+        }
 
 		void Update() {
             centrePosition = PlayerControl.Position;

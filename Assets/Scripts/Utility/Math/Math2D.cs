@@ -192,5 +192,40 @@ namespace Extensions {
             }
         }
 
+        public static IEnumerable<Vector3i> CirclePoints(Vector3i origin, int radius) {
+            int x, y, decisionOver2;
+            for (int octant = 0; octant < 8; octant++)
+            {
+                x = radius;
+                y = 0;
+                decisionOver2 = 1 - x;
+
+                while (y <= x)
+                {
+                    switch (octant)
+                    {
+                        case 0: yield return new Vector3i(x + origin.x, y + origin.y, 0); break;
+                        case 1: yield return new Vector3i(y + origin.x, x + origin.y, 0); break;
+                        case 2: yield return new Vector3i(-x + origin.x, y + origin.y, 0); break;
+                        case 3: yield return new Vector3i(-y + origin.x, x + origin.y, 0); break;
+                        case 4: yield return new Vector3i(-x + origin.x, -y + origin.y, 0); break;
+                        case 5: yield return new Vector3i(-y + origin.x, -x + origin.y, 0); break;
+                        case 6: yield return new Vector3i(x + origin.x, -y + origin.y, 0); break;
+                        case 7: yield return new Vector3i(y + origin.x, -x + origin.y, 0); break;
+                    }
+                    y++;
+                    if (decisionOver2 <= 0)
+                    {
+                        decisionOver2 += 2 * y + 1;
+                    }
+                    else
+                    {
+                        x--;
+                        decisionOver2 += 2 * (y - x) + 1;
+                    }
+                }
+            }
+        }
+
     }
 }

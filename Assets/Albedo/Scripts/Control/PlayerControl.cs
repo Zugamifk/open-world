@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Albedo.World;
 using Albedo.Graphics;
+using Extensions;
 
 namespace Albedo {
 	public class PlayerControl : MonoBehaviour {
@@ -32,6 +33,12 @@ namespace Albedo {
 			protected set {
                 // Debug.Log(instance.position + " -> " + value+" : "+Time.deltaTime+" : "+instance.velocity);
                 instance.position = value;
+            }
+		}
+
+		public static Vector2 TileOffset {
+			get {
+                return new Vector2(Math.Repeat(Position.x,1), Math.Repeat(Position.y,1));
             }
 		}
 

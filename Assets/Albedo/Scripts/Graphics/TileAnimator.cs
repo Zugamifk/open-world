@@ -43,9 +43,10 @@ namespace Albedo.Graphics {
         }
 
 		void Update() {
-			if(MapView.Selected==tile) {
-				DrawOutline(Color.green);
-			}
+            System.Action<TileAnimator> debugdraw;
+            if(MapView.DebugTiles.TryGetValue(WorldPosition, out debugdraw)) {
+                debugdraw(this);
+            }
 		}
 
 		public void DrawOutline(Color color) {
