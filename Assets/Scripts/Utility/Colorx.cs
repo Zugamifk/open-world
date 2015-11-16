@@ -55,6 +55,10 @@ public static class Colorx {
 		return hsv;
 	}
 
+	public static Color SetAlpha(this Color col, float a) {
+        return new Color(col.r, col.g, col.b, a);
+    }
+
 	public static IEnumerable<Color> FibonacciHues(Color seed) {
 		var col = (ColorHSV)seed;
 		while(true) {

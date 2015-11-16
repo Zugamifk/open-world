@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using Textures;
@@ -26,7 +27,8 @@ namespace Albedo.Graphics {
 
         protected GroundTexture groundTextureGenerator;
         protected Dictionary<Vector3i, Sprite> spriteLookup;
-		protected int visibleTilesWidth;
+        protected HashSet<Vector3i> spritesAssigned;
+        protected int visibleTilesWidth;
         protected int visibleTilesHeight;
         protected Tile[,] currentTiles;
 		protected World.Tile[,] worldTilesforGroundTile;
@@ -80,6 +82,7 @@ namespace Albedo.Graphics {
             groundTextureGenerator = new GroundTexture(tileWidth, tileHeight);
             groundTextureGenerator.Colors = gradient;
             spriteLookup = new Dictionary<Vector3i, Sprite>();
+            spritesAssigned = new HashSet<Vector3i>();
             worldTilesforGroundTile = new World.Tile[tileWidth, tileHeight];
             bottomLeftTile = Vector3i.zero;
         }
@@ -87,13 +90,16 @@ namespace Albedo.Graphics {
 		void Start() {
 			InitializeGameObjects(MapView.Main.ViewRect);
 			CrunchManager.AddRoutine(()=>PrecrunchTileTextures(), Constants.PlayerControlInitialized);
+            var precrunchTotal = (precrunchRadius * 2 + 1) * (precrunchRadius * 2 + 1);
+            LoadingBar.AddJob("Generating Dirt Textures", precrunchTotal, () => (float)spriteLookup.Count / (float)precrunchTotal);
+            LoadingBar.OnPostLoad += RefreshTiles;
         }
 
 		void Update() {
             UpdateTiles(MapView.Main.ViewRect);
         }
 
-		IEnumerator PrecrunchTileTextures() {
+		void PrecrunchTileTextures() {
             var mid = GetTilePosition(PlayerControl.Position);
             for(int x=mid.x-precrunchRadius*tileWidth;
 				x<=mid.x+precrunchRadius*tileWidth;
@@ -104,8 +110,6 @@ namespace Albedo.Graphics {
 					y+=tileHeight) {
 
                     GetSprite(new Vector2(x, y));
-                    yield return 1;
-
                 }
 
 			}
@@ -148,23 +152,40 @@ namespace Albedo.Graphics {
             var lookupPosition = GetTilePosition(position);
 			var basePos = (Vector2)lookupPosition;
 
-            if(!spriteLookup.TryGetValue(lookupPosition, out sprite)) {
-				Debugx.Tick();
-                groundTextureGenerator.Position = basePos;
-                var tex = groundTextureGenerator.Generate();
-				tex.filterMode = FilterMode.Point;
+            lock (spriteLookup)
+            {
+                if (!spriteLookup.TryGetValue(lookupPosition, out sprite) && !spritesAssigned.Contains(lookupPosition))
+                {
 
-                sprite = Sprite.Create(
-                    tex,
-                    TilePixelRect,
-                    Vector2.zero,
-                    Constants.SpritePPU);
-                spriteLookup.Add(lookupPosition, sprite);
-                generatedTileCount = spriteLookup.Count;
-				Debugx.Tock();
+					Texture2D tex = groundTextureGenerator.GetEmptyTexture();
+                    Color[] pixels = null;
+                    spritesAssigned.Add(lookupPosition);
+                    ThreadManager.QueueTask(() =>
+                   {
+						groundTextureGenerator.Position = basePos;
+						pixels = groundTextureGenerator.GetPixels().ToArray();
+                   },
+				   () => {
+					   tex.SetPixels(pixels);
+					   tex.Apply();
+					   tex.filterMode = FilterMode.Point;
+					   sprite = Sprite.Create(
+						   tex,
+						   TilePixelRect,
+						   Vector2.zero,
+						   Constants.SpritePPU);
+                       spriteLookup.Add(lookupPosition, sprite);
+                       generatedTileCount = spriteLookup.Count;
+                   });
+                }
             }
-			return sprite;
+            return sprite;
 		}
+
+		bool IsVisible(Vector3i position) {
+            return position.x >= bottomLeftTile.x && position.x <= bottomLeftTile.x + currentTiles.GetLength(0) &&
+                position.y >= bottomLeftTile.y && position.y <= position.y + currentTiles.GetLength(1);
+        }
 
 		Vector3i GetTilePosition(Vector2 position) {
 			return new Vector3i(

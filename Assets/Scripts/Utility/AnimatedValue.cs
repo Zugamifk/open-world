@@ -65,6 +65,8 @@ public class AnimatedValue<T> {
         set { animator = value; }
     }
 
+    public Lambdas.Setter<T> SetCallback {get; set;}
+
     public AnimatedValue(T initial) {
         _value = initial;
         _internalValue = initial;
@@ -77,6 +79,10 @@ public class AnimatedValue<T> {
         animationTime = time;
     }
 
+    public Coroutine WaitForAnimation() {
+        return Animator.WaitFor(() => !animating);
+    }
+
 
     private bool animating;
     protected IEnumerator AnimateValue() {
@@ -84,6 +90,7 @@ public class AnimatedValue<T> {
                 interpolationParameter += UnityEngine.Time.deltaTime/animationTime) {
 
             _internalValue = interpolation(_fromValue, _value, interpolationParameter);
+            if(SetCallback!=null) SetCallback(_internalValue);
             yield return 1;
         }
         animating = false;

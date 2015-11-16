@@ -7,8 +7,6 @@ using System.Linq;
 namespace Albedo.Crunching {
 	public class CrunchManager : MonoBehaviour {
 
-        public delegate IEnumerator CrunchingRoutine();
-
         private enum ConditionStatus {
 			NotReady,
 			Ready,
@@ -16,12 +14,14 @@ namespace Albedo.Crunching {
 		}
 
 		private struct CrunchTask {
+            public bool runInSeparateThread;
             public string[] conditions;
-            public CrunchingRoutine task;
-			public CrunchTask(CrunchingRoutine task, params string[] conditions) {
+            public System.Action task;
+			public CrunchTask(System.Action task, params string[] conditions) {
 				this.task = task;
 				this.conditions = conditions;
-			}
+                runInSeparateThread = false;
+            }
         }
 
 		private Dictionary<string, ConditionStatus> conditionStatuses;
@@ -43,7 +43,12 @@ namespace Albedo.Crunching {
             for (int i = 0; i < maxCheck;i++) {
                 var task = tasks.Dequeue();
 				if(task.conditions.All(ConditionReady)) {
-                    StartCoroutine(task.task());
+                    if (task.runInSeparateThread)
+                    {
+                        ThreadManager.QueueTask(task.task);
+                    } else {
+                        task.task();
+                    }
                 } else {
 					tasks.Enqueue(task);
 				}
@@ -85,8 +90,14 @@ namespace Albedo.Crunching {
             }
         }
 
-		public static void AddRoutine(CrunchingRoutine routine, params string[] conditions) {
+		public static void AddRoutine(System.Action routine, params string[] conditions) {
 			instance.tasks.Enqueue(new CrunchTask(routine, conditions));
+		}
+
+		public static void AddRoutineAsync(System.Action routine, params string[] conditions) {
+            var newTask = new CrunchTask(routine, conditions);
+            newTask.runInSeparateThread = true;
+            instance.tasks.Enqueue(newTask);
 		}
 	}
 }

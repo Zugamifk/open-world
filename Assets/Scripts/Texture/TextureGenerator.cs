@@ -45,16 +45,24 @@ namespace Textures {
 			}
 		}
 
+		public virtual Texture2D GetEmptyTexture() {
+			var tex = new Texture2D(width, height, Format, GenerateMipMaps);
+			tex.anisoLevel = anisoLevel;
+			tex.name = name;
+			return tex;
+		}
+
+		public virtual void Fill(Texture2D tex) {
+			var pixels = GetPixels().ToArray();
+			tex.SetPixels(pixels);
+			tex.Apply();
+		}
+
         public abstract IEnumerable<Color> GetPixels();
         public virtual Texture2D Generate() {
-            var tex = new Texture2D(width, height, Format, GenerateMipMaps);
-            tex.anisoLevel = anisoLevel;
-
-            var pixels = GetPixels().ToArray();
-            tex.SetPixels(pixels);
-			tex.name = name;
-            tex.Apply();
-			return tex;
+            var tex = GetEmptyTexture();
+            Fill(tex);
+            return tex;
         }
     }
 }
