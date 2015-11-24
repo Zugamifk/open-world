@@ -36,15 +36,17 @@ namespace Albedo.Graphics {
 
 		public override IEnumerable<Color> GetPixels() {
 
+            var pos = Position;
+
             float xs = UnitScale.x/(float)width;
 			float ys = UnitScale.y/(float)height;
 
-            float xi = Position.x;
-            float yi = Position.y;
+            float xi = pos.x;
+            float yi = pos.y;
 
             for (int y = 0; y < height; y++)
             {
-                xi = Position.x;
+                xi = pos.x;
                 for (int x = 0; x < width; x++)
                 {
                     var t = sampler(xi, yi);

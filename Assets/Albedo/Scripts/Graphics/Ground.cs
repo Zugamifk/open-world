@@ -162,8 +162,14 @@ namespace Albedo.Graphics {
                     spritesAssigned.Add(lookupPosition);
                     ThreadManager.QueueTask(() =>
                    {
-						groundTextureGenerator.Position = basePos;
-						pixels = groundTextureGenerator.GetPixels().ToArray();
+                       IEnumerable<Color> gen;
+                       lock (groundTextureGenerator)
+                       {
+                           groundTextureGenerator.Position = basePos;
+                           gen = groundTextureGenerator.GetPixels();
+                       }
+					   pixels = gen.ToArray();
+
                    },
 				   () => {
 					   tex.SetPixels(pixels);

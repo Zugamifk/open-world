@@ -10,6 +10,9 @@ namespace Albedo.Graphics {
         Text m_statusText;
         [SerializeField]
         Image m_loadingBar;
+		[Header("Debug")]
+        [SerializeField]
+        bool debug;
 
         Queue<LoadJob> jobs;
         LoadJob currentJob;
@@ -19,7 +22,9 @@ namespace Albedo.Graphics {
 		bool loading;
 		IEnumerable<Graphic> renderers;
 
-		static LoadingBar instance;
+        System.Diagnostics.Stopwatch debugTimer;
+
+        static LoadingBar instance;
 
 		private class LoadJob {
             public string status;
@@ -29,6 +34,7 @@ namespace Albedo.Graphics {
 
         public delegate void PostLoadingAction();
         public static PostLoadingAction OnPostLoad;
+
 
         public static void AddJob(string status, int weight, System.Func<float> statusCB) {
             instance._AddJob(status, weight, statusCB);
@@ -53,6 +59,9 @@ namespace Albedo.Graphics {
             loading = false;
             m_statusText.text = "Done!";
             StartCoroutine(FinishedAnimation());
+			if(debug) {
+                Debug.Log("Loading time: " + debugTimer.Elapsed.TotalMilliseconds+" ms");
+            }
         }
 
 		IEnumerator FinishedAnimation() {
@@ -78,6 +87,13 @@ namespace Albedo.Graphics {
                 loading = true;
             }
         }
+
+		void Start() {
+			if(debug) {
+				debugTimer = new System.Diagnostics.Stopwatch();
+                debugTimer.Start();
+            }
+		}
 
 		void Update() {
 			if(!loading) return;
