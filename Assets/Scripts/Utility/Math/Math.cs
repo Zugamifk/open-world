@@ -40,6 +40,19 @@ namespace Extensions {
             return num > low && num < high;
         }
 
+        public static int RoundUpMagnitude(float f)
+        {
+            if (f > 0)
+            {
+                return Mathf.CeilToInt(f);
+            }
+            else if (f < 0)
+            {
+                return Mathf.FloorToInt(f);
+            }
+            else return 0;
+        }
+
         /** Interval on 0-1 rather than 0-2pi */
         public static float USin(float t) {
             return Mathf.Sin(t*2*Mathf.PI);

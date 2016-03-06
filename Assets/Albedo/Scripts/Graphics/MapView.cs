@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Extensions;
+using Extensions.Managers;
 
 namespace Albedo.Graphics {
 	using World = Albedo.World;

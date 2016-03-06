@@ -12,7 +12,9 @@ namespace Shrines
         
         public void InitializeGameobject()
         {
-            renderer = gameObject.AddComponent<SpriteRenderer>();
+            var sgo = new GameObject("sprite");
+            sgo.transform.SetParent(transform, false);
+            renderer = sgo.AddComponent<SpriteRenderer>();
         }
 
         public void SetTile(Tile tile)
@@ -20,6 +22,11 @@ namespace Shrines
             this.tile = tile;
 
             renderer.sprite = tile.data.sprite;
+            var spr = renderer.sprite;
+            if (spr != null)
+            {
+                renderer.transform.localPosition = -spr.Size() * 0.5f;
+            }
         }
     }
 }

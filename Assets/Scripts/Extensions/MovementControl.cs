@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace Albedo {
+namespace Extensions.Managers
+{
 	public class MovementControl : MonoBehaviour {
         public delegate void MovementControlVelocityUpdate(Vector2 move);
         private MovementControlVelocityUpdate velocityUpdate;

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Albedo.World;
 using Albedo.Graphics;
 using Extensions;
+using Extensions.Managers;
 
 namespace Albedo {
 	public class PlayerControl : MonoBehaviour {

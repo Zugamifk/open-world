@@ -22,9 +22,12 @@ namespace Shrines
                 {
                     var tile = new Tile();
                     tile.data = types.Random();
-                    grid[new Vector3i(x, y, 0)] = tile;
+                    tile.position = new Vector3i(x, y, 0);
+                    grid[tile.position] = tile;
                 }
             }
+            grid.width = width;
+            grid.height = height;
         }
     }
 }

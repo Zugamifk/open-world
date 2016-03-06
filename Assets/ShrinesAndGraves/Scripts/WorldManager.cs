@@ -7,6 +7,7 @@ namespace Shrines
     {
         public World world;
         public GridView view;
+        public Player player;
 
         static WorldManager s_instance;
 
@@ -17,12 +18,8 @@ namespace Shrines
                 return;
             }
             view.grid = world.grid;
-        }
 
-        // Update is called once per frame
-        void Update()
-        {
-
+            view.SetPositionCallback(() => player.position);
         }
     }
 }

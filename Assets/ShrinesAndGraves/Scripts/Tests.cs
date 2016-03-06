@@ -25,7 +25,7 @@ namespace Shrines {
 			}
 			for(int i=0;i<5;i++) {
 				var x = X0 + Random.value * M;
-				Debug.Log(string.Format("Overlapping {0}: {1}", x, tree.Overlapping(x).Count()));
+                //Debug.Log(string.Format("Overlapping {0}: {1}", x, tree.Overlapping(x).Count()));
 			}
 
             var y = 0;
@@ -53,7 +53,7 @@ namespace Shrines {
                 var lr = line.GetComponent<RectTransform>();
                 SetRect(lr);
                 lr.sizeDelta = Vector2.one;
-                Debug.Log(string.Format("{0} intervals on {1} at level {2}", n.sortedByMax.Count, n.center, n.depth));
+                //Debug.Log(string.Format("{0} intervals on {1} at level {2}", n.sortedByMax.Count, n.center, n.depth));
             }
 
 		}

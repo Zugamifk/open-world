@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Collections;
 
-namespace Albedo {
+namespace Extensions.Managers
+{
     public delegate void OnButtonDown();
     public delegate void OnButtonHeld();
     public delegate void OnButtonUp();

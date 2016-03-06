@@ -6,6 +6,6 @@ namespace Shrines
     public class Tile
     {
         public TileData data;
-        Vector3i position;
+        public Vector3i position;
     }
 }

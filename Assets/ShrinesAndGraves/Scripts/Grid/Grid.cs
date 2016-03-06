@@ -8,6 +8,9 @@ namespace Shrines
     {
         Dictionary<Vector3i, Tile> tiles = new Dictionary<Vector3i,Tile>();
 
+        public int width;
+        public int height;
+
         public Tile this[Vector3i v]
         {
             get
