@@ -123,7 +123,8 @@ namespace Albedo.Graphics {
 				for(int y=0;y<visibleTilesHeight;y++) {
                     var newTileGO = new GameObject();
 					newTileGO.transform.OrientTo(transform);
-                    newTileGO.AddComponent<SpriteRenderer>();
+                    var ren = newTileGO.AddComponent<SpriteRenderer>();
+                    ren.material = ResourceManager.Defaults.spriteMaterial;
                     var newTile = newTileGO.AddComponent<Tile>();
                     currentTiles[x, y] = newTile;
                 }

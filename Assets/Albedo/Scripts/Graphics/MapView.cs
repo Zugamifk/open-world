@@ -147,7 +147,7 @@ namespace Albedo.Graphics {
 			foreach(var pt in Math2D.CirclePoints(new Vector3i(512,512,0), 10)) {
 				DebugTiles[pt] = tile =>tile.DrawOutline(Color.blue);
 			}
-            VisionRadius.Initialize(visibleTilesWidth, visibleTilesHeight);
+            // VertexColorVisionRadius.Initialize(visibleTilesWidth, visibleTilesHeight);
         }
 
 		void Update() {

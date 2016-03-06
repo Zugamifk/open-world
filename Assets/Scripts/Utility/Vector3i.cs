@@ -51,6 +51,16 @@ public struct Vector3i : IComparable<Vector3i> {
 		return new Vector3i(a.x-b.x, a.y-b.y, a.z-b.z);
 	}
 
+    public static Vector3i operator *(Vector3i a, int i)
+    {
+        return new Vector3i(a.x * i, a.y * i, a.z * i);
+    }
+
+    public static Vector3i operator *(int i, Vector3i a)
+    {
+        return new Vector3i(i * a.x, i * a.y, i * a.z);
+    }
+
 	public static Vector3i operator- (Vector3i a){
 		return Vector3i.zero - a;
 	}

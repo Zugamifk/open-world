@@ -7,7 +7,7 @@ using Extensions;
 namespace Albedo.Graphics {
 	[RequireComponent(typeof(MeshRenderer))]
 	[RequireComponent(typeof(MeshFilter))]
-	public class VisionRadius : MonoBehaviour {
+	public class VertexColorVisionRadius : MonoBehaviour {
 
         [SerializeField]
         protected int radius;
@@ -19,10 +19,11 @@ namespace Albedo.Graphics {
         int width, height;
         Vector2 rootPosition;
 
-        private static VisionRadius instance;
+        private static VertexColorVisionRadius instance;
 
         void Awake() {
 			renderer = GetComponent<MeshRenderer>();
+            renderer.sortingOrder = Constants.VisionSortingOrder;
             filter = GetComponent<MeshFilter>();
 			this.SetInstanceOrKill(ref instance);
         }

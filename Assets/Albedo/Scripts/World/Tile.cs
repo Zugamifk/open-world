@@ -13,6 +13,8 @@ namespace Albedo.World {
             protected set;
         }
 
+        public bool Visible;
+
         public Tile() {
             objects = new TileObject[Constants.MaxTileObjects];
             objectCount = 0;

@@ -8,6 +8,7 @@ namespace Albedo {
 	public class Defaults : ScriptableObject
 	{
         public Sprite tileSprite;
+		public Material spriteMaterial;
 
 		#if UNITY_EDITOR
 		[MenuItem("Assets/Create/Defaults")]

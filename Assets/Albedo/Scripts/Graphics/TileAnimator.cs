@@ -29,6 +29,12 @@ namespace Albedo.Graphics {
 			}
 		}
 
+		public TileObjectAnimator[] Objects {
+			get {
+				return objects;
+			}
+		}
+
 		void Awake() {
             objects = new TileObjectAnimator[Constants.MaxTileObjects];
 			for(int i=0;i<Constants.MaxTileObjects;i++) {
@@ -41,6 +47,10 @@ namespace Albedo.Graphics {
             objectCount = 0;
             name = string.Format("Tile [{0},{1}]", WorldPosition.x, WorldPosition.y);
         }
+
+		void Start() {
+			LightingManager.RegisterTileAnimator(this);
+		}
 
 		void Update() {
             System.Action<TileAnimator> debugdraw;

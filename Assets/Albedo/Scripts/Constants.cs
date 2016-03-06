@@ -31,6 +31,7 @@ namespace Albedo {
         public const int PlayerSortingOrder = 2;
         public const int OverPlayerSortingOrder = 3;
         public const int HighSortingOrder = 4;
+        public const int VisionSortingOrder = 5;
 
         /** STRINGS */
 

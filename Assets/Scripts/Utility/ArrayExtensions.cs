@@ -4,7 +4,14 @@ public static class ArrayExtensions {
 
 	//Gets a random element from an array
 	public static T Random<T>(this T[] array) {
-		return array[Randomx.Index<T>(array)];
+        if (array == null || array.Length == 0)
+        {
+            return default(T);
+        }
+        else
+        {
+            return array[Randomx.Index<T>(array)];
+        }
 	}
 
 	//Returns a new array that is a copy of the given array with the element at the specified index removed

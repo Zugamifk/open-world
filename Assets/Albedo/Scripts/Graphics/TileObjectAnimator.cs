@@ -15,8 +15,16 @@ namespace Albedo.Graphics {
         void Awake() {
             renderer = GetComponent<SpriteRenderer>();
             renderer.sortingOrder = Constants.GroundSurfaceSortingOrder;
-			nullName = name;
+            nullName = name;
         }
+
+		void Start() {
+            renderer.material = ResourceManager.Defaults.spriteMaterial;
+        }
+
+		public void SetMaterialFloat(string name, float value) {
+			renderer.material.SetFloat(name, value);
+		}
 
 		public void SetObject(World.TileObject obj) {
 			if(obj==null) {
