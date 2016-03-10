@@ -37,7 +37,7 @@ namespace Landscape {
 			var verts = mesh.vertices;
 
 			for(int i=0;i<verts.Length;i++) {
-				verts[i] = verts[i].x0y();
+				verts[i] = ((Vector2)verts[i]).x0y();
 				verts[i].y = map.GetHeight(position.x+verts[i].x, position.y+verts[i].z);
 			}
 

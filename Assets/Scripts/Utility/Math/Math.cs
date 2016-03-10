@@ -29,7 +29,7 @@ namespace Extensions {
 
         public static int Mod(int num, int mod) {
             var res = num%mod;
-            return num > 0 ? res : res + mod;
+            return num < 0 ? res+mod : res;
         }
 
         public static float Place(float min, float max, float num) {

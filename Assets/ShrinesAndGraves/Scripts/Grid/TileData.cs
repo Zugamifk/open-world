@@ -6,5 +6,6 @@ namespace Shrines
     public class TileData : ScriptableObject
     {
         public Sprite sprite;
+        public bool collides;
     }
 }

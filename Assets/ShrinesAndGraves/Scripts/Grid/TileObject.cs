@@ -3,30 +3,39 @@ using System.Collections;
 
 namespace Shrines
 {
-    public class TileObject : MonoBehaviour
+    public class TileObject : WorldObject
     {
 
         public Tile tile;
 
-        SpriteRenderer renderer;
-        
-        public void InitializeGameobject()
+        public override void InitializeGameobject(Entity e)
         {
-            var sgo = new GameObject("sprite");
-            sgo.transform.SetParent(transform, false);
-            renderer = sgo.AddComponent<SpriteRenderer>();
+            base.InitializeGameobject(e);
+            SetTile(e as Tile);
         }
 
         public void SetTile(Tile tile)
         {
             this.tile = tile;
 
-            renderer.sprite = tile.data.sprite;
-            var spr = renderer.sprite;
-            if (spr != null)
+            if (tile != null)
             {
-                renderer.transform.localPosition = -spr.Size() * 0.5f;
+                renderer.sprite = tile.data.sprite;
+                var spr = renderer.sprite;
+                if (spr != null)
+                {
+                    var os = spr.Size();
+                    os.Scale(spr.pivot);
+                    renderer.transform.localPosition = -os;
+                }
             }
+            else ResetGameobject();
+        }
+
+        public override void ResetGameobject()
+        {
+            base.ResetGameobject();
+            tile = null;
         }
     }
 }

@@ -57,7 +57,7 @@ namespace Landscape {
 				position,
 				out tile)) {
 				tile = new Tile();
-				tile.position = position.xz();
+				tile.position = ((Vector3)position).xz();
 				tile.map = Generator;
 				tile.meshGenerator = groundTileMeshGenerator;
 				tile.Mesh = tile.Generate();

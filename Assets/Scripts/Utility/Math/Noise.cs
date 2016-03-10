@@ -20,7 +20,16 @@ namespace Extensions {
         {
             return Random.value;
         }
-
+        /// <summary>
+        /// Generates 1-Dimensional perlin noise
+        /// </summary>
+        /// <param name="signal">Defines random number distrubition. A uniform distrubtion will have a linear signal.</param>
+        /// <param name="frequencyDistribution">How frequency is adjusted between min and max in each iteration</param>
+        /// <param name="amplitudeDistribution">Multiplicative gain function for each distribution</param>
+        /// <param name="minFreq">Minimum frequency, first iteration</param>
+        /// <param name="maxFreq">Maximum frequency, final iteration</param>
+        /// <param name="steps">Number of iterations</param>
+        /// <returns>A function the takes a float x and return a perlin noise value</returns>
 		public static Noise1D FrequencyNoise1D(
 			System.Func<float, float> signal,
 			System.Func<float, float> frequencyDistribution,

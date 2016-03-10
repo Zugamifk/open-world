@@ -71,6 +71,19 @@ public static class GameObjectx {
 		}
 	}
 
+    public static T GetOrAddComponent<T>(this GameObject go) where T : Component
+    {
+        T result = go.GetComponent<T>();
+        if (result == null)
+        {
+            return go.AddComponent<T>();
+        }
+        else
+        {
+            return result;
+        }
+    }
+
 	/** checks inactive gameobjects as well */
 	public static IEnumerable<T> GetComponentsInAllChildren<T>(this GameObject go) where T:Component {
 		var component = go.GetComponent(typeof(T));

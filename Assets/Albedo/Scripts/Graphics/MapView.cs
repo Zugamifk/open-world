@@ -156,7 +156,7 @@ namespace Albedo.Graphics {
 
             var mouseHoverPos = Camera.main.ScreenToWorldPoint(InputManager.MouseScreenPosition);
 			Debugx.DrawCross(mouseHoverPos, 0.3f, Color.red);
-            Vector3i selectedPos = Vector3i.RoundDown(mouseHoverPos + (Vector3)centrePosition);
+            //Vector3i selectedPos = Vector3i.RoundDown(mouseHoverPos + (Vector3)centrePosition);
             // Selected = World.Map.GetTile(selectedPos);
 
             RaycastHit info;
