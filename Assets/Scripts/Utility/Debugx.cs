@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Diagnostics;
+using System.Linq;
 
 public static class Debugx {
 
@@ -52,6 +53,11 @@ public static class Debugx {
         UnityEngine.Debug.DrawLine(new Vector3(rect.xMin, rect.yMin, 0), new Vector3(rect.xMax, rect.yMin, 0), color, duration, depthTest);
     }
 
+    public static void Concat(string join, params object[] args)
+    {
+        UnityEngine.Debug.Log(string.Join(join, args.Select(o=>o.ToString()).ToArray()));
+    }
+
     public static Stopwatch timer;
     public static void Tick() {
         timer = Stopwatch.StartNew();
@@ -75,4 +81,5 @@ public static class Debugx {
             timer = Stopwatch.StartNew();
         };
     }
+
 }

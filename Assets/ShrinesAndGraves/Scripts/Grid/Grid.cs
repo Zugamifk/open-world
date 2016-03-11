@@ -9,6 +9,8 @@ namespace Shrines
     {
         Tile[,] tiles;
 
+        const float epsilon = 0.001f;
+
         static bool collideOnExceededWorldBounds = true;
 
         public int width;
@@ -74,6 +76,7 @@ namespace Shrines
             var normal = Vector2.zero; // normal for collision
             float xm = -1, ym = -1; // multiplier for normal directions
             bool hit = false; // was there a collision?
+            var sqo = new Vector2(start.x - (float)(int)start.x, start.y - (float)(int)start.y);
             foreach (var position in Math2D.SuperCover(start, end)) // march through grind squares
             {
                 //Debug.Log(position.y);
@@ -81,7 +84,7 @@ namespace Shrines
                 if ((tile != null && tile.collides) ||
                     (tile == null && collideOnExceededWorldBounds)) // collide on tile or leaving map bounds
                 {
-                    var to = position - start; // vector to collision point
+                    var to = position - start + sqo; // vector to collision point
                     //Debug.Log(to+" : "+line.y);
                     //line = to;
                     var bl = -to; // opposite vector to simplify algorithm
@@ -95,17 +98,18 @@ namespace Shrines
                         to.y += 1;
                         ym = 1;
                     }
-                    var dx = Physics.Bound(Mathf.Abs(to.x / line.x));
-                    var dy = Physics.Bound(Mathf.Abs(to.y / line.y));
+                    var dx = Mathf.Clamp01(to.x / line.x);
+                    var dy = Mathf.Clamp01(to.y / line.y);
 
                     if (Mathf.Approximately(line.y, 0))
                     {
-                        //Debug.Log(to.x + " : " + line.x+":"+dx);
+                        Debug.Log("x");
                         line *= dx;
                         normal = Vector3.right * xm;
                     }
                     else if (Mathf.Approximately(line.x, 0))
                     {
+                            Debugx.Concat(" : ", dy, line.y, to.y, ym);
                         line *= dy;
                         normal = Vector3.up * ym;
                     }
@@ -127,7 +131,7 @@ namespace Shrines
 
                 }
             }
-            info.point = start + line;
+            info.point = start + line + normal * epsilon;
             info.distance = line.magnitude;
             info.normal = normal;
             info.collided = hit;

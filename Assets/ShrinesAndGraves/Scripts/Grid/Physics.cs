@@ -3,6 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using Extensions;
 
+/*TODO:
+ * Friction
+ * Bump maps
+ * Complicated normals
+ * Projection-based collision
+ */
 namespace Shrines
 {
     public static class Physics
@@ -28,6 +34,7 @@ namespace Shrines
                 var op = b.position;
                 if (CheckExtremes(b, step, out info))
                 {
+                    //Debug.Log(info.point + " : " + b.position + " : " + step + " : " + Vector2.Reflect(step, info.normal)+" : "+info.normal);
                     var newvelocity = Vector2.Reflect(step, info.normal);
                     b.position = info.point + newvelocity*(step.magnitude-info.distance);
                     b.velocity = newvelocity;
@@ -56,6 +63,7 @@ namespace Shrines
                     if (collisionCorner < 0 || hit.distance < info.distance)
                     {
                         info = hit;
+                        info.point -= b.corners[i];
                         collisionCorner = i;
                     }
                 }
