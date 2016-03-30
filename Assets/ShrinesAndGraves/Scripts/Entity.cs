@@ -3,10 +3,13 @@ using System.Collections;
 
 namespace Shrines
 {
+    [System.Serializable]
     public class Entity
     {
         public virtual string name { get { return "Entity"; } }
-        public Vector2 position;
+        public Vector2f16 position;
+
+        [System.NonSerialized]
         public WorldObject viewObject;
     }
 }

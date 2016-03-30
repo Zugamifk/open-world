@@ -9,6 +9,8 @@ namespace Shrines
 
         new protected SpriteRenderer renderer;
 
+        protected PhysicsBody physicsBody;
+
         public Vector2 position
         {
             get
@@ -21,11 +23,11 @@ namespace Shrines
             }
         }
 
-        public Vector3i positioni
+        public Vector2i positioni
         {
             get
             {
-                return (Vector3i)entity.position;
+                return entity.position;
             }
             set
             {
@@ -69,8 +71,12 @@ namespace Shrines
         public virtual void ResetGameobject()
         {
             renderer.enabled = false;
-            m_Entity.viewObject = null;
+            if (m_Entity != null)
+            {
+                m_Entity.viewObject = null;
+            }
             m_Entity = null;
         }
+
     }
 }

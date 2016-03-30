@@ -10,5 +10,6 @@ namespace Shrines
         public Vector2 normal;
         public PhysicsBody other;
         public bool collided;
+        public bool overlapping;
     }
 }

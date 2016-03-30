@@ -14,6 +14,11 @@ namespace Extensions {
     		return Mathf.Approximately(a.x, b.x) && Mathf.Approximately(a.y, b.y);
     	}
 
+        public static bool Approximately(Vector2 a, float b)
+        {
+            return Mathf.Approximately(a.x, b) && Mathf.Approximately(a.y, b);
+        }
+
     	public static float PerlinNoise(Vector2 p) {
     		return Mathf.PerlinNoise(p.x, p.y);
     	}

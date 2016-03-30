@@ -17,6 +17,18 @@ namespace Shrines
             {
                 return;
             }
+
+            SaveData.Load("game");
+            if (!SaveData.IsFileLoaded)
+            {
+                SaveData.Initialize("game");
+                world.Initialize(Grid.PerlinNoise(world.width, world.height, world.types));
+            }
+            else
+            {
+                world.Initialize(SaveData.file.grid);
+            }
+
             player.InitializeGameobject(new Player());
             
             view.grid = world.grid;
@@ -33,13 +45,18 @@ namespace Shrines
             Tile t = world.grid.GetTile(player.position);
             while (t.collides)
             {
-                t = world.grid.GetTile(t.gridPosition + Vector3i.up);
+                t = world.grid.GetTile(t.gridPosition + Vector2i.up);
             }
             for (int i = 0; i < 5; i++)
             {
-                t = world.grid.GetTile(t.gridPosition + Vector3i.up);
+                t = world.grid.GetTile(t.gridPosition + Vector2i.up);
             }
             player.SetPosition(t.gridPosition);
+        }
+
+        void OnApplicationQuit()
+        {
+            SaveData.Save();
         }
 
         void FixedUpdate()

@@ -11,6 +11,17 @@ namespace Shrines
 
         public Vector2[] corners;
 
+        public delegate void CollisionEvent(Collision c);
+        public CollisionEvent OnCollide;
+        
+        public Rect rect
+        {
+            get
+            {
+                return new Rect(position, corners[2]);
+            }
+        }
+
         public void PositionUpdate(Vector2 position)
         {
             var diff = position - this.position;
@@ -29,6 +40,14 @@ namespace Shrines
                 rect.position + rect.size,
                 new Vector2(rect.xMax, rect.y)
             };
+        }
+
+        public void OnCollision(Collision collision)
+        {
+            if (OnCollide != null)
+            {
+                OnCollide(collision);
+            }
         }
 
         public void GetDebugMessageArgs(out string format, out System.Func<object>[] args)

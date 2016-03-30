@@ -7,6 +7,7 @@ ____________________________________________________________________________*/
 using UnityEngine;
 using System;
 
+[Serializable]
 public struct Vector3i : IComparable<Vector3i> {
 
 	public int x, y, z;

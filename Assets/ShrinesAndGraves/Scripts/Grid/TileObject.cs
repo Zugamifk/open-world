@@ -20,14 +20,7 @@ namespace Shrines
 
             if (tile != null)
             {
-                renderer.sprite = tile.data.sprite;
-                var spr = renderer.sprite;
-                if (spr != null)
-                {
-                    var os = spr.Size();
-                    os.Scale(spr.pivot);
-                    renderer.transform.localPosition = -os;
-                }
+                renderer.sprite = tile.data.GetSprite(tile.surface);
             }
             else ResetGameobject();
         }

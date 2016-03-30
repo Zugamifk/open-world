@@ -26,9 +26,9 @@ namespace Shrines
 
         int width, height;
 
-        Vector2 offset;
-        Vector2 position;
-        Vector3i bottomLeftTile;
+        Vector2f16 offset;
+        Vector2f16 position;
+        Vector2i bottomLeftTile;
 
         public delegate Vector2 GetPositionCallback();
         GetPositionCallback positionUpdate;
@@ -53,13 +53,13 @@ namespace Shrines
         // Use this for initialization
         void Start()
         {
-            height = Mathf.FloorToInt(viewCamera.orthographicSize*2) + 1;
-            width = (int)(viewCamera.orthographicSize * viewCamera.aspect * 2) + 1;
+            height = Mathf.FloorToInt(viewCamera.orthographicSize*2) + 2;
+            width = (int)(viewCamera.orthographicSize * viewCamera.aspect * 2) + 2;
 
             offset = new Vector2(viewCamera.orthographicSize * viewCamera.aspect, viewCamera.orthographicSize);
 
             position = Vector2.zero;
-            bottomLeftTile = (Vector3i)(position -offset);
+            bottomLeftTile = position - offset;
 
             currentTiles = new TileObject[width, height];
             buffer = new TileObject[width, height];
@@ -87,33 +87,27 @@ namespace Shrines
             if (positionUpdate != null)
             {
                 // get new position
-                var newPos = BoundPosition(positionUpdate.Invoke());
-                    //Debug.Log("Tiles: "+currentTiles.Count);
+                var newpos = BoundPosition(positionUpdate.Invoke());
+                var step = GetStep(position, newpos);
+                offset = new Vector2f16(viewCamera.orthographicSize * viewCamera.aspect, viewCamera.orthographicSize);
+                position = newpos;
+                bottomLeftTile += step;
 
-                var step = GetStep(position, newPos);
-                if (Mathf.Abs(step.x) > World.SanityBound || Mathf.Abs(step.y) > World.SanityBound)
-                {
-                    Debug.Break();
-                }
                 if (step.x+step.y != 0) // shift tiles
                 {
-                    var newBL = bottomLeftTile + step;
                     for (int x = 0; x < width; x++)
                     {
                         for (int y = 0; y < height; y++)
                         {
                             var tile = currentTiles[x, y];
 
-                            tile.SetTile(grid.GetTile(newBL.x + x, newBL.y+y));
+                            tile.SetTile(grid.GetTile(bottomLeftTile.x + x, bottomLeftTile.y + y));
                             
                         }
                     }
-                    bottomLeftTile = newBL;
                 }
 
-                offset = new Vector2(viewCamera.orthographicSize * viewCamera.aspect, viewCamera.orthographicSize);
-                position = newPos;
-                root.localPosition = -(position - bottomLeftTile);
+                root.localPosition = (Vector2f16)bottomLeftTile - position;
             }
             foreach (var b in Physics.registeredBodies)
             {
@@ -133,12 +127,11 @@ namespace Shrines
         /// <param name="start"></param>
         /// <param name="end"></param>
         /// <returns>Direction of step to take</returns>
-        Vector3i GetStep(Vector2 start, Vector2 end)
+        Vector2i GetStep(Vector2 start, Vector2 end)
         {
-            return new Vector3i(
+            return new Vector2i(
                 (int)end.x - (int)start.x,
-                (int)end.y - (int)start.y,
-                0
+                (int)end.y - (int)start.y
             );
         }
 

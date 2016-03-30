@@ -54,8 +54,14 @@ namespace Albedo {
         void Awake() {
             if (this.SetInstanceOrKill(ref instance))
             {
-				m_movementControl.RegisterVelocityUpdate(UpdateMovementVelocity);
+                SetControls();
             }
+        }
+
+        void SetControls()
+        {
+            m_movementControl.RegisterVelocityUpdate(UpdateMovementVelocity);
+
         }
 
         void Start() {

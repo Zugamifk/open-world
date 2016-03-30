@@ -5,11 +5,10 @@ using Extensions;
 
 namespace Shrines
 {
+    [System.Serializable]
     public class Grid
     {
         Tile[,] tiles;
-
-        const float epsilon = 0.001f;
 
         static bool collideOnExceededWorldBounds = true;
 
@@ -23,9 +22,74 @@ namespace Shrines
             tiles = new Tile[w, h];
         }
 
+        public static Grid PerlinNoise(int width, int height, TileData[] types) {
+            var grid = new Grid(width, height);
+            var noise = Math.FrequencyNoise1D(x => x, x => x * x, x => (1 - x) * (1 - x), 0.1f, 0.25f, 4);
+            for (int x = 0; x < width; x++)
+            {
+                var g = noise(x);
+                for (int y = 0; y < height; y++)
+                {
+                    var tile = new Tile();
+
+                    if (y < 25 + g * 50)
+                    {
+                        tile.data = types[0];
+                    }
+                    else
+                    {
+                        tile.data = types[1];
+                    }
+                    tile.gridPosition = new Vector2i(x, y);
+                    grid.SetTile(x, y, tile);
+                }
+            }
+            for (int x = 0; x < width; x++)
+            {
+                for (int y = 0; y < height; y++)
+                {
+                    var tile = grid.GetTile(x, y);
+                    uint neighboursBits = 0;
+                    var t = grid.GetTile(x+1, y);
+                    neighboursBits += (uint)(t.collides? 1 : 0);
+                    neighboursBits <<= 1;
+                    
+                    t = grid.GetTile(x + 1, y-1);
+                    neighboursBits += (uint)(t.collides ? 1 : 0);
+                    neighboursBits <<= 1;
+
+                    t = grid.GetTile(x, y-1);
+                    neighboursBits += (uint)(t.collides ? 1 : 0);
+                    neighboursBits <<= 1;
+
+                    t = grid.GetTile(x - 1, y-1);
+                    neighboursBits += (uint)(t.collides ? 1 : 0);
+                    neighboursBits <<= 1;
+
+                    t = grid.GetTile(x - 1, y);
+                    neighboursBits += (uint)(t.collides ? 1 : 0);
+                    neighboursBits <<= 1;
+
+                    t = grid.GetTile(x - 1, y+1);
+                    neighboursBits += (uint)(t.collides ? 1 : 0);
+                    neighboursBits <<= 1;
+
+                    t = grid.GetTile(x, y+1);
+                    neighboursBits += (uint)(t.collides ? 1 : 0);
+                    neighboursBits <<= 1;
+
+                    t = grid.GetTile(x + 1, y+1);
+                    neighboursBits += (uint)(t.collides ? 1 : 0);
+
+                    tile.SetSurface(neighboursBits);
+                }
+            }
+            return grid;
+        }
+
         public Tile GetTile(int x, int y)
         {
-            if (!InBounds(x, y)) return null;
+            if (!InBounds(x, y)) return Tile.Null;
             Tile t = tiles[x, y];
             if (t == null)
             {
@@ -44,7 +108,7 @@ namespace Shrines
             return GetTile((int)position.x, (int)position.y);
         }
 
-        public Tile GetTile(Vector3i position)
+        public Tile GetTile(Vector2i position)
         {
             return GetTile(position.x, position.y);
         }
@@ -60,6 +124,30 @@ namespace Shrines
                 x < 0 || x >= width ||
                 y < 0 || y >= height
                 );
+        }
+
+        public bool Collides(Tile tile)
+        {
+            return (tile != null && tile.collides) ||
+                    (tile == null && collideOnExceededWorldBounds);
+        }
+
+        public int GetTiles(Rect rect, Tile[] tiles)
+        {
+            int x = Mathf.FloorToInt(rect.xMin);
+            int X = Mathf.CeilToInt(rect.xMax);
+            int y = Mathf.FloorToInt(rect.yMin);
+            int Y = Mathf.CeilToInt(rect.yMax);
+            int i = 0;
+            for (; x < X; x++)
+            {
+                for (; y < Y; y++)
+                {
+                    tiles[i] = GetTile(x, y);
+                    i++;
+                }
+            }
+            return i;
         }
 
         public bool Raycast(Vector2 start, Vector2 end, out RaycastData info)
@@ -81,13 +169,10 @@ namespace Shrines
             {
                 //Debug.Log(position.y);
                 var tile = GetTile(position);
-                if ((tile != null && tile.collides) ||
-                    (tile == null && collideOnExceededWorldBounds)) // collide on tile or leaving map bounds
+                if (Collides(tile)) // collide on tile or leaving map bounds
                 {
                     var to = position - start + sqo; // vector to collision point
-                    //Debug.Log(to+" : "+line.y);
-                    //line = to;
-                    var bl = -to; // opposite vector to simplify algorithm
+
                     if (to.x < 0)
                     {
                         to.x += 1;
@@ -101,29 +186,31 @@ namespace Shrines
                     var dx = Mathf.Clamp01(to.x / line.x);
                     var dy = Mathf.Clamp01(to.y / line.y);
 
-                    if (Mathf.Approximately(line.y, 0))
+                    if (Math.Approximately(to, 0))
                     {
-                        Debug.Log("x");
+                        info.overlapping = true;
+                        //line *= 0;
+                    } else if (Mathf.Approximately(line.y, 0))
+                    {
                         line *= dx;
-                        normal = Vector3.right * xm;
+                        normal = Vector2.right * xm;
                     }
                     else if (Mathf.Approximately(line.x, 0))
                     {
-                            Debugx.Concat(" : ", dy, line.y, to.y, ym);
                         line *= dy;
-                        normal = Vector3.up * ym;
+                        normal = Vector2.up * ym;
                     }
                     else
                     {
                         if (dx > dy)
                         {
                             line *= dx;
-                            normal = Vector3.right * xm;
+                            normal = Vector2.right * xm;
                         }
                         else
                         {
                             line *= dy;
-                            normal = Vector3.up * ym;
+                            normal = Vector2.up * ym;
                         }
                     }
                     hit = true;
@@ -131,7 +218,7 @@ namespace Shrines
 
                 }
             }
-            info.point = start + line + normal * epsilon;
+            info.point = start + line;
             info.distance = line.magnitude;
             info.normal = normal;
             info.collided = hit;

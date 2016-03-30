@@ -31,7 +31,10 @@ namespace Extensions.Managers
         public static string[] KeyStrings = new string[] {
             "None",
             "Horizontal",
-            "Vertical"
+            "Vertical",
+            "Mouse X",
+            "Mouse Y",
+            "Submit"
         };
 
         private static InputManager instance;
