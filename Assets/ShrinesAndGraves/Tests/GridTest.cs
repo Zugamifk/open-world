@@ -46,16 +46,6 @@ namespace Shrines
                 var rect = new Rect(r+os, Vector2.one);
                 Debugx.DrawRect(rect, Color.yellow);
             }
-            RaycastData data;
-            if (grid.Raycast(Vector2.zero, mp - os, out data))
-            {
-                Debug.DrawLine(os, data.point + os, Color.magenta);
-                Debug.Log(data.point);
-            }
-            else
-            {
-                Debug.DrawLine(os, mp, Color.blue);
-            }
         }
     }
 }

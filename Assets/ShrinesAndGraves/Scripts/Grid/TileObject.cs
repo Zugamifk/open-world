@@ -11,6 +11,11 @@ namespace Shrines
         public override void InitializeGameobject(Entity e)
         {
             base.InitializeGameobject(e);
+
+            var bc = gameObject.GetOrAddComponent<BoxCollider2D>();
+            bc.offset = Vector2.one*0.5f;
+            collider = bc;
+
             SetTile(e as Tile);
         }
 
@@ -23,6 +28,8 @@ namespace Shrines
                 renderer.sprite = tile.data.GetSprite(tile.surface);
             }
             else ResetGameobject();
+            transform.position = tile.position;
+            collider.enabled = tile.collides;
         }
 
         public override void ResetGameobject()

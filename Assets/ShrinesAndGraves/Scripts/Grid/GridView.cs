@@ -10,6 +10,8 @@ namespace Shrines
     {
 
         [SerializeField]
+        GameObject target;
+        [SerializeField]
         Camera viewCamera;
         [SerializeField]
         Transform root;
@@ -48,6 +50,8 @@ namespace Shrines
                 o.transform.SetParent(root, false);
                 objectPool[i] = o;
             }
+
+            transform.SetParent(target.transform, false);
         }
 
         // Use this for initialization
@@ -56,7 +60,7 @@ namespace Shrines
             height = Mathf.FloorToInt(viewCamera.orthographicSize*2) + 2;
             width = (int)(viewCamera.orthographicSize * viewCamera.aspect * 2) + 2;
 
-            offset = new Vector2(viewCamera.orthographicSize * viewCamera.aspect, viewCamera.orthographicSize);
+            offset = new Vector2(viewCamera.orthographicSize * viewCamera.aspect+1, viewCamera.orthographicSize+1);
 
             position = Vector2.zero;
             bottomLeftTile = position - offset;
@@ -106,12 +110,6 @@ namespace Shrines
                         }
                     }
                 }
-
-                root.localPosition = (Vector2f16)bottomLeftTile - position;
-            }
-            foreach (var b in Physics.registeredBodies)
-            {
-                b.DebugDraw(position);
             }
         }
 

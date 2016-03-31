@@ -9,7 +9,7 @@ namespace Shrines
 
         new protected SpriteRenderer renderer;
 
-        protected PhysicsBody physicsBody;
+        new protected Collider2D collider;
 
         public Vector2 position
         {

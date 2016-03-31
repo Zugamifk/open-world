@@ -59,9 +59,5 @@ namespace Shrines
             SaveData.Save();
         }
 
-        void FixedUpdate()
-        {
-            Physics.Update();
-        }
     }
 }
