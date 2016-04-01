@@ -23,7 +23,7 @@ namespace Shrines
 
         public static float Bound(float val)
         {
-            return Mathf.Clamp(val, -World.SanityBound, World.SanityBound);
+            return Mathf.Clamp(val, -WorldData.SanityBound, WorldData.SanityBound);
         }
     }
 }

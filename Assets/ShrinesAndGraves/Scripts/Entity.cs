@@ -8,6 +8,8 @@ namespace Shrines
     {
         public virtual string name { get { return "Entity"; } }
         public Vector2f16 position;
+        public WorldObjectData data;
+        public Rect rect;
 
         [System.NonSerialized]
         public WorldObject viewObject;

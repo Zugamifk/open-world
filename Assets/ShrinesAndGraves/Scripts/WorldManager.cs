@@ -5,10 +5,12 @@ namespace Shrines
 {
     public class WorldManager : MonoBehaviour
     {
-        public World world;
+
+        public WorldData worldData;
         public GridView view;
         public PlayerObject player;
 
+        World world;
         static WorldManager s_instance;
 
         void Awake()
@@ -18,19 +20,21 @@ namespace Shrines
                 return;
             }
 
+            world = new World(worldData);
+
             SaveData.Load("game");
             if (!SaveData.IsFileLoaded)
             {
                 SaveData.Initialize("game");
-                world.Initialize(Grid.PerlinNoise(world.width, world.height, world.types));
+                world.grid = Grid.PerlinNoise(worldData.width, worldData.height, worldData.types);
             }
             else
             {
-                world.Initialize(SaveData.file.grid);
+                world.grid = SaveData.file.grid;
             }
 
             player.InitializeGameobject(new Player());
-            
+
             view.grid = world.grid;
             Physics.grid = world.grid;
 
@@ -40,7 +44,7 @@ namespace Shrines
 
         void Start()
         {
-            player.SetPosition(world.spawnPosition);
+            player.SetPosition(worldData.spawnPosition);
 
             Tile t = world.grid.GetTile(player.position);
             while (t.collides)

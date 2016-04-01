@@ -25,11 +25,11 @@ namespace Shrines
 
             if (tile != null)
             {
-                renderer.sprite = tile.data.GetSprite(tile.surface);
+                renderer.sprite = tile.tileData.GetSprite(tile.surface);
             }
             else ResetGameobject();
             transform.position = tile.position;
-            collider.enabled = tile.collides;
+            collider.enabled = tile.collides && tile.surface != Tile.Surface.None;
         }
 
         public override void ResetGameobject()

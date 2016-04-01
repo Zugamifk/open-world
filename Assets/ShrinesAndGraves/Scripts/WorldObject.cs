@@ -66,6 +66,11 @@ namespace Shrines
             } else {
                 renderer.enabled = true;
             }
+            renderer.sharedMaterial = ResourceManager.Instance.spriteMaterial;
+            if (e!=null && entity.data != null )
+            {
+                renderer.sprite = entity.data.GetSprite();
+            }
         }
 
         public virtual void ResetGameobject()

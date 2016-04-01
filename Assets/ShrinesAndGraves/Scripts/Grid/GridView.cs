@@ -14,6 +14,8 @@ namespace Shrines
         [SerializeField]
         Camera viewCamera;
         [SerializeField]
+        int bufferSize;
+        [SerializeField]
         Transform root;
         [SerializeField]
         int objectPoolSize;
@@ -42,12 +44,15 @@ namespace Shrines
 
         void Awake()
         {
-            objectPool = new GameObject[objectPoolSize];
             activeObjects = new Dictionary<string, WorldObject>();
+
+            var pool = new GameObject("Object Pool");
+            pool.transform.SetParent(transform, false);
+            objectPool = new GameObject[objectPoolSize];
             for (int i = 0; i < objectPoolSize; i++)
             {
                 var o =  new GameObject("object");
-                o.transform.SetParent(root, false);
+                o.transform.SetParent(pool.transform, false);
                 objectPool[i] = o;
             }
 
@@ -57,10 +62,10 @@ namespace Shrines
         // Use this for initialization
         void Start()
         {
-            height = Mathf.FloorToInt(viewCamera.orthographicSize*2) + 2;
-            width = (int)(viewCamera.orthographicSize * viewCamera.aspect * 2) + 2;
+            height = Mathf.FloorToInt(viewCamera.orthographicSize*2) + bufferSize*2;
+            width = (int)(viewCamera.orthographicSize * viewCamera.aspect * 2) + bufferSize * 2;
 
-            offset = new Vector2(viewCamera.orthographicSize * viewCamera.aspect+1, viewCamera.orthographicSize+1);
+            offset = new Vector2(viewCamera.orthographicSize * viewCamera.aspect+bufferSize, viewCamera.orthographicSize+bufferSize);
 
             position = Vector2.zero;
             bottomLeftTile = position - offset;

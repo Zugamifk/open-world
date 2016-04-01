@@ -1,26 +1,25 @@
 ﻿using UnityEngine;
 using System.Collections;
-using Extensions;
+using System.Collections.Generic;
 
 namespace Shrines
 {
-    public class World : ScriptableObject
+    public class World
     {
-        public static float SanityBound = 2500;
-        public int width;
-        public int height;
-
-        public TileData[] types;
-
+        public WorldData data;
         public Grid grid;
 
-        public Vector2 spawnPosition;
+        List<Entity> entities = new List<Entity>();
 
-        public void Initialize(Grid g)
+        public World(WorldData data)
         {
-            grid = g;
-            width = g.width;
-            height = g.height;
+            this.data = data;
+
+            for (int i = 0; i < 1000; i++)
+            {
+                var cloud = new Entity();
+                //grid.AddEntity()
+            }
         }
     }
 }

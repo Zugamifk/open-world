@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Shrines
 {
@@ -9,13 +10,17 @@ namespace Shrines
         public const int SurfaceCount = 2;
         public enum Surface
         {
-            None,
-            Top
+            Null,
+            Top,
+            None, // inside other tiles
+            All = 255
         }
 
-        public TileData data;
+        public TileData tileData;
         public Vector2i gridPosition;
         public Surface surface;
+        public byte surfaceBits;
+        public List<Entity> contained;
 
         public static Tile Null
         {
@@ -29,9 +34,9 @@ namespace Shrines
         {
             get
             {
-                if (data != null)
+                if (tileData != null)
                 {
-                    return data.collides;
+                    return tileData.collides;
                 }
                 else
                 {
@@ -56,12 +61,18 @@ namespace Shrines
             }
         }
 
-        public void SetSurface(uint neighboursBits)
+        public void SetSurface(byte neighboursBits)
         {
             if ((neighboursBits & (1<<1)) == 0)
             {
                 surface = Surface.Top;
             }
+            else if (neighboursBits == 255)
+            {
+                surface = Surface.None;
+            }
+
+            surfaceBits = neighboursBits;
         }
     }
 }
