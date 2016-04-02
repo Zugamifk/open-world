@@ -20,7 +20,7 @@ namespace Shrines
         public Vector2i gridPosition;
         public Surface surface;
         public byte surfaceBits;
-        public List<Entity> contained;
+        public List<Entity> contained = new List<Entity>();
 
         public static Tile Null
         {

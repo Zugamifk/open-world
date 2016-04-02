@@ -1,12 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class WorldObjectData : ScriptableObject {
-
-    public Sprite[] sprites;
-
-    public Sprite GetSprite()
+namespace Shrines
+{
+    public class WorldObjectData : ScriptableObject
     {
-        return sprites.Random();
+
+        public Sprite[] sprites;
+
+        public Sprite GetSprite()
+        {
+            return sprites.Random();
+        }
     }
 }

@@ -23,7 +23,7 @@ namespace Shrines
         {
             this.tile = tile;
 
-            if (tile != null)
+            if (tile != null && tile.tileData!=null)
             {
                 renderer.sprite = tile.tileData.GetSprite(tile.surface);
             }

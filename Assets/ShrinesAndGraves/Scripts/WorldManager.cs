@@ -33,6 +33,11 @@ namespace Shrines
                 world.grid = SaveData.file.grid;
             }
 
+            if (worldData != null)
+            {
+                worldData.environment.FillGrid(world.grid);
+            }
+
             player.InitializeGameobject(new Player());
 
             view.grid = world.grid;

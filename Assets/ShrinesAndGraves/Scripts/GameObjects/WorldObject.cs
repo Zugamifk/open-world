@@ -71,6 +71,7 @@ namespace Shrines
             {
                 renderer.sprite = entity.data.GetSprite();
             }
+            gameObject.transform.position = e.position;
         }
 
         public virtual void ResetGameobject()
@@ -82,6 +83,5 @@ namespace Shrines
             }
             m_Entity = null;
         }
-
     }
 }

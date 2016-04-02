@@ -90,6 +90,11 @@ public struct Vector2f16 {
         return !(a == b);
     }
 
+    public override string ToString()
+    {
+        return string.Format("({0}, {1})", x, y);
+    }
+
     public static Vector2f16 up = new Vector2f16(0, 1);
     public static Vector2f16 down = new Vector2f16(0, -1);
     public static Vector2f16 right = new Vector2f16(1, 0);

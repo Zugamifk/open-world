@@ -20,9 +20,10 @@ namespace Shrines
         [SerializeField]
         int objectPoolSize;
 
-        GameObject[] objectPool;
+        Queue<WorldObject> objectPool;
+        Queue<TileObject> tilePool;
 
-        Dictionary<string, WorldObject> activeObjects;
+        Dictionary<Entity, WorldObject> activeEntities;
 
         public Grid grid;
 
@@ -44,17 +45,20 @@ namespace Shrines
 
         void Awake()
         {
-            activeObjects = new Dictionary<string, WorldObject>();
+            activeEntities = new Dictionary<Entity, WorldObject>();
 
             var pool = new GameObject("Object Pool");
             pool.transform.SetParent(transform, false);
-            objectPool = new GameObject[objectPoolSize];
+            objectPool = new Queue<WorldObject>(objectPoolSize);
             for (int i = 0; i < objectPoolSize; i++)
             {
                 var o =  new GameObject("object");
                 o.transform.SetParent(pool.transform, false);
-                objectPool[i] = o;
+                var wo = o.AddComponent<WorldObject>();
+                objectPool.Enqueue(wo);
             }
+
+            tilePool = new Queue<TileObject>();
 
             transform.SetParent(target.transform, false);
         }
@@ -85,6 +89,7 @@ namespace Shrines
                     var pos = new Vector3i(x, y, 0);
                     tile.transform.localPosition = pos;
                     currentTiles[x,y] = to;
+                    tilePool.Enqueue(to);
                 }
             }
             //Debug.Log(width+" : "+height);
@@ -104,20 +109,110 @@ namespace Shrines
 
                 if (step.x+step.y != 0) // shift tiles
                 {
-                    for (int x = 0; x < width; x++)
-                    {
-                        for (int y = 0; y < height; y++)
-                        {
-                            var tile = currentTiles[x, y];
-
-                            tile.SetTile(grid.GetTile(bottomLeftTile.x + x, bottomLeftTile.y + y));
-                            
-                        }
-                    }
+                    UpdateTiles(step);
                 }
             }
         }
 
+        void UpdateTiles(Vector2i step)
+        {
+            var obl = bottomLeftTile - step;
+            int xs = step.x;
+            int ox = 0, oX = 0, nx = 0, nX = 0; // x boundaries for old and new tiles
+            if (xs < 0)
+            {
+                ox = Mathf.Max(0, width+xs);
+                oX = width;
+                nx = 0;
+                nX = Mathf.Min(-xs, width);
+            }
+            else if (xs > 0)
+            {
+                ox = 0;
+                oX = Mathf.Min(width, xs);
+                nx = Mathf.Max(0, width - xs);
+                nX = width;
+            }
+
+            int ys = step.y;
+            int oy = 0, oY = 0, ny = 0, nY = 0; // y boundaries for old and new tiles
+            if (ys < 0)
+            {
+                oy = Mathf.Max(0, height+ys);
+                oY = height;
+                ny = 0;
+                nY = Mathf.Min(height, -ys);
+            }
+            else if (ys > 0)
+            {
+                oy = 0;
+                oY = Mathf.Min(height, ys);
+                ny = Mathf.Max(0, height - ys);
+                nY = height;
+            }
+
+            // horizontal rect of tiles
+            int y0 = Mathf.Clamp(-step.y, 0, height);
+            int y1 = Mathf.Clamp(height-step.y, 0, height);
+            for (int x = ox; x < oX; x++)
+            {
+                for (int y = y0; y < y1; y++)
+                {
+                    var tile = grid.GetTile(obl.x + x, obl.y + y);
+                    ResetTile(tile);
+                }
+            }
+
+            for (int x = nx; x < nX; x++)
+            {
+                for (int y = y0; y < y1; y++)
+                {
+                    var tile = grid.GetTile(bottomLeftTile.x + x, bottomLeftTile.y + y);
+                    SetTile(tile);
+                }
+            }
+
+
+            // vertical rect of tiles
+            int x0 = Mathf.Clamp(-step.x, 0, width);
+            int x1 = Mathf.Clamp(width- step.x, 0, width);
+            for (int x = x0; x < x1; x++)
+            {
+                for (int y = oy; y < oY; y++)
+                {
+                    var tile = grid.GetTile(obl.x + x, obl.y + y);
+                    ResetTile(tile);
+                }
+            }
+
+            for (int x = x0; x < x1; x++)
+            {
+                for (int y = ny; y < nY; y++)
+                {
+                    var tile = grid.GetTile(bottomLeftTile.x + x, bottomLeftTile.y + y);
+                    SetTile(tile);
+                }
+            }
+
+            // corner rect of tiles
+            for (int x = ox; x < oX; x++)
+            {
+                for (int y = oy; y < oY; y++)
+                {
+                    var tile = grid.GetTile(obl.x + x, obl.y + y);
+                    ResetTile(tile);
+                }
+            }
+
+            for (int x = ox; x < oX; x++)
+            {
+                for (int y = ny; y < nY; y++)
+                {
+                    var tile = grid.GetTile(bottomLeftTile.x + x, bottomLeftTile.y + y);
+                    SetTile(tile);
+                }
+            }
+        }
 
         TileObject GetTile(int x, int y)
         {
@@ -149,6 +244,56 @@ namespace Shrines
                 Mathf.Clamp(pos.x, 0, grid.width),
                 Mathf.Clamp(pos.y, 0, grid.height)
             );
+        }
+
+        void ResetTile(Tile tile)
+        {
+            WorldObject to;
+            if (!activeEntities.TryGetValue(tile, out to))
+            {
+                Debug.Log("No entity found for tile at " + tile.position);
+                return;
+            }
+            activeEntities.Remove(tile);
+            ReturnToPool(to);
+            foreach (var e in tile.contained)
+            {
+                WorldObject wo;
+                if (activeEntities.TryGetValue(e, out wo))
+                {
+                    ReturnToPool(wo);
+                    wo.ResetGameobject();
+                    activeEntities.Remove(e);
+                }
+            }
+        }
+
+        void SetTile(Tile tile)
+        {
+            var tileObject = tilePool.Dequeue();
+            tileObject.SetTile(tile);
+
+            activeEntities.Add(tile, tileObject);
+
+            foreach (var e in tile.contained)
+            {
+                if (activeEntities.ContainsKey(e)) continue;
+                var wo = objectPool.Dequeue();
+                wo.InitializeGameobject(e);
+                activeEntities.Add(e, wo);
+            }
+        }
+
+        void ReturnToPool(WorldObject wo)
+        {
+            if (wo is TileObject)
+            {
+                tilePool.Enqueue(wo as TileObject);
+            }
+            else
+            {
+                objectPool.Enqueue(wo);
+            }
         }
     }
 }
