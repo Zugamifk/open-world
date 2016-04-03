@@ -17,11 +17,14 @@ namespace Shrines
         public int width;
         public int height;
 
+        public Tile[] surface;
+
         public Grid(int w, int h)
         {
             width = w;
             height = h;
             tiles = new Tile[w, h];
+            surface = new Tile[w];
         }
 
         public static Grid PerlinNoise(int width, int height, TileData[] types) {
@@ -32,18 +35,16 @@ namespace Shrines
                 var g = noise(x);
                 for (int y = 0; y < height; y++)
                 {
-                    var tile = new Tile();
-
+                    TileData data = null;
                     if (y < 25 + g * 50)
                     {
-                        tile.tileData = types[0];
+                        data = types[0];
                     }
                     else
                     {
-                        tile.tileData = types[1];
+                        data = types[1];
                     }
-                    tile.gridPosition = new Vector2i(x, y);
-                    tile.position = tile.gridPosition;
+                    var tile = new Tile(x,y,data);
                     grid.SetTile(x, y, tile);
                 }
             }
@@ -51,40 +52,7 @@ namespace Shrines
             {
                 for (int y = 0; y < height; y++)
                 {
-                    var tile = grid.GetTile(x, y);
-                    byte neighboursBits = 0;
-                    var t = grid.GetTile(x+1, y);
-                    neighboursBits += (byte)(t.collides ? 1 : 0);
-                    neighboursBits <<= 1;
-                    
-                    t = grid.GetTile(x + 1, y-1);
-                    neighboursBits += (byte)(t.collides ? 1 : 0);
-                    neighboursBits <<= 1;
-
-                    t = grid.GetTile(x, y-1);
-                    neighboursBits += (byte)(t.collides ? 1 : 0);
-                    neighboursBits <<= 1;
-
-                    t = grid.GetTile(x - 1, y-1);
-                    neighboursBits += (byte)(t.collides ? 1 : 0);
-                    neighboursBits <<= 1;
-
-                    t = grid.GetTile(x - 1, y);
-                    neighboursBits += (byte)(t.collides ? 1 : 0);
-                    neighboursBits <<= 1;
-
-                    t = grid.GetTile(x - 1, y+1);
-                    neighboursBits += (byte)(t.collides ? 1 : 0);
-                    neighboursBits <<= 1;
-
-                    t = grid.GetTile(x, y+1);
-                    neighboursBits += (byte)(t.collides ? 1 : 0);
-                    neighboursBits <<= 1;
-
-                    t = grid.GetTile(x + 1, y+1);
-                    neighboursBits += (byte)(t.collides ? 1 : 0);
-
-                    tile.SetSurface(neighboursBits);
+                    grid.UpdateSurfaces(new Recti(0,0,width, height));
                 }
             }
             return grid;
@@ -159,6 +127,50 @@ namespace Shrines
             for (int i = 0; i < g; i++)
             {
                 TileArray[i].contained.Add(e);
+            }
+        }
+
+        public void UpdateSurfaces(Recti rect)
+        {
+            for (int x = rect.xMin; x < rect.xMax; x++)
+            {
+                for (int y = rect.yMin; y < rect.yMax; y++)
+                {
+                    var tile = GetTile(x, y);
+                    byte neighboursBits = 0;
+                    var t = GetTile(x + 1, y);
+                    neighboursBits += (byte)(t.collides ? 1 : 0);
+                    neighboursBits <<= 1;
+
+                    t = GetTile(x + 1, y - 1);
+                    neighboursBits += (byte)(t.collides ? 1 : 0);
+                    neighboursBits <<= 1;
+
+                    t = GetTile(x, y - 1);
+                    neighboursBits += (byte)(t.collides ? 1 : 0);
+                    neighboursBits <<= 1;
+
+                    t = GetTile(x - 1, y - 1);
+                    neighboursBits += (byte)(t.collides ? 1 : 0);
+                    neighboursBits <<= 1;
+
+                    t = GetTile(x - 1, y);
+                    neighboursBits += (byte)(t.collides ? 1 : 0);
+                    neighboursBits <<= 1;
+
+                    t = GetTile(x - 1, y + 1);
+                    neighboursBits += (byte)(t.collides ? 1 : 0);
+                    neighboursBits <<= 1;
+
+                    t = GetTile(x, y + 1);
+                    neighboursBits += (byte)(t.collides ? 1 : 0);
+                    neighboursBits <<= 1;
+
+                    t = GetTile(x + 1, y + 1);
+                    neighboursBits += (byte)(t.collides ? 1 : 0);
+
+                    tile.SetSurface(neighboursBits);
+                }
             }
         }
 

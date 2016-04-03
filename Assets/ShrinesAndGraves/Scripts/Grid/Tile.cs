@@ -26,8 +26,15 @@ namespace Shrines
         {
             get
             {
-                return new Tile();
+                return new Tile(0,0,null);
             }
+        }
+
+        public Tile(int x, int y, TileData data) : base()
+        {
+            this.position = new Vector2(x,y);
+            tileData = data;
+            gridPosition = new Vector2i(x, y);
         }
 
         public bool collides
@@ -42,14 +49,6 @@ namespace Shrines
                 {
                     return false;
                 }
-            }
-        }
-
-        public Rect rect
-        {
-            get
-            {
-                return new Rect(gridPosition, Vector2.one);
             }
         }
 
@@ -73,6 +72,11 @@ namespace Shrines
             }
 
             surfaceBits = neighboursBits;
+        }
+
+        public void SetData(TileData data)
+        {
+            tileData = data;
         }
     }
 }

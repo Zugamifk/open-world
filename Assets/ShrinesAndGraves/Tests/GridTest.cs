@@ -21,7 +21,7 @@ namespace Shrines
             {
                 for (int y = 0; y < H; y++)
                 {
-                    grid.SetTile(x, y, new Tile());
+                    //grid.SetTile(x, y, new Tile());
                 }
             }
             //grid[(Vector3i)offset].collides = true;

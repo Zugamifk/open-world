@@ -39,6 +39,10 @@ namespace Shrines
                 world.grid = SaveData.file.grid;
             }
 
+            world.grid.UpdateSurfaces(worldData.emptyRegion.rect);
+
+            UnityEngine.Physics.gravity = Vector3.up * Units.MetresToUnits(-9.81f);
+
             player.InitializeGameobject(new Player());
 
             view.grid = world.grid;
