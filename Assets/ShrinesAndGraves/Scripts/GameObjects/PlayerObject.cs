@@ -63,9 +63,8 @@ namespace Shrines
 
         public void Jump()
         {
-            if (grounded)
+            if (true)
             {
-                Debug.Log("blah");
                 rigidbody.AddForce(Vector2.up * JumpPower * Time.fixedDeltaTime, ForceMode2D.Force);
             }
         }

@@ -70,6 +70,11 @@ public struct Vector2i {
         return !(a == b);
     }
 
+    public override string ToString()
+    {
+        return string.Format("({0}, {1})", x, y);
+    }
+
     public static Vector2i up = new Vector2i(0, 1);
     public static Vector2i down = new Vector2i(0, -1);
     public static Vector2i right = new Vector2i(1, 0);

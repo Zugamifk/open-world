@@ -35,6 +35,8 @@ namespace Shrines
         Vector2f16 position;
         Vector2i bottomLeftTile;
 
+        Transform poolRoot;
+
         public delegate Vector2 GetPositionCallback();
         GetPositionCallback positionUpdate;
 
@@ -49,11 +51,12 @@ namespace Shrines
 
             var pool = new GameObject("Object Pool");
             pool.transform.SetParent(transform, false);
+            poolRoot = pool.transform;
             objectPool = new Queue<WorldObject>(objectPoolSize);
             for (int i = 0; i < objectPoolSize; i++)
             {
                 var o =  new GameObject("object");
-                o.transform.SetParent(pool.transform, false);
+                o.transform.SetParent(poolRoot, false);
                 var wo = o.AddComponent<WorldObject>();
                 objectPool.Enqueue(wo);
             }
@@ -103,115 +106,58 @@ namespace Shrines
                 // get new position
                 var newpos = BoundPosition(positionUpdate.Invoke());
                 var step = GetStep(position, newpos);
-                offset = new Vector2f16(viewCamera.orthographicSize * viewCamera.aspect, viewCamera.orthographicSize);
+                offset = new Vector2(viewCamera.orthographicSize * viewCamera.aspect + bufferSize, viewCamera.orthographicSize + bufferSize);
                 position = newpos;
-                bottomLeftTile += step;
 
-                if (step.x+step.y != 0) // shift tiles
-                {
-                    UpdateTiles(step);
-                }
+                UpdateTiles();
+                
             }
         }
 
-        void UpdateTiles(Vector2i step)
+        void UpdateTiles()
         {
-            var obl = bottomLeftTile - step;
-            int xs = step.x;
-            int ox = 0, oX = 0, nx = 0, nX = 0; // x boundaries for old and new tiles
-            if (xs < 0)
-            {
-                ox = Mathf.Max(0, width+xs);
-                oX = width;
-                nx = 0;
-                nX = Mathf.Min(-xs, width);
-            }
-            else if (xs > 0)
-            {
-                ox = 0;
-                oX = Mathf.Min(width, xs);
-                nx = Mathf.Max(0, width - xs);
-                nX = width;
-            }
+            var obl = bottomLeftTile;
+            bottomLeftTile = position - offset;
 
-            int ys = step.y;
-            int oy = 0, oY = 0, ny = 0, nY = 0; // y boundaries for old and new tiles
-            if (ys < 0)
-            {
-                oy = Mathf.Max(0, height+ys);
-                oY = height;
-                ny = 0;
-                nY = Mathf.Min(height, -ys);
-            }
-            else if (ys > 0)
-            {
-                oy = 0;
-                oY = Mathf.Min(height, ys);
-                ny = Mathf.Max(0, height - ys);
-                nY = height;
-            }
+            if (obl == bottomLeftTile) return;
 
-            // horizontal rect of tiles
-            int y0 = Mathf.Clamp(-step.y, 0, height);
-            int y1 = Mathf.Clamp(height-step.y, 0, height);
-            for (int x = ox; x < oX; x++)
-            {
-                for (int y = y0; y < y1; y++)
-                {
-                    var tile = grid.GetTile(obl.x + x, obl.y + y);
-                    ResetTile(tile);
-                }
-            }
-
-            for (int x = nx; x < nX; x++)
-            {
-                for (int y = y0; y < y1; y++)
-                {
-                    var tile = grid.GetTile(bottomLeftTile.x + x, bottomLeftTile.y + y);
-                    SetTile(tile);
-                }
-            }
-
-
-            // vertical rect of tiles
-            int x0 = Mathf.Clamp(-step.x, 0, width);
-            int x1 = Mathf.Clamp(width- step.x, 0, width);
-            for (int x = x0; x < x1; x++)
-            {
-                for (int y = oy; y < oY; y++)
-                {
-                    var tile = grid.GetTile(obl.x + x, obl.y + y);
-                    ResetTile(tile);
-                }
-            }
-
-            for (int x = x0; x < x1; x++)
-            {
-                for (int y = ny; y < nY; y++)
-                {
-                    var tile = grid.GetTile(bottomLeftTile.x + x, bottomLeftTile.y + y);
-                    SetTile(tile);
-                }
-            }
+            int n = 0;
 
             // corner rect of tiles
-            for (int x = ox; x < oX; x++)
+            for (int x = obl.x; x < obl.x+width; x++)
             {
-                for (int y = oy; y < oY; y++)
+                for (int y = obl.y; y < obl.y+height; y++)
                 {
-                    var tile = grid.GetTile(obl.x + x, obl.y + y);
-                    ResetTile(tile);
+                    if (x < bottomLeftTile.x ||
+                        x >= bottomLeftTile.x + width ||
+                        y < bottomLeftTile.y ||
+                        y >= bottomLeftTile.y + height)
+                    {
+                        n++;
+                        var tile = grid.GetTile(x, y);
+                        ResetTile(tile);
+                    }
                 }
             }
 
-            for (int x = ox; x < oX; x++)
+            int m = 0;
+            for (int x = bottomLeftTile.x; x < bottomLeftTile.x + width; x++)
             {
-                for (int y = ny; y < nY; y++)
+                for (int y = bottomLeftTile.y; y < bottomLeftTile.y + height; y++)
                 {
-                    var tile = grid.GetTile(bottomLeftTile.x + x, bottomLeftTile.y + y);
-                    SetTile(tile);
+                    if (x < obl.x ||
+                        x >= obl.x + width ||
+                        y < obl.y ||
+                        y >= obl.y + height)
+                    {
+                        m++;
+                        var tile = grid.GetTile(x, y);
+                        SetTile(tile);
+                    }
                 }
             }
+
+            Debug.LogFormat("Step: {0}, out: {1}, in: {2}", bottomLeftTile-obl, n, m);
         }
 
         TileObject GetTile(int x, int y)
@@ -264,6 +210,7 @@ namespace Shrines
                     ReturnToPool(wo);
                     wo.ResetGameobject();
                     activeEntities.Remove(e);
+                    wo.transform.SetParent(poolRoot, false);
                 }
             }
         }
@@ -280,6 +227,7 @@ namespace Shrines
                 if (activeEntities.ContainsKey(e)) continue;
                 var wo = objectPool.Dequeue();
                 wo.InitializeGameobject(e);
+                wo.transform.SetParent(root, true);
                 activeEntities.Add(e, wo);
             }
         }
