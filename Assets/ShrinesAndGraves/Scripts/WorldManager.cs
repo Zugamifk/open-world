@@ -26,16 +26,17 @@ namespace Shrines
             if (!SaveData.IsFileLoaded)
             {
                 SaveData.Initialize("game");
-                world.grid = Grid.PerlinNoise(worldData.width, worldData.height, worldData.types);
+                var er = worldData.emptyRegion;
+                world.grid = new Grid(er.rect.width, er.rect.height);
+                er.Fill(world.grid);
+                for (int i = 0; i < worldData.regions.Length; i++)
+                {
+                    worldData.regions[i].Fill(world.grid);
+                }
             }
             else
             {
                 world.grid = SaveData.file.grid;
-            }
-
-            if (worldData != null)
-            {
-                worldData.environment.FillGrid(world.grid);
             }
 
             player.InitializeGameobject(new Player());

@@ -15,6 +15,7 @@ namespace Shrines
 
         [SerializeField]
         public ObjectDataToken[] m_Objects;
+        public TileData[] tileTypes;
 
         Dictionary<string, WorldObjectData> m_ObjectLookup = new Dictionary<string, WorldObjectData>();
 

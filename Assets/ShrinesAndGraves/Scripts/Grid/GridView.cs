@@ -156,8 +156,6 @@ namespace Shrines
                     }
                 }
             }
-
-            Debug.LogFormat("Step: {0}, out: {1}, in: {2}", bottomLeftTile-obl, n, m);
         }
 
         TileObject GetTile(int x, int y)

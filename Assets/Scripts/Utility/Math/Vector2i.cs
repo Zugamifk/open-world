@@ -50,6 +50,16 @@ public struct Vector2i {
         return new Vector2i(i * a.x, i * a.y);
     }
 
+    public static Vector2i operator /(int i, Vector2i a)
+    {
+        return new Vector2i(i / a.x, i / a.y);
+    }
+
+    public static Vector2i operator /(Vector2i a, int i)
+    {
+        return new Vector2i(a.x / i, a.y / i);
+    }
+
     public static Vector2i operator -(Vector2i a)
     {
         return Vector2i.zero - a;
