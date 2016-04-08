@@ -7,20 +7,12 @@ namespace Shrines
     public class PlayerObject : WorldObject
     {
 
-        public float JumpPower;
+        public Animator animator;
+        public Transform graphicsRoot;
 
         MovementControl controller;
+        public Rigidbody2D rigidbody;
 
-        new protected Rigidbody2D rigidbody;
-
-        int groundPoints = 0;
-        public bool grounded
-        {
-            get
-            {
-                return groundPoints > 0;
-            }
-        }
 
         // Use this for initialization
         public override void InitializeGameobject(Entity e)
@@ -28,27 +20,9 @@ namespace Shrines
             base.InitializeGameobject(e);
 
             controller = gameObject.GetOrAddComponent<MovementControl>();
-            controller.RegisterMoveUpdate(Move);
-            controller.RegisterJumpHandler(Jump);
 
-            rigidbody = gameObject.GetOrAddComponent<Rigidbody2D>();
             collider = gameObject.GetOrAddComponent<CircleCollider2D>();
             collider.enabled = true;
-            //body = gameObject.GetOrAddComponent<PhysicsBody>();
-            //body.Initialize(new Rect(0,0,1,1));
-            //body.OnCollide += OnCollide;
-            //Physics.registeredBodies.Add(body);
-        }
-
-        public delegate void PositionUpdateCallback(Vector2 position);
-        public PositionUpdateCallback PositionUpdate;
-
-        /** A normal move, limited by physics and gamer state */
-        public void Move(Vector2 velocity)
-        {
-            if (PositionUpdate != null) PositionUpdate.Invoke(position);
-
-            rigidbody.velocity += velocity * 10 * Time.fixedDeltaTime;
         }
 
         /** Sets the position, ignoring game rules */
@@ -56,40 +30,25 @@ namespace Shrines
         {
             position = pos;
             rigidbody.position = pos;
-
-            if (PositionUpdate != null) PositionUpdate.Invoke(position);
-            //Debug.Log(pos + "->" + body.position + "->" + position);
         }
 
-        public void Jump()
+        void Update()
         {
-            if (true)
+            position = rigidbody.position;
+
+            var speed = rigidbody.velocity.x;
+            if (Mathf.Abs(speed) > 0.05f)
             {
-                rigidbody.AddForce(Vector2.up * JumpPower * Time.fixedDeltaTime, ForceMode2D.Force);
+                if (speed < 0)
+                {
+                    graphicsRoot.transform.localRotation = Quaternion.AngleAxis(180, Vector3.up);
+                }
+                else
+                {
+                    graphicsRoot.transform.localRotation = Quaternion.identity;
+                }
             }
-        }
-
-        void OnCollisionEnter2D(Collision2D hit)
-        {
-            if (hit.contacts[0].normal.y > 0)
-            {
-                groundPoints++;
-            }
-        }
-
-        void OnCollisionExit2D(Collision2D hit)
-        {
-            if (hit.contacts[0].normal.y > 0)
-            {
-                groundPoints--;
-            }
-        }
-
-        void LateUpdate()
-        {
-            var newPos = rigidbody.position;
-
-            position = newPos;
+            animator.SetFloat("speed", Mathf.Abs(speed));
         }
     }
 }

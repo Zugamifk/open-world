@@ -12,41 +12,58 @@ namespace Shrines
         JumpEvent onJump;
 
         [Readonly][SerializeField]
-        Vector2 velocity;
+        Vector2 move;
 
-		public void RegisterMoveUpdate(MoveUpdate update) {
-            onMove += update;
-        }
+        public Rigidbody2D rigidbody;
 
-        public void RegisterJumpHandler(JumpEvent update)
+        public float JumpPower;
+        public float maxSpeed;
+        public float acceleration;
+
+        protected Collider2D collider;
+
+
+        int groundPoints = 0;
+        public bool grounded
         {
-            onJump += update;
+            get
+            {
+                return groundPoints > 0;
+            }
         }
 
 		void UpdateX(float val) {
-			velocity.x+=val;
+			move.x+=val;
 		}
 
-        void Jump()
+        public Vector2 GetFootPosition()
         {
-            if (onJump != null)
+            return (Vector2)collider.transform.position + collider.offset + Vector2.down * .5f;
+        }
+
+        public void Jump()
+        {
+            var grounded = Physics2D.Raycast(GetFootPosition(), Vector2.down, 0.1f);
+            Debug.DrawLine(GetFootPosition(), GetFootPosition()+Vector2.down * 0.1f, Color.red);
+            if (grounded.collider!=null)
             {
-                onJump();
+                rigidbody.AddForce(Vector2.up * JumpPower * Time.fixedDeltaTime, ForceMode2D.Impulse);
             }
         }
 
         void Start() {
 			InputManager.RegisterAxisUpdateCallback(InputKey.MOVE_HORIZONTAL, UpdateX);
             InputManager.RegisterButtonDownCallback(InputKey.BUTTON0, Jump);
+
+            collider = gameObject.GetOrAddComponent<CircleCollider2D>();
 		}
 
 		void Update() {
-            if (onMove != null)
-            {
-                onMove(velocity);
-            }
+            var vel = rigidbody.velocity;
+            vel.x = Mathf.Clamp(vel.x + move.x * acceleration * Time.fixedDeltaTime, -maxSpeed, maxSpeed);
+            rigidbody.velocity = (Vector2f16)vel;
 
-            velocity = Vector2.zero;
+            move = Vector2.zero;
 		}
     }
 }
