@@ -10,7 +10,7 @@ namespace Shrines
 
         public override void Fill(Grid g)
         {
-            Debug.Log(rect.center.x);
+
             int level = g.surface[rect.center.x].gridPosition.y;
             for (int x = rect.xMin; x < rect.xMax; x++)
             {
@@ -19,16 +19,14 @@ namespace Shrines
 
                 for (int y = surface.gridPosition.y; y > surfHeight; y--)
                 {
-                    var tile = g.GetTile(x, y);
-                    tile.SetData(environment.tileTypes[1]);
+                    g.SetTileData(x, y, environment.tileTypes[1]);
                 }
 
-                for (int y = surface.gridPosition.y; y < surfHeight; y++)
+                for (int y = surface.gridPosition.y; y <= surfHeight; y++)
                 {
-                    var tile = g.GetTile(x, y);
-                    tile.SetData(environment.tileTypes[0]);
+                    g.SetTileData(x, y, environment.tileTypes[0]);
                 }
-                
+                g.surface[x] = g.GetTile(x, surfHeight);
             }
         }
     }

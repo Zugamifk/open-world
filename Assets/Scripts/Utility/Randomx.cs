@@ -156,4 +156,12 @@ public static class Randomx {
 		}
 	}
 
+    public static bool Bool
+    {
+        get
+        {
+            return Random.value < 0.5f;
+        }
+    }
+
 }

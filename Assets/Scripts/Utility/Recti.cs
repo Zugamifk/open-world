@@ -196,7 +196,7 @@ namespace Extensions
 
         public override string ToString()
         {
-            return string.Format ("{(x:{0} y:{1} w:{2} h:{3})", x, y, size.x, size.y);
+            return string.Format ("(x:{0} y:{1} w:{2} h:{3})", x, y, size.x, size.y);
         }
     }
 }

@@ -89,6 +89,31 @@ namespace Shrines
             tiles[x, y] = tile;
         }
 
+        public void SetTileData(int x, int y, TileData tileData)
+        {
+            var tile = GetTile(x, y);
+            if(tile!=null) {
+                tile.SetData(tileData);
+            }
+        }
+
+        public void SetTileData(Recti r, TileData tileData)
+        {
+            int x = r.position.x,
+                y = r.position.y;
+            int X = x + r.size.x,
+                Y = y + r.size.y;
+            for (x = r.position.x; x < X; x++)
+            {
+                for (y = r.position.y; y < Y; y++)
+                {
+                    var tile = GetTile(x, y);
+                    tile.SetData(tileData);
+                }
+            }
+        }
+
+
         public bool InBounds(int x, int y)
         {
             return !(
