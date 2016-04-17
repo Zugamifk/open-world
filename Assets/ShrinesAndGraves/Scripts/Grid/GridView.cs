@@ -195,7 +195,7 @@ namespace Shrines
             WorldObject to;
             if (!activeEntities.TryGetValue(tile, out to))
             {
-                Debug.Log("No entity found for tile at " + tile.position);
+                //Debug.Log("No entity found for tile at " + tile.position);
                 return;
             }
             activeEntities.Remove(tile);
