@@ -33,8 +33,7 @@ namespace Extensions {
         }
 
         public static int Mod(int num, int mod) {
-            var res = num%mod;
-            return num < 0 ? res+mod : res;
+            return (num%mod + mod)%mod;
         }
 
         public static float Place(float min, float max, float num) {

@@ -81,5 +81,8 @@ public static class Debugx {
             timer = Stopwatch.StartNew();
         };
     }
-
+    public static void LogBinary(string name, byte value)
+    {
+        UnityEngine.Debug.LogFormat("{0}: {1}", name, System.Convert.ToString(value, 2));
+    }
 }

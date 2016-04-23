@@ -142,6 +142,26 @@ namespace Shrines
                     tiles[i] = GetTile(x, y);
                     i++;
                 }
+                y = Mathf.FloorToInt(rect.yMin);
+            }
+            return i;
+        }
+
+        public int GetTiles(Recti rect, Tile[] tiles)
+        {
+            int x = rect.xMin;
+            int X = rect.xMax;
+            int y = rect.yMin;
+            int Y = rect.yMax;
+            int i = 0;
+            for (; x < X; x++)
+            {
+                for (; y < Y; y++)
+                {
+                    tiles[i] = GetTile(x, y);
+                    i++;
+                }
+                y = rect.yMin;
             }
             return i;
         }

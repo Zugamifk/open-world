@@ -24,13 +24,17 @@ namespace Shrines
             var entranceWidth = Random.Range(hallHeightRange.x, hallHeightRange.y);
             var entranceHall = new Recti(entrancePos-entranceWidth/2, entranceTile.gridPosition.y-depth+1, entranceWidth, depth);
 
-            g.SetTileData(entranceHall, environment.tileTypes[1]);
 
             var r = GetRoom();
             var entranceRoomexit = r.AddRandomExit(Room.Side.TOP, entranceWidth);
             var rx = entranceHall.x - entranceRoomexit.interval.x;
             var ry = entranceHall.y - r.size.y;
-            g.SetTileData(new Recti(rx, ry, r.size.x, r.size.y), environment.tileTypes[1]);
+            var roomRect = new Recti(rx, ry, r.size.x, r.size.y);
+
+            g.SetTileData(roomRect, environment.tileTypes[1]);
+            g.SetTileData(entranceHall, environment.tileTypes[1]);
+            RegionUtility.FillGroundTiles(g, new Recti(entranceHall.position - 5, entranceHall.size + 10), environment.tileTypes[0]);
+            RegionUtility.FillGroundTiles(g, new Recti(roomRect.position - 5, roomRect.size + 10), environment.tileTypes[0]);
         }
 
         public Room GetRoom()

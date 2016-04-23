@@ -25,7 +25,7 @@ namespace Shrines
 
             if (tile != null && tile.tileData!=null)
             {
-                renderer.sprite = tile.tileData.GetSprite(tile.surface);
+                renderer.sprite = tile.tileData.GetSprite(tile);
             }
             else ResetGameobject();
             transform.position = tile.position;
