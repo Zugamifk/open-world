@@ -8,9 +8,11 @@ namespace Shrines
     public class Tile : Entity
     {
         public const int SurfaceCount = 2;
+        // 1 -> colliding tile, 0 -> non colliding tile, starting from top right and going counterclockwise
         public enum Surface
         {
-            Null = 0,
+            Null = 0, // unset or disconnected
+            // values 1-255 denote actual flags corresponding to bytes
             TopRight = 1 << 0,
             Top = 1<<1, 
             TopLeft = 1<<2,
@@ -19,8 +21,10 @@ namespace Shrines
             Bottom = 1<<5,
             BottomRight = 1<<6,
             Right = 1<<7,
-            None = 1 << 8, // inside other tiles
-            All = 255
+            All = 255,
+            // from 256, these are special values
+            NotAll = 256, // some are free
+            ValueCount = 257
         }
 
         public TileData tileData;
@@ -91,17 +95,15 @@ namespace Shrines
                 }
             }
 
-            // check for a single free tile if still unset
-            if (!set )
+            if (!set)
             {
-                for (int i = 0; i < 8; i++)
+                if ((byte)(~neighboursBits) == 0)
                 {
-                    var s = s_surfaceOrder1[i];
-                    if ((neighboursBits & 1 << s) == 0)
-                    {
-                        surface = (Surface)(1 << s);
-                        break;
-                    }
+                    surface = Surface.All;
+                }
+                else
+                {
+                    surface = Surface.NotAll;
                 }
             }
 

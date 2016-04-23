@@ -19,6 +19,10 @@ namespace Shrines
         Transform root;
         [SerializeField]
         int objectPoolSize;
+        [SerializeField, Layer]
+        int layer;
+        [SerializeField, Tooltip("Sorting oder in layer")]
+        int sortingOrder;
 
         Queue<WorldObject> objectPool;
         Queue<TileObject> tilePool;
@@ -88,6 +92,8 @@ namespace Shrines
                     var to = tile.AddComponent<TileObject>();
                     var te = grid.GetTile(x,  y);
                     to.InitializeGameobject(te);
+                    to.renderer.sortingLayerID = layer;
+                    to.renderer.sortingOrder = sortingOrder;
                     tile.transform.SetParent(root, false);
                     var pos = new Vector3i(x, y, 0);
                     tile.transform.localPosition = pos;

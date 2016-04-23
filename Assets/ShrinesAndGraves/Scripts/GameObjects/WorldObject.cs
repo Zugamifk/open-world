@@ -7,7 +7,7 @@ namespace Shrines
     {
         protected Entity m_Entity;
 
-        new protected SpriteRenderer renderer;
+        new protected SpriteRenderer m_renderer;
 
         new protected Collider2D collider;
 
@@ -47,6 +47,14 @@ namespace Shrines
             }
         }
 
+        public Renderer renderer
+        {
+            get
+            {
+                return m_renderer;
+            }
+        }
+
         public virtual void InitializeGameobject(Entity e)
         {
             if (m_Entity != null)
@@ -58,25 +66,25 @@ namespace Shrines
                 gameObject.name = e.name;
             }
             m_Entity = e;
-            if (renderer == null)
+            if (m_renderer == null)
             {
                 var sgo = new GameObject("sprite");
                 sgo.transform.SetParent(transform, false);
-                renderer = sgo.AddComponent<SpriteRenderer>();
+                m_renderer = sgo.AddComponent<SpriteRenderer>();
             } else {
-                renderer.enabled = true;
+                m_renderer.enabled = true;
             }
-            renderer.sharedMaterial = ResourceManager.Instance.spriteMaterial;
+            m_renderer.sharedMaterial = ResourceManager.Instance.spriteMaterial;
             if (e!=null && entity.data != null )
             {
-                renderer.sprite = entity.data.GetSprite();
+                m_renderer.sprite = entity.data.GetSprite();
             }
             gameObject.transform.position = e.position;
         }
 
         public virtual void ResetGameobject()
         {
-            renderer.enabled = false;
+            m_renderer.enabled = false;
             if (m_Entity != null)
             {
                 m_Entity.viewObject = null;

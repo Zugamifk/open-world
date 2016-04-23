@@ -7,7 +7,7 @@ namespace Shrines
     {
 
         public WorldData worldData;
-        public GridView view;
+        public GridView[] views;
         public PlayerObject player;
 
         World world;
@@ -45,11 +45,13 @@ namespace Shrines
 
             player.InitializeGameobject(new Player());
 
-            view.grid = world.grid;
             Physics.grid = world.grid;
 
-            view.SetPositionCallback(() => player.position);
-
+            foreach (var view in views)
+            {
+                view.grid = world.grid;
+                view.SetPositionCallback(() => player.position);
+            }
         }
 
         void Start()

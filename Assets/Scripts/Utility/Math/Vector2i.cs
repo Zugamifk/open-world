@@ -70,6 +70,16 @@ public struct Vector2i {
         return new Vector2i(a.x / i, a.y / i);
     }
 
+    public static Vector2i operator %(Vector2i a, Vector2i b)
+    {
+        return new Vector2i(a.x % b.x, a.y % b.y);
+    }
+
+    public static Vector2i operator %(Vector2i a, int i)
+    {
+        return new Vector2i(a.x % i, a.y % i);
+    }
+
     public static Vector2i operator -(Vector2i a)
     {
         return Vector2i.zero - a;
@@ -85,7 +95,17 @@ public struct Vector2i {
         return a.x == b.x && a.y == b.y;
     }
 
+    public static bool operator ==(Vector2i a, int b)
+    {
+        return a.x == b && a.y == b;
+    }
+
     public static bool operator !=(Vector2i a, Vector2i b)
+    {
+        return !(a == b);
+    }
+
+    public static bool operator !=(Vector2i a, int b)
     {
         return !(a == b);
     }

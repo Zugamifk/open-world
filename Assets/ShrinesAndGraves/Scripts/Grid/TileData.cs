@@ -7,17 +7,30 @@ namespace Shrines
     public class TileData : ScriptableObject
     {
         [System.Serializable]
+        public class SpriteLayer
+        {
+            [Layer]
+            public int layer;
+            public Vector2i dimensions = Vector2i.one;
+            public Sprite[] sprites;
+        }
+
+        [System.Serializable]
         public class Graphic
         {
             public Tile.Surface surface;
-            public Sprite[] sprites;
+            public SpriteLayer[] sprites;
 
-            public Sprite sprite
+            public Sprite GetSprite(int layer)
             {
-                get
+                for (int i = 0; i < sprites.Length; i++)
                 {
-                    return sprites.Random();
+                    if (sprites[i].layer == layer)
+                    {
+                        return sprites[i].sprites.Random();
+                    }
                 }
+                return null;
             }
 
             public static bool operator ==(Graphic a, Graphic b) {
@@ -45,52 +58,103 @@ namespace Shrines
             }
         }
 
-        [System.NonSerialized]
-        Graphic[] graphicLookup = new Graphic[256];
+
+        Dictionary<int, SpriteLayer[]> graphicLookup = new Dictionary<int, SpriteLayer[]>();
 
         [SerializeField]
         public Graphic[] graphics;
-        public Sprite defaultSprite;
+        public SpriteLayer[] defaultSprites;
         public bool collides;
 
         void OnEnable()
         {
+            SpriteLayer[] gs;
             for (int i = 0; i < graphics.Length; i++)
             {
-                graphicLookup[(byte)graphics[i].surface] =  graphics[i];
+                for(int j=0;j<graphics[i].sprites.Length;j++) {
+                    var ss = graphics[i].sprites[j];
+                    if (!graphicLookup.TryGetValue(ss.layer, out gs))
+                    {
+                        gs = new SpriteLayer[(int)Tile.Surface.ValueCount];
+                        graphicLookup.Add(ss.layer, gs);
+                    }
+                    gs[(int)graphics[i].surface] = ss;
+                }
             }
         }
 
-        public Sprite GetSprite(Tile tile)
+        SpriteLayer[] _sprites;
+        public Sprite GetSprite(Tile tile, int layer)
         {
-            Graphic g = graphicLookup[tile.surfaceBits];
-            if (g!=null)
+
+            if (!graphicLookup.TryGetValue(layer, out _sprites))
             {
-                return g.sprite;
+                return null;
             }
 
-            g = graphicLookup[(byte)tile.surface];
+            var g = _sprites[tile.surfaceBits];
+            if (g!=null)
+            {
+                goto __testGraphic;
+            }
+
+            g = _sprites[(int)tile.surface];
             if (g != null)
             {
-                graphicLookup[tile.surfaceBits] = g;
-                return g.sprite;
+                _sprites[tile.surfaceBits] = g;
+                goto __testGraphic;
             }
-            
+
+            if ((byte)(~tile.surfaceBits) == 0)
+            {
+                g = _sprites[(int)Tile.Surface.All];
+                if (g != null)
+                {
+                    _sprites[tile.surfaceBits] = g;
+                    goto __testGraphic;
+                }
+            }
+            else
+            {
+                g = _sprites[(int)Tile.Surface.NotAll];
+                if (g != null)
+                {
+                    _sprites[tile.surfaceBits] = g;
+                    goto __testGraphic;
+                }
+            }
+
             for (int i = 0; i < 8; i++)
             {
                 if ((tile.surfaceBits & 1 << i) == 0)
                 {
-                    g = graphicLookup[(byte)(1 << i)];
+                    g = _sprites[(int)(1 << i)];
                     if (g != null)
                     {
-                        graphicLookup[tile.surfaceBits] = g;
-                        return g.sprite;
+                        _sprites[tile.surfaceBits] = g;
+                        goto __testGraphic;
                     }
                 }
             }
 
-            return defaultSprite;
-            
+            for (int i = 0; i < defaultSprites.Length; i++)
+            {
+                if (defaultSprites[i].layer == layer)
+                {
+                    g = defaultSprites[i];
+                    goto __testGraphic;
+                }
+            }
+            return null;
+        __testGraphic:
+            if (g.dimensions != 1 && tile.gridPosition % g.dimensions != 0)
+            {
+                return null;
+            }
+            else
+            {
+                return g.sprites.Random();
+            }
         }
     }
 }
