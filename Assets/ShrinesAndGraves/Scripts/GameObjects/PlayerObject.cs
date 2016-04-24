@@ -13,16 +13,39 @@ namespace Shrines
         MovementControl controller;
         public Rigidbody2D rigidbody;
 
+        float jumpPower;
+        bool jumping;
+        ScriptedPlaybackBehaviour jumpBehaviour;
 
         // Use this for initialization
         public override void InitializeGameobject(Entity e)
         {
             base.InitializeGameobject(e);
 
-            controller = gameObject.GetOrAddComponent<MovementControl>();
+            jumpBehaviour = animator.GetBehaviour<ScriptedPlaybackBehaviour>();
 
-            collider = gameObject.GetOrAddComponent<CircleCollider2D>();
+            controller = gameObject.GetOrAddComponent<MovementControl>();
+            controller.onFall += () => animator.SetTrigger("fall");
+            controller.onHighJump += () => animator.SetTrigger("high jump");
+            controller.onJump += () =>
+            {
+                animator.SetTrigger("jump");
+                animator.ResetTrigger("land");
+                animator.ResetTrigger("fall");
+                jumpPower = rigidbody.velocity.y;
+                jumping = true;
+            };
+            controller.onLand += () =>
+            {
+                animator.SetTrigger("land");
+                animator.ResetTrigger("jump");
+                animator.ResetTrigger("high jump");
+                animator.ResetTrigger("fall");
+                jumping = false;
+            };
+            collider = gameObject.GetOrAddComponent<BoxCollider2D>();
             collider.enabled = true;
+            
         }
 
         /** Sets the position, ignoring game rules */
@@ -36,19 +59,27 @@ namespace Shrines
         {
             position = rigidbody.position;
 
-            var speed = rigidbody.velocity.x;
-            if (Mathf.Abs(speed) > 0.05f)
+            if (jumping)
             {
-                if (speed < 0)
-                {
-                    graphicsRoot.transform.localRotation = Quaternion.AngleAxis(180, Vector3.up);
-                }
-                else
-                {
-                    graphicsRoot.transform.localRotation = Quaternion.identity;
-                }
+                jumpBehaviour.time = Mathf.InverseLerp(jumpPower, -jumpPower, rigidbody.velocity.y);
+                Debug.Log(jumpBehaviour.time);
             }
-            animator.SetFloat("speed", Mathf.Abs(speed));
+            else
+            {
+                var speed = rigidbody.velocity.x;
+                if (Mathf.Abs(speed) > 0.05f)
+                {
+                    if (speed < 0)
+                    {
+                        graphicsRoot.transform.localRotation = Quaternion.AngleAxis(180, Vector3.up);
+                    }
+                    else
+                    {
+                        graphicsRoot.transform.localRotation = Quaternion.identity;
+                    }
+                }
+                animator.SetFloat("speed", Mathf.Abs(speed));
+            }
         }
     }
 }

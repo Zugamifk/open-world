@@ -28,6 +28,15 @@ namespace Shrines
             ValueCount = 258
         }
 
+        // for rotating tile sprites
+        public enum Rotation
+        {
+            Down,
+            Right,
+            Up,
+            Left
+        }
+
         public TileData tileData;
         public Vector2i gridPosition;
         public Surface surface;
