@@ -20,7 +20,7 @@ namespace Shrines
                 for (int y = 0; y < height; y++)
                 {
                     TileData data = null;
-                    if (y < surfaceHeight + g)
+                    if (y <= surfaceHeight + g)
                     {
                         data = environment.tileTypes[0];
                     }
@@ -29,6 +29,7 @@ namespace Shrines
                         data = environment.tileTypes[1];
                     }
                     var tile = new Tile(x,y, data);
+                    tile.altitude = y - surfaceHeight - g;
                     grid.SetTile(x, y, tile);
                     if (y == surfaceHeight + g)
                     {

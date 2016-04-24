@@ -178,6 +178,14 @@ namespace Extensions
                 other.yMax <= yMax;
         }
 
+        public bool Contains(Vector2i point)
+        {
+            return point.x >= xMin &&
+                point.x <= xMax &&
+                point.y >= yMin &&
+                point.y <= yMax;
+        }
+
         public bool Overlaps(Recti other)
         {
             return other.xMin < xMax &&

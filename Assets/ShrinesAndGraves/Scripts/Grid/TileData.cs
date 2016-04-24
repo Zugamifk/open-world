@@ -58,11 +58,20 @@ namespace Shrines
             }
         }
 
+        [System.Serializable]
+        public class DepthLayer
+        {
+            public SpriteLayer sprites;
+            public int depth;
+        }
 
         Dictionary<int, SpriteLayer[]> graphicLookup = new Dictionary<int, SpriteLayer[]>();
+        Dictionary<int, List<DepthLayer>> depthGraphicLookup = new Dictionary<int, List<DepthLayer>>();
 
         [SerializeField]
         public Graphic[] graphics;
+        [SerializeField]
+        public DepthLayer[] depthlayers;
         public SpriteLayer[] defaultSprites;
         public bool collides;
 
@@ -81,18 +90,53 @@ namespace Shrines
                     gs[(int)graphics[i].surface] = ss;
                 }
             }
+
+            List<DepthLayer> ds;
+            for (int i = 0; i < depthlayers.Length; i++)
+            {
+                var ss = depthlayers[i];
+                if (!depthGraphicLookup.TryGetValue(ss.sprites.layer, out ds))
+                {
+                    ds = new List<DepthLayer>();
+                    depthGraphicLookup.Add(ss.sprites.layer, ds);
+                }
+                ds.Add(ss);
+            }
         }
 
         SpriteLayer[] _sprites;
+        List<DepthLayer> _depthSprites;
         public Sprite GetSprite(Tile tile, int layer)
         {
-
+            SpriteLayer g = null;
+            var all = (byte)(~tile.surfaceBits) == 0;
+            if (all)
+            {
+                if (depthGraphicLookup.TryGetValue(layer, out _depthSprites))
+                {
+                    for (int i = 0; i < _depthSprites.Count; i++)
+                    {
+                        if (-_depthSprites[i].depth >= tile.altitude)
+                        {
+                            g = _depthSprites[i].sprites;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+                    if (g != null)
+                    {
+                        goto __testGraphic;
+                    }
+                }
+            }
             if (!graphicLookup.TryGetValue(layer, out _sprites))
             {
                 return null;
             }
 
-            var g = _sprites[tile.surfaceBits];
+            g = _sprites[tile.surfaceBits];
             if (g!=null)
             {
                 goto __testGraphic;
@@ -105,16 +149,7 @@ namespace Shrines
                 goto __testGraphic;
             }
 
-            if ((byte)(~tile.surfaceBits) == 0)
-            {
-                g = _sprites[(int)Tile.Surface.All];
-                if (g != null)
-                {
-                    _sprites[tile.surfaceBits] = g;
-                    goto __testGraphic;
-                }
-            }
-            else
+            if (!all)
             {
                 g = _sprites[(int)Tile.Surface.NotAll];
                 if (g != null)
@@ -122,6 +157,13 @@ namespace Shrines
                     _sprites[tile.surfaceBits] = g;
                     goto __testGraphic;
                 }
+            }
+
+            g = _sprites[(int)Tile.Surface.Any];
+            if (g != null)
+            {
+                _sprites[tile.surfaceBits] = g;
+                goto __testGraphic;
             }
 
             for (int i = 0; i < 8; i++)

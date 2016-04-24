@@ -24,7 +24,8 @@ namespace Shrines
             All = 255,
             // from 256, these are special values
             NotAll = 256, // some are free
-            ValueCount = 257
+            Any = 257, // any possible surfaces
+            ValueCount = 258
         }
 
         public TileData tileData;
@@ -32,6 +33,8 @@ namespace Shrines
         public Surface surface;
         [Binary]
         public byte surfaceBits;
+        [Tooltip("Distance from the nearest surface, for graphics and maybe other uses")]
+        public int altitude;
         public List<Entity> contained = new List<Entity>();
 
         public static Tile Null

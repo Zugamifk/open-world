@@ -29,7 +29,7 @@ namespace Shrines
             }
             else ResetGameobject();
             transform.position = tile.position;
-            collider.enabled = tile.collides && tile.surface != Tile.Surface.Null;
+            collider.enabled = tile.collides && tile.surface != Tile.Surface.All;
         }
 
         public override void ResetGameobject()

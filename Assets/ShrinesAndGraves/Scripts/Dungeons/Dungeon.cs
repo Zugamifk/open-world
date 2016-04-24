@@ -13,6 +13,7 @@ namespace Shrines
         public int maxHallLength;
         public Vector2i hallHeightRange;
         public int maxExits;
+        public int buffer = 10;
 
         Queue<Room.Exit> freeExits;
 
@@ -33,8 +34,13 @@ namespace Shrines
 
             g.SetTileData(roomRect, environment.tileTypes[1]);
             g.SetTileData(entranceHall, environment.tileTypes[1]);
-            RegionUtility.FillGroundTiles(g, new Recti(entranceHall.position - 5, entranceHall.size + 10), environment.tileTypes[0]);
-            RegionUtility.FillGroundTiles(g, new Recti(roomRect.position - 5, roomRect.size + 10), environment.tileTypes[0]);
+            var fullEntrance = new Recti(entranceHall.position - buffer, entranceHall.size + buffer*2);
+            RegionUtility.FillGroundTiles(g, fullEntrance, environment.tileTypes[0]);
+            RegionUtility.UpdateDepths(g, fullEntrance, entranceHall);
+            var fullRoom = new Recti(roomRect.position - buffer, roomRect.size + buffer*2);
+            RegionUtility.FillGroundTiles(g, fullRoom, environment.tileTypes[0]);
+            RegionUtility.UpdateDepths(g, fullRoom, roomRect);
+
         }
 
         public Room GetRoom()
