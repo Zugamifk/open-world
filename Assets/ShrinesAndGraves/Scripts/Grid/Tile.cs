@@ -122,6 +122,27 @@ namespace Shrines
             surfaceBits = neighboursBits;
         }
 
+        /// <summary>
+        /// are the three proximate surfaces to this surface free? (non-colliding)
+        /// </summary>
+        /// <param name="surface"></param>
+        /// <returns></returns>
+        public bool Is3NodesFree(Surface surface)
+        {
+            //TODO: optimize with smarter bit shifting
+            var s = (byte)surface;
+            var s0 = s << 1 | s >> 7;
+            var s1 = s >> 1 | s << 7;
+            if ((surfaceBits & (s0 | s | s1)) == 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public void SetData(TileData data)
         {
             tileData = data;

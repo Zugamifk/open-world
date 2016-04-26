@@ -17,6 +17,10 @@ public class ScriptedPlaybackBehaviour : StateMachineBehaviour
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         animator.Play(state, -1, curve.Evaluate(time));
+        if (time >= 0.9f)
+        {
+            animator.speed = oldSpeed;
+        }
     }
 
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)

@@ -6,6 +6,12 @@ namespace Shrines
 {
 	public class MovementControl : MonoBehaviour {
 
+        enum MoveMode
+        {
+            Free,
+            Climbing
+        }
+
         public class FootSensor : MonoBehaviour
         {
             public MovementControl.MoveEvent onCollision;
@@ -18,6 +24,21 @@ namespace Shrines
             }
         }
 
+        public class HandSensor : TriggerReceiver
+        {
+            public MovementControl.MoveEvent onLedgeGrab;
+            public EntityTrigger lastTrigger;
+            public override void OnEnterTrigger(EntityTrigger trigger)
+            {
+                var lt = trigger as TileObject.LedgeTrigger;
+                lastTrigger = trigger;
+                if (lt != null && onLedgeGrab != null)
+                {
+                    onLedgeGrab.Invoke();
+                }
+            }
+        }
+
         public delegate void MoveUpdate(Vector2 move);
         MoveUpdate onMove;
 
@@ -26,6 +47,9 @@ namespace Shrines
         public MoveEvent onHighJump;
         public MoveEvent onLand;
         public MoveEvent onFall;
+        public MoveEvent onLedgeGrab;
+        public MoveEvent onLedgeClimb;
+        public MoveEvent onLedgeDrop;
         public delegate void ParamEvent(float t);
         public ParamEvent onJumpPowerUpdate;
 
@@ -43,6 +67,7 @@ namespace Shrines
         public float maxSpeed;
         public float acceleration;
 
+        public Collider2D handsCollider;
         public Collider2D footCollider;
         [Layer]
         public int footColliderLayer;
@@ -51,11 +76,18 @@ namespace Shrines
         float jumpTime;
         Vector2 jumpPosition;
         bool jumping, highJumping;
+        
+        HandSensor handSensor;
+
+        MoveMode currentMovementMode = MoveMode.Free;
 
         Vector2 lastVelocity;
 
+        bool blockInput;
+
 		void UpdateX(float val) {
-			move.x+=val;
+            if (blockInput) return;
+            move.x+=val;
 		}
 
         public Vector2 GetFootPosition()
@@ -65,42 +97,80 @@ namespace Shrines
 
         public void StartJump()
         {
-            var grounded = footCollider.IsTouchingLayers(footColliderLayer);
-            if (grounded)
+            if (blockInput) return;
+            switch (currentMovementMode)
             {
-                jumpPower = 0;
-                jumpTime = Time.fixedTime;
-                rigidbody.AddForce(Vector2.up * InitialJumpPower * Time.fixedDeltaTime, ForceMode2D.Impulse);
-                jumpPosition = rigidbody.position;
-                highJumping = false;
-                jumping = true;
-                if (onJump != null)
-                {
-                    onJump.Invoke();
-                }
+                case MoveMode.Free:
+                    {
+                        var grounded = footCollider.IsTouchingLayers(footColliderLayer);
+                        if (grounded)
+                        {
+                            jumpPower = 0;
+                            jumpTime = Time.fixedTime;
+                            rigidbody.AddForce(Vector2.up * InitialJumpPower * Time.fixedDeltaTime, ForceMode2D.Impulse);
+                            jumpPosition = rigidbody.position;
+                            highJumping = false;
+                            jumping = true;
+                            if (onJump != null)
+                            {
+                                onJump.Invoke();
+                            }
+                        }
+                    } break;
+                case MoveMode.Climbing:
+                    {
+                        ClimbLedge();
+                    }
+                    break;
+                default:
+                    break;
             }
+        }
+
+        IEnumerator TeleportToLedge()
+        {
+            SetMoveMode(MoveMode.Free);
+            blockInput = true;
+            yield return new WaitForSeconds(.3f);
+            transform.position = handSensor.lastTrigger.transform.position;
+            yield return new WaitForSeconds(.5f);
+            blockInput = false;
+            SetColliders(true);            
         }
 
         public void Jump()
         {
-            if (Time.fixedTime - jumpTime < JumpTimeMax)
+            if (blockInput) return;
+            switch (currentMovementMode)
             {
-                var gain = 1 - (Time.fixedTime - jumpTime) / JumpTimeMax;
-                rigidbody.AddForce(Vector2.up * JumpPowerMax * gain * gain * Time.fixedDeltaTime, ForceMode2D.Impulse);
-                var newPower = (Time.fixedTime - jumpTime) / JumpTimeMax;
-                if (newPower >= HighJumpTime * JumpTimeMax &&
-                    jumpPower < HighJumpTime * JumpTimeMax)
-                {
-                    if(onHighJump != null)
-                    { 
-                        onHighJump.Invoke();
+                case MoveMode.Free:
+                    {
+                        if (Time.fixedTime - jumpTime < JumpTimeMax)
+                        {
+                            var gain = 1 - (Time.fixedTime - jumpTime) / JumpTimeMax;
+                            rigidbody.AddForce(Vector2.up * JumpPowerMax * gain * gain * Time.fixedDeltaTime, ForceMode2D.Impulse);
+                            var newPower = (Time.fixedTime - jumpTime) / JumpTimeMax;
+                            if (newPower >= HighJumpTime * JumpTimeMax &&
+                                jumpPower < HighJumpTime * JumpTimeMax)
+                            {
+                                if (onHighJump != null)
+                                {
+                                    onHighJump.Invoke();
+                                }
+                                highJumping = true;
+                            }
+                            jumpPower = newPower;
+                            if (onJumpPowerUpdate != null)
+                            {
+                                onJumpPowerUpdate.Invoke(jumpPower);
+                            }
+                        }
                     }
-                    highJumping = true;
-                }
-                jumpPower = newPower;
-                if(onJumpPowerUpdate!=null) {
-                    onJumpPowerUpdate.Invoke(jumpPower);
-                }
+                    break;
+                case MoveMode.Climbing:
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -117,10 +187,73 @@ namespace Shrines
             }
         }
 
+        void GrabLedge()
+        {
+            if (onLedgeGrab != null)
+            {
+                onLedgeGrab.Invoke();
+            }
+            StartCoroutine(DelayedBlockInput(.2f));
+            transform.position = handSensor.lastTrigger.transform.position - (Vector3)handsCollider.transform.localPosition;
+            SetMoveMode(MoveMode.Climbing);
+            SetColliders(false);
+        }
+
+        void ClimbLedge()
+        {
+            if (onLedgeClimb != null)
+            {
+                onLedgeClimb.Invoke();
+            }
+            StartCoroutine(TeleportToLedge());
+        }
+
+        void SetColliders(bool to)
+        {
+            handsCollider.enabled = to;
+            footCollider.enabled = to;
+        }
+
+        void SetMoveMode(MoveMode mode)
+        {
+            if (mode == currentMovementMode) return;
+            switch (mode)
+            {
+                case MoveMode.Free:
+                    {
+                        rigidbody.isKinematic = false;
+                    }
+                    break;
+                case MoveMode.Climbing:
+                    {
+                        rigidbody.isKinematic = true;
+                        rigidbody.velocity = Vector3.zero;
+                    }
+                    break;
+                default:
+                    break;
+            }
+            currentMovementMode = mode;
+        }
+
+        IEnumerator DelayedBlockInput(float time)
+        {
+            blockInput = true;
+            yield return new WaitForSeconds(time);
+            blockInput = false;
+        }
+
         void Start() {
 			InputManager.RegisterAxisUpdateCallback(InputKey.MOVE_HORIZONTAL, UpdateX);
             InputManager.RegisterButtonHeldCallback(InputKey.BUTTON0, Jump);
             InputManager.RegisterButtonDownCallback(InputKey.BUTTON0, StartJump);
+
+            if (handsCollider != null)
+            {
+                var sensor = handsCollider.gameObject.AddComponent<HandSensor>();
+                sensor.onLedgeGrab += GrabLedge;
+                handSensor = sensor;
+            }
 
             if (footCollider != null)
             {
@@ -129,26 +262,50 @@ namespace Shrines
             }
 		}
 
-		void Update() {
-            var vel = rigidbody.velocity;
-            vel.x = Mathf.Clamp(vel.x + move.x * acceleration * Time.fixedDeltaTime, -maxSpeed, maxSpeed);
-            rigidbody.velocity = (Vector2f16)vel;
-
-            if (lastVelocity.y >= -FallThreshold && rigidbody.velocity.y < -FallThreshold)
+		void FixedUpdate() {
+            if (blockInput) move = Vector2.zero;
+            switch (currentMovementMode)
             {
-                bool canFall = !jumping || highJumping || rigidbody.position.y < jumpPosition.y;
-                if (!footCollider.IsTouchingLayers(footColliderLayer))
-                {
-                    if (onFall != null && canFall)
+                case MoveMode.Free:
                     {
-                        onFall.Invoke();
+                        var vel = rigidbody.velocity;
+                        vel.x = Mathf.Clamp(vel.x + move.x * acceleration * Time.fixedDeltaTime, -maxSpeed, maxSpeed);
+                        rigidbody.velocity = (Vector2f16)vel;
+                        if (lastVelocity.y >= -FallThreshold && rigidbody.velocity.y < -FallThreshold)
+                        {
+                            if (!footCollider.IsTouchingLayers(footColliderLayer))
+                            {
+                                if (onFall != null)
+                                {
+                                    onFall.Invoke();
+                                }
+                            }
+                        }
+                    } break;
+                case MoveMode.Climbing:
+                    {
+                        var edgeSide = handSensor.lastTrigger.transform.position - transform.position;
+                        if (edgeSide.x * move.x < -0.5f) // moving opposite direction , fall
+                        {
+                            SetMoveMode(MoveMode.Free);
+                            if (onFall != null)
+                            {
+                                onFall.Invoke();
+                            }
+                        }
+                        else if (edgeSide.x * move.x > 0.5f)
+                        {
+                            ClimbLedge();
+                        }
                     }
-                }
+                    break;
+                default:
+                    break;
             }
 
             lastVelocity = rigidbody.velocity;
-
             move = Vector2.zero;
+
 		}
     }
 }

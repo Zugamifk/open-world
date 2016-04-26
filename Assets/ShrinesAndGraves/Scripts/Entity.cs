@@ -36,5 +36,6 @@ namespace Shrines
             this.position = position;
             this.rect = new Rect(position, sprite.Size());
         }
+
     }
 }

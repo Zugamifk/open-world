@@ -5,8 +5,19 @@ namespace Shrines
 {
     public class TileObject : WorldObject
     {
+        public class LedgeTrigger : EntityTrigger
+        {
+            public TileObject tileObject;
+        }
 
         public Tile tile;
+        public BoxCollider2D leftLedge, rightLedge;
+
+        public void InitializeRenderersOnly(Entity e)
+        {
+            base.InitializeGameobject(e);
+            SetTile(e as Tile);
+        }
 
         public override void InitializeGameobject(Entity e)
         {
@@ -15,6 +26,26 @@ namespace Shrines
             var bc = gameObject.GetOrAddComponent<BoxCollider2D>();
             bc.offset = Vector2.one*0.5f;
             collider = bc;
+
+            var go = new GameObject("Left Ledge");
+            go.transform.SetParent(transform);
+            go.transform.localPosition = Vector2.up;
+            leftLedge = go.AddComponent<BoxCollider2D>();
+            leftLedge.size = Vector2.one * 0.5f;
+            leftLedge.isTrigger = true;
+            leftLedge.enabled = false;
+            var lt = go.AddComponent<LedgeTrigger>();
+            lt.tileObject = this;
+
+            go = new GameObject("Right Ledge");
+            go.transform.SetParent(transform);
+            go.transform.localPosition = Vector2.one;
+            rightLedge = go.AddComponent<BoxCollider2D>();
+            rightLedge.isTrigger = true;
+            rightLedge.enabled = false;
+            rightLedge.size = Vector2.one * 0.5f;
+            lt = go.AddComponent<LedgeTrigger>();
+            lt.tileObject = this;
 
             SetTile(e as Tile);
         }
@@ -29,7 +60,40 @@ namespace Shrines
             }
             else ResetGameobject();
             transform.position = tile.position;
-            collider.enabled = tile.collides && tile.surface != Tile.Surface.All;
+
+            if (collider == null) return;
+            if (tile.collides)
+            {
+                EnableLedges();
+                collider.enabled = tile.surface != Tile.Surface.All;
+            }
+            else
+            {
+                collider.enabled = false;
+                rightLedge.enabled = false;
+                leftLedge.enabled = false;
+            }
+        }
+
+        void EnableLedges()
+        {
+            if (tile.Is3NodesFree(Tile.Surface.TopLeft))
+            {
+                leftLedge.enabled = true;
+            }
+            else
+            {
+                leftLedge.enabled = false;
+            }
+
+            if (tile.Is3NodesFree(Tile.Surface.TopRight))
+            {
+                rightLedge.enabled = true;
+            }
+            else
+            {
+                rightLedge.enabled = false;
+            }
         }
 
         public override void ResetGameobject()

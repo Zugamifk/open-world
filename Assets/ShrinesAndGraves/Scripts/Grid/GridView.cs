@@ -23,6 +23,8 @@ namespace Shrines
         int layer;
         [SerializeField, Tooltip("Sorting oder in layer")]
         int sortingOrder;
+        [SerializeField, Tooltip("should this view initialize colliders and other components?")]
+        bool renderersOnly;
 
         Queue<WorldObject> objectPool;
         Queue<TileObject> tilePool;
@@ -91,7 +93,14 @@ namespace Shrines
                     var tile = new GameObject("Tile");
                     var to = tile.AddComponent<TileObject>();
                     var te = grid.GetTile(x,  y);
-                    to.InitializeGameobject(te);
+                    if (renderersOnly)
+                    {
+                        to.InitializeRenderersOnly(te);
+                    }
+                    else
+                    {
+                        to.InitializeGameobject(te);
+                    }
                     to.renderer.sortingLayerID = layer;
                     to.renderer.sortingOrder = sortingOrder;
                     tile.transform.SetParent(root, false);

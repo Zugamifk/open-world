@@ -43,6 +43,14 @@ namespace Shrines
                 animator.ResetTrigger("fall");
                 jumping = false;
             };
+            controller.onLedgeGrab += () =>
+            {
+                animator.SetTrigger("ledge grab");
+                animator.ResetTrigger("land");
+            };
+            controller.onLedgeClimb += () => {
+                animator.SetTrigger("ledge climb");
+            };
             collider = gameObject.GetOrAddComponent<BoxCollider2D>();
             collider.enabled = true;
             
@@ -59,25 +67,25 @@ namespace Shrines
         {
             position = rigidbody.position;
 
+            var speed = rigidbody.velocity.x;
+            if (Mathf.Abs(speed) > 0.05f)
+            {
+                if (speed < 0)
+                {
+                    graphicsRoot.transform.localRotation = Quaternion.AngleAxis(180, Vector3.up);
+                }
+                else
+                {
+                    graphicsRoot.transform.localRotation = Quaternion.identity;
+                }
+            }
+
             if (jumping)
             {
                 jumpBehaviour.time = Mathf.InverseLerp(jumpPower, -jumpPower, rigidbody.velocity.y);
-                Debug.Log(jumpBehaviour.time);
             }
             else
             {
-                var speed = rigidbody.velocity.x;
-                if (Mathf.Abs(speed) > 0.05f)
-                {
-                    if (speed < 0)
-                    {
-                        graphicsRoot.transform.localRotation = Quaternion.AngleAxis(180, Vector3.up);
-                    }
-                    else
-                    {
-                        graphicsRoot.transform.localRotation = Quaternion.identity;
-                    }
-                }
                 animator.SetFloat("speed", Mathf.Abs(speed));
             }
         }
