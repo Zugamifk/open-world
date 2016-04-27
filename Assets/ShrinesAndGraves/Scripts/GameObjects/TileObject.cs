@@ -13,19 +13,15 @@ namespace Shrines
         public Tile tile;
         public BoxCollider2D leftLedge, rightLedge;
 
-        public void InitializeRenderersOnly(Entity e)
+        public override void InitializeRenderers(Entity e)
         {
-            base.InitializeGameobject(e);
+            base.InitializeRenderers(e);
             SetTile(e as Tile);
         }
 
         public override void InitializeGameobject(Entity e)
         {
             base.InitializeGameobject(e);
-
-            var bc = gameObject.GetOrAddComponent<BoxCollider2D>();
-            bc.offset = Vector2.one*0.5f;
-            collider = bc;
 
             var go = new GameObject("Left Ledge");
             go.transform.SetParent(transform);

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Extensions;
 
 namespace Shrines
 {
@@ -22,6 +23,28 @@ namespace Shrines
         public Vector2i position;
         public Vector2i size;
         public List<Exit> exits = new List<Exit>();
+
+        public Recti rect
+        {
+            get
+            {
+                return new Recti(position, size);
+            }
+        }
+
+        public Room() { }
+
+        public Room(Recti r)
+        {
+            position = r.position;
+            size = r.size;
+        }
+
+        public Room(Vector2i pos, Vector2i sz)
+        {
+            position = pos;
+            size = sz;
+        }
 
         public void AddRandomExits(int num, int exitSize = 4)
         {
@@ -89,6 +112,24 @@ namespace Shrines
                 }
             }
             return null;
+        }
+
+        public static Side GetOppositeSide(Side s)
+        {
+            switch (s)
+            {
+                case Side.LEFT:
+                    return Side.RIGHT;
+                case Side.RIGHT:
+                    return Side.LEFT;
+                case Side.TOP:
+                    return Side.BOTTOM;
+                case Side.BOTTOM:
+                    return Side.TOP;
+                default:
+                    break;
+            }
+            return Side.TOP;
         }
     }
 }

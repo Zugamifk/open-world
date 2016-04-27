@@ -23,35 +23,137 @@ namespace Shrines
             var entranceTile = g.surface[entrancePos];
 
             var entranceWidth = Random.Range(hallHeightRange.x, hallHeightRange.y);
-            var entranceHall = new Recti(entrancePos-entranceWidth/2, entranceTile.gridPosition.y-depth+1, entranceWidth, depth);
-
+            var entranceHall = new Room(new Recti(entrancePos - entranceWidth / 2, entranceTile.gridPosition.y - depth + 1, entranceWidth, depth));
 
             var r = GetRoom();
             var entranceRoomexit = r.AddRandomExit(Room.Side.TOP, entranceWidth);
-            var rx = entranceHall.x - entranceRoomexit.interval.x;
-            var ry = entranceHall.y - r.size.y;
-            var roomRect = new Recti(rx, ry, r.size.x, r.size.y);
+            r.position = new Vector2i(entranceHall.position.x - entranceRoomexit.interval.x, entranceHall.position.y - r.size.y);
 
-            g.SetTileData(roomRect, environment.tileTypes[1]);
-            g.SetTileData(entranceHall, environment.tileTypes[1]);
-            var fullEntrance = new Recti(entranceHall.position - buffer, entranceHall.size + buffer*2);
-            RegionUtility.FillGroundTiles(g, fullEntrance, environment.tileTypes[0]);
-            RegionUtility.UpdateDepths(g, fullEntrance, entranceHall);
-            var fullRoom = new Recti(roomRect.position - buffer, roomRect.size + buffer*2);
-            RegionUtility.FillGroundTiles(g, fullRoom, environment.tileTypes[0]);
-            RegionUtility.UpdateDepths(g, fullRoom, roomRect);
+            Stack<Room> roomStack = new Stack<Room>();
 
+            roomStack.Push(r);
+
+            SetRoom(g, entranceHall);
+            SetRoom(g, r);
+
+            for (int i = 0; i < maxRooms; i++)
+            {
+
+                if (roomStack.Count == 0) break;
+
+                r = roomStack.Pop();
+                
+                var side = Random.value;
+                if (side < .25f && r.GetExit(Room.Side.BOTTOM)==null)
+                {
+                    r = AddExtensionRoom(g, r, Room.Side.BOTTOM);
+                    roomStack.Push(r);
+                }
+                else
+                {
+                    var er = r.GetExit(Room.Side.RIGHT) != null;
+                    var el = r.GetExit(Room.Side.LEFT) != null;
+                    if(er && el) {
+                        if(r.GetExit(Room.Side.BOTTOM)==null) {
+                            r = AddExtensionRoom(g, r, Room.Side.BOTTOM);
+                            roomStack.Push(r);
+                        }
+                    } else if (el)
+                    {
+                        r = AddExtensionRoom(g, r, Room.Side.RIGHT);
+                        roomStack.Push(r);
+                    }
+                    else if (er)
+                    {
+                        r = AddExtensionRoom(g, r, Room.Side.LEFT);
+                        roomStack.Push(r);
+                    }
+                    else
+                    {
+                        if (Random.value >= 0.5f)
+                        {
+                            r = AddExtensionRoom(g, r, Room.Side.RIGHT);
+                            roomStack.Push(r);
+                        }
+                        else
+                        {
+                            r = AddExtensionRoom(g, r, Room.Side.LEFT);
+                            roomStack.Push(r);
+                        }
+                    }
+                }
+            }
+        }
+
+        Room AddExtensionRoom(Grid g, Room r, Room.Side s)
+        {
+            var entranceWidth = Random.Range(hallHeightRange.x, hallHeightRange.y);
+            var entranceRoomexit = r.AddRandomExit(s, entranceWidth);
+            var entranceLength = Random.Range(3, 10);
+            Recti entranceRect = default(Recti);
+            switch (s)
+            {
+                case Room.Side.LEFT:
+                    entranceRect = new Recti(r.position.x - entranceLength + 1, r.position.y + entranceRoomexit.interval.y, entranceLength, entranceWidth);
+                break;
+                case Room.Side.RIGHT:
+                    entranceRect = new Recti(r.position.x + r.size.x, r.position.y + entranceRoomexit.interval.y, entranceLength, entranceWidth);                    
+                break;
+                case Room.Side.TOP:
+                    entranceRect = new Recti(r.position.x + entranceRoomexit.interval.x, r.position.y + r.size.y, entranceWidth, entranceLength);
+                break;
+                case Room.Side.BOTTOM:
+                    entranceRect = new Recti(r.position.x + entranceRoomexit.interval.x, r.position.y - entranceLength + 1, entranceWidth, entranceLength);                    
+                break;
+                default:
+                    break;
+            }
+            var entranceHall = new Room(entranceRect);
+            r = GetRoom();
+            entranceRoomexit = r.AddRandomExit(Room.GetOppositeSide(s), entranceWidth);
+            switch (s)
+            {
+                case Room.Side.LEFT:
+                    r.position = new Vector2i(entranceHall.position.x - r.size.x, entranceHall.position.y - entranceRoomexit.interval.y);
+                    break;
+                case Room.Side.RIGHT:
+                    r.position = new Vector2i(entranceHall.position.x + entranceHall.size.x, entranceHall.position.y - entranceRoomexit.interval.y);
+                    break;
+                case Room.Side.TOP:
+                    r.position = new Vector2i(entranceHall.position.x - entranceRoomexit.interval.x, entranceHall.position.y + entranceHall.size.y);
+                    break;
+                case Room.Side.BOTTOM:
+                    r.position = new Vector2i(entranceHall.position.x - entranceRoomexit.interval.x, entranceHall.position.y - r.size.y);
+                    break;
+                default:
+                    break;
+            }
+
+            SetRoom(g, entranceHall);
+            SetRoom(g, r);
+
+            return r;
         }
 
         public Room GetRoom()
         {
-            var room = new Room();;
+            var room = new Room();
             room.size = new Vector2i(
                     Random.Range(roomLimits.xMin, roomLimits.xMax),
                     Random.Range(roomLimits.yMin, roomLimits.yMax)
                 );
             
             return room;
+        }
+
+        public void SetRoom(Grid g, Room r)
+        {
+            
+            g.SetTileData(r.rect, environment.tileTypes[1]);
+
+            var areaRect = new Recti(r.position - buffer, r.size + buffer * 2);
+            RegionUtility.FillGroundTiles(g, areaRect, environment.tileTypes[0]);
+            RegionUtility.UpdateDepths(g, areaRect, r.rect);
         }
     }
 }

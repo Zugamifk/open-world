@@ -20,7 +20,11 @@ namespace Shrines
         // Use this for initialization
         public override void InitializeGameobject(Entity e)
         {
+            collider = gameObject.GetComponent<BoxCollider2D>();
+
             base.InitializeGameobject(e);
+            
+            collider.enabled = true;
 
             jumpBehaviour = animator.GetBehaviour<ScriptedPlaybackBehaviour>();
 
@@ -46,13 +50,12 @@ namespace Shrines
             controller.onLedgeGrab += () =>
             {
                 animator.SetTrigger("ledge grab");
+                animator.ResetTrigger("ledge climb");
                 animator.ResetTrigger("land");
             };
             controller.onLedgeClimb += () => {
                 animator.SetTrigger("ledge climb");
             };
-            collider = gameObject.GetOrAddComponent<BoxCollider2D>();
-            collider.enabled = true;
             
         }
 

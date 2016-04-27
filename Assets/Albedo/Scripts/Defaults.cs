@@ -10,12 +10,12 @@ namespace Albedo {
         public Sprite tileSprite;
 		public Material spriteMaterial;
 
-		#if UNITY_EDITOR
-		[MenuItem("Assets/Create/Defaults")]
-		public static void CreateAsset ()
-		{
-			ScriptableObjectUtility.CreateAsset<Defaults> ();
-		}
-		#endif
+        //#if UNITY_EDITOR
+        //[MenuItem("Assets/Create/Defaults")]
+        //public static void CreateAsset ()
+        //{
+        //    ScriptableObjectUtility.CreateAsset<Defaults> ();
+        //}
+        //#endif
     }
 }

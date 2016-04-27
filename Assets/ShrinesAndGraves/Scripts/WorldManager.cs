@@ -58,15 +58,8 @@ namespace Shrines
         {
             player.SetPosition(worldData.spawnPosition);
 
-            Tile t = world.grid.GetTile(player.position);
-            while (t.collides)
-            {
-                t = world.grid.GetTile(t.gridPosition + Vector2i.up);
-            }
-            for (int i = 0; i < 5; i++)
-            {
-                t = world.grid.GetTile(t.gridPosition + Vector2i.up);
-            }
+            Tile t = world.grid.surface[(int)player.position.x];
+            
             player.SetPosition(t.gridPosition);
         }
 

@@ -5,6 +5,10 @@ namespace Shrines
 {
     public class WorldObject : MonoBehaviour
     {
+        public delegate void ObjectEvent(WorldObject other);
+
+        public ObjectEvent OnEnter;
+        
         protected Entity m_Entity;
 
         new protected SpriteRenderer m_renderer;
@@ -55,31 +59,62 @@ namespace Shrines
             }
         }
 
+        public virtual void InitializeRenderers(Entity e)
+        {
+            if (e != null)
+            {
+                gameObject.name = e.name;
+            }
+
+            m_Entity = e;
+
+            if (m_renderer == null)
+            {
+                var sgo = new GameObject("sprite");
+                sgo.transform.SetParent(transform, false);
+                m_renderer = sgo.AddComponent<SpriteRenderer>();
+            }
+            else
+            {
+                m_renderer.enabled = true;
+            }
+            m_renderer.sharedMaterial = ResourceManager.Instance.spriteMaterial;
+            if (e != null && entity.data != null)
+            {
+                m_renderer.sprite = entity.data.GetSprite();
+            }
+
+            gameObject.transform.position = e.position;
+        }
+
         public virtual void InitializeGameobject(Entity e)
         {
             if (m_Entity != null)
             {
                 ResetGameobject();
             }
-            if (e != null)
+
+            InitializeRenderers(e);
+
+            if (collider == null)
             {
-                gameObject.name = e.name;
+                var bc = gameObject.GetOrAddComponent<BoxCollider2D>();
+                bc.offset = Vector2.one * 0.5f;
+                collider = bc;
             }
-            m_Entity = e;
-            if (m_renderer == null)
+
+            if (e.IsTrigger)
             {
-                var sgo = new GameObject("sprite");
-                sgo.transform.SetParent(transform, false);
-                m_renderer = sgo.AddComponent<SpriteRenderer>();
-            } else {
-                m_renderer.enabled = true;
+                collider.enabled = true;
+                collider.isTrigger = true;
+                OnEnter += e.OnTriggerEnter;
             }
-            m_renderer.sharedMaterial = ResourceManager.Instance.spriteMaterial;
-            if (e!=null && entity.data != null )
+            else
             {
-                m_renderer.sprite = entity.data.GetSprite();
+                collider.enabled = false;
+                collider.isTrigger = false;
+                OnEnter = null;
             }
-            gameObject.transform.position = e.position;
         }
 
         public virtual void ResetGameobject()
@@ -90,6 +125,18 @@ namespace Shrines
                 m_Entity.viewObject = null;
             }
             m_Entity = null;
+        }
+
+        void OnTriggerEnter2D(Collider2D other)
+        {
+            if (OnEnter != null)
+            {
+                var wo = other.gameObject.GetComponent<WorldObject>();
+                if (wo != null)
+                {
+                    OnEnter(wo);
+                }
+            }
         }
     }
 }

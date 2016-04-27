@@ -23,6 +23,12 @@ namespace Shrines
                 _name = name;
             }
         }
+
+        /// <summary>
+        /// Does this entity require a trigger?
+        /// </summary>
+        public readonly bool IsTrigger = false; 
+
         [System.NonSerialized]
         public WorldObject viewObject;
 
@@ -37,5 +43,16 @@ namespace Shrines
             this.rect = new Rect(position, sprite.Size());
         }
 
+        protected Entity(WorldObjectData data, Vector2f16 position, bool isTrigger) : this(data, position)
+        {
+            IsTrigger = isTrigger;
+        }
+
+        protected Entity(bool isTrigger) : this()
+        {
+            IsTrigger = isTrigger;
+        }
+
+        public virtual void OnTriggerEnter(WorldObject wo) { }
     }
 }

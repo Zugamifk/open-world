@@ -95,7 +95,7 @@ namespace Shrines
                     var te = grid.GetTile(x,  y);
                     if (renderersOnly)
                     {
-                        to.InitializeRenderersOnly(te);
+                        to.InitializeRenderers(te);
                     }
                     else
                     {
