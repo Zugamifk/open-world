@@ -73,11 +73,12 @@ namespace Shrines
             animator.enabled = false; 
             graphicsRoot.gameObject.SetActive(false);
             collider.enabled = false;
-            rigidbody.Sleep();
+            rigidbody.isKinematic = true;
 
             var go = (GameObject)Instantiate(gibs, graphicsRoot.transform.position, graphicsRoot.transform.rotation);
             var g = go.GetComponent<Gibs>();
-            g.power = 2500;
+            g.power = 1500;
+            g.enabled = true;
             go.transform.SetParent(transform, true);
         }
 

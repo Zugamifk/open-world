@@ -10,18 +10,18 @@ namespace Shrines
         [System.NonSerialized]
         public Vector2 normal;
 
-        void Awake()
+        void Start()
         {
             int I = transform.childCount;
             for (int i = I; i > 0; i--)
             {
                 var child = transform.GetChild(i-1);
                 child.SetParent(transform.parent, true);
-                child.GetComponent<Rigidbody2D>().AddForce(Quaternion.AngleAxis(Random.Range(-45, 45), Vector3.forward) * power);
+                child.GetComponent<Rigidbody2D>().AddForce(Quaternion.AngleAxis(Random.Range(-45, 45), Vector3.forward) * Randomx.OnXYCircle * Random.value * power);
             }
         }
 
-        void Start()
+        void LateUpdate()
         {
             Destroy(gameObject);
         }
