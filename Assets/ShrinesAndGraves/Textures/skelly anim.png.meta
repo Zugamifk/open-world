@@ -1,0 +1,825 @@
+fileFormatVersion: 2
+guid: 19d45e836588ad94694a99230cd6e5fd
+timeCreated: 1462045942
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: skelly anim_0
+    21300002: skelly anim_1
+    21300004: skelly anim_2
+    21300006: skelly anim_3
+    21300008: skelly anim_4
+    21300010: skelly anim_5
+    21300012: skelly anim_6
+    21300014: skelly anim_7
+    21300016: skelly anim_8
+    21300018: skelly anim_9
+    21300020: skelly anim_10
+    21300022: skelly anim_11
+    21300024: skelly anim_12
+    21300026: skelly anim_13
+    21300028: skelly anim_14
+    21300030: skelly anim_15
+    21300032: skelly anim_16
+    21300034: skelly anim_17
+    21300036: skelly anim_18
+    21300038: skelly anim_19
+    21300040: skelly anim_20
+    21300042: skelly anim_21
+    21300044: skelly anim_22
+    21300046: skelly anim_23
+    21300048: skelly anim_24
+    21300050: skelly anim_25
+    21300052: skelly anim_26
+    21300054: skelly anim_27
+    21300056: skelly anim_28
+    21300058: skelly anim_29
+    21300060: skelly anim_30
+    21300062: skelly anim_31
+    21300064: skelly anim_32
+    21300066: skelly anim_33
+    21300068: skelly anim_34
+    21300070: skelly anim_35
+    21300072: skelly anim_36
+  serializedVersion: 2
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    linearTexture: 0
+    correctGamma: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 0
+  cubemapConvolution: 0
+  cubemapConvolutionSteps: 7
+  cubemapConvolutionExponent: 1.5
+  seamlessCubemap: 0
+  textureFormat: 4
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: 0
+    aniso: 0
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  rGBM: 0
+  compressionQuality: 50
+  allowsAlphaSplitting: 0
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 16
+  alphaIsTransparency: 1
+  textureType: 5
+  buildTargetSettings: []
+  spriteSheet:
+    sprites:
+    - name: skelly anim_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 192
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -5, y: 39}
+        - {x: -7, y: 37}
+        - {x: -12, y: 21}
+        - {x: -12, y: 3}
+        - {x: -9, y: 0}
+        - {x: 5, y: 0}
+        - {x: 5, y: 38}
+        - {x: 2, y: 39}
+    - name: skelly anim_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 192
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 5, y: 40}
+        - {x: -8, y: 40}
+        - {x: -9, y: 26}
+        - {x: -9, y: 0}
+        - {x: 5, y: 0}
+        - {x: 8, y: 4}
+        - {x: 9, y: 6}
+        - {x: 9, y: 28}
+    - name: skelly anim_2
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 192
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 9, y: 39}
+        - {x: -9, y: 39}
+        - {x: -12, y: 17}
+        - {x: -12, y: 0}
+        - {x: 9, y: 0}
+        - {x: 12, y: 4}
+        - {x: 12, y: 22}
+    - name: skelly anim_3
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 192
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 12, y: 36}
+        - {x: -6, y: 36}
+        - {x: -14, y: 13}
+        - {x: -14, y: 3}
+        - {x: -11, y: 0}
+        - {x: -6, y: 0}
+        - {x: -2, y: 5}
+        - {x: 1, y: 0}
+        - {x: 12, y: 0}
+    - name: skelly anim_4
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 192
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 2, y: 38}
+        - {x: -4, y: 38}
+        - {x: -8, y: 30}
+        - {x: -9, y: 20}
+        - {x: -9, y: 2}
+        - {x: -8, y: 0}
+        - {x: 4, y: 0}
+        - {x: 9, y: 8}
+        - {x: 9, y: 20}
+        - {x: 5, y: 35}
+    - name: skelly anim_5
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 192
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -8, y: 40}
+        - {x: -10, y: 32}
+        - {x: -10, y: 0}
+        - {x: 6, y: 0}
+        - {x: 7, y: 4}
+        - {x: 7, y: 38}
+        - {x: 5, y: 40}
+    - name: skelly anim_6
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 192
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 2, y: 38}
+        - {x: -6, y: 38}
+        - {x: -7, y: 36}
+        - {x: -13, y: 19}
+        - {x: -13, y: 0}
+        - {x: 13, y: 0}
+        - {x: 13, y: 21}
+        - {x: 7, y: 36}
+    - name: skelly anim_7
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 192
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 6, y: 34}
+        - {x: 2, y: 35}
+        - {x: -5, y: 35}
+        - {x: -12, y: 15}
+        - {x: -12, y: 13}
+        - {x: -9, y: 10}
+        - {x: -14, y: 6}
+        - {x: -14, y: 2}
+        - {x: -12, y: 0}
+        - {x: 10, y: 0}
+        - {x: 10, y: 17}
+    - name: skelly anim_8
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 144
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -2, y: 37}
+        - {x: -6, y: 32}
+        - {x: -13, y: 23}
+        - {x: -13, y: 21}
+        - {x: -11, y: 19}
+        - {x: -9, y: 19}
+        - {x: -12, y: 19}
+        - {x: -16, y: 15}
+        - {x: -16, y: 5}
+        - {x: -8, y: 0}
+        - {x: 15, y: 0}
+        - {x: 15, y: 32}
+        - {x: 6, y: 37}
+    - name: skelly anim_9
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 144
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 2, y: 36}
+        - {x: -2, y: 35}
+        - {x: -14, y: 14}
+        - {x: -14, y: 5}
+        - {x: -11, y: 0}
+        - {x: 15, y: 0}
+        - {x: 16, y: 8}
+        - {x: 16, y: 23}
+        - {x: 9, y: 36}
+    - name: skelly anim_10
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 144
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 7, y: 33}
+        - {x: 1, y: 33}
+        - {x: -3, y: 27}
+        - {x: -7, y: 7}
+        - {x: -7, y: 2}
+        - {x: -3, y: 0}
+        - {x: 7, y: 0}
+        - {x: 10, y: 5}
+        - {x: 10, y: 30}
+    - name: skelly anim_11
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 144
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -2, y: 37}
+        - {x: -7, y: 23}
+        - {x: -7, y: 2}
+        - {x: -6, y: 0}
+        - {x: 10, y: 0}
+        - {x: 10, y: 36}
+        - {x: 9, y: 37}
+    - name: skelly anim_12
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 144
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 0, y: 39}
+        - {x: -9, y: 27}
+        - {x: -12, y: 5}
+        - {x: -12, y: 0}
+        - {x: 13, y: 0}
+        - {x: 13, y: 39}
+    - name: skelly anim_13
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 144
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -16, y: 21}
+        - {x: -16, y: 3}
+        - {x: -14, y: 0}
+        - {x: 16, y: 0}
+        - {x: 16, y: 39}
+        - {x: -1, y: 39}
+        - {x: -12, y: 28}
+    - name: skelly anim_14
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 144
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -1, y: 37}
+        - {x: -15, y: 23}
+        - {x: -15, y: 22}
+        - {x: -13, y: 17}
+        - {x: -10, y: 18}
+        - {x: -14, y: 12}
+        - {x: -15, y: 11}
+        - {x: -15, y: 6}
+        - {x: -7, y: 1}
+        - {x: -2, y: 0}
+        - {x: 15, y: 0}
+        - {x: 16, y: 4}
+        - {x: 16, y: 28}
+        - {x: 13, y: 37}
+    - name: skelly anim_15
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 144
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 0, y: 36}
+        - {x: -14, y: 28}
+        - {x: -16, y: 19}
+        - {x: -16, y: 3}
+        - {x: -3, y: 0}
+        - {x: 16, y: 0}
+        - {x: 16, y: 32}
+        - {x: 13, y: 36}
+    - name: skelly anim_16
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 144
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 1, y: 34}
+        - {x: -7, y: 20}
+        - {x: -7, y: 0}
+        - {x: 7, y: 0}
+        - {x: 12, y: 6}
+        - {x: 12, y: 31}
+        - {x: 11, y: 34}
+    - name: skelly anim_17
+      rect:
+        serializedVersion: 2
+        x: 288
+        y: 144
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 7, y: 37}
+        - {x: -1, y: 37}
+        - {x: -8, y: 26}
+        - {x: -8, y: 0}
+        - {x: 9, y: 0}
+        - {x: 12, y: 6}
+        - {x: 12, y: 32}
+        - {x: 11, y: 35}
+    - name: skelly anim_18
+      rect:
+        serializedVersion: 2
+        x: 320
+        y: 144
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 15, y: 0}
+        - {x: 16, y: 3}
+        - {x: 16, y: 27}
+        - {x: 8, y: 39}
+        - {x: -4, y: 39}
+        - {x: -14, y: 18}
+        - {x: -14, y: 1}
+        - {x: -12, y: 0}
+        - {x: -7, y: 0}
+        - {x: -3, y: 6}
+        - {x: 7, y: 2}
+        - {x: 13, y: 0}
+    - name: skelly anim_19
+      rect:
+        serializedVersion: 2
+        x: 352
+        y: 144
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 16, y: 32}
+        - {x: 9, y: 38}
+        - {x: -5, y: 38}
+        - {x: -14, y: 25}
+        - {x: -10, y: 13}
+        - {x: -7, y: 14}
+        - {x: -5, y: 16}
+        - {x: -4, y: 15}
+        - {x: -16, y: 9}
+        - {x: -16, y: 3}
+        - {x: -15, y: 0}
+        - {x: 8, y: 0}
+        - {x: 15, y: 6}
+        - {x: 15, y: 8}
+        - {x: 16, y: 10}
+    - name: skelly anim_20
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 96
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 1, y: 33}
+        - {x: -3, y: 32}
+        - {x: -8, y: 11}
+        - {x: -8, y: 0}
+        - {x: 8, y: 0}
+        - {x: 16, y: 23}
+        - {x: 16, y: 27}
+        - {x: 10, y: 33}
+    - name: skelly anim_21
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 96
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 3, y: 32}
+        - {x: -7, y: 21}
+        - {x: -13, y: 4}
+        - {x: -13, y: 2}
+        - {x: -11, y: 0}
+        - {x: 5, y: 0}
+        - {x: 15, y: 15}
+        - {x: 15, y: 25}
+        - {x: 10, y: 32}
+    - name: skelly anim_22
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 96
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -1, y: 41}
+        - {x: -7, y: 36}
+        - {x: -7, y: 2}
+        - {x: -5, y: 1}
+        - {x: 11, y: 1}
+        - {x: 16, y: 23}
+        - {x: 16, y: 40}
+        - {x: 15, y: 41}
+    - name: skelly anim_23
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 96
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 3, y: 32}
+        - {x: -2, y: 31}
+        - {x: -16, y: 6}
+        - {x: -16, y: 0}
+        - {x: 7, y: 0}
+        - {x: 14, y: 15}
+        - {x: 14, y: 24}
+        - {x: 9, y: 32}
+    - name: skelly anim_24
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 96
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -1, y: 34}
+        - {x: -7, y: 31}
+        - {x: -13, y: 23}
+        - {x: -11, y: 17}
+        - {x: -14, y: 14}
+        - {x: -16, y: 13}
+        - {x: -16, y: 4}
+        - {x: 10, y: 2}
+        - {x: 15, y: 2}
+        - {x: 16, y: 3}
+        - {x: 16, y: 33}
+        - {x: 15, y: 34}
+    - name: skelly anim_25
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 96
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -6, y: 35}
+        - {x: -16, y: 24}
+        - {x: -16, y: 4}
+        - {x: -8, y: 0}
+        - {x: 16, y: 0}
+        - {x: 16, y: 35}
+    - name: skelly anim_26
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 96
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -7, y: 48}
+        - {x: -9, y: 41}
+        - {x: -9, y: 0}
+        - {x: 5, y: 0}
+        - {x: 10, y: 25}
+        - {x: 10, y: 46}
+        - {x: 9, y: 48}
+    - name: skelly anim_27
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 96
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 14, y: 36}
+        - {x: 14, y: 43}
+        - {x: -7, y: 43}
+        - {x: -11, y: 33}
+        - {x: -11, y: 1}
+        - {x: -9, y: 0}
+        - {x: -7, y: 0}
+        - {x: -5, y: 1}
+        - {x: -3, y: 3}
+        - {x: -2, y: 5}
+        - {x: -4, y: 6}
+        - {x: -2, y: 0}
+        - {x: 7, y: 0}
+        - {x: 6, y: 8}
+        - {x: 5, y: 12}
+        - {x: 13, y: 31}
+    - name: skelly anim_28
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 96
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -6, y: 32}
+        - {x: -7, y: 28}
+        - {x: -7, y: 0}
+        - {x: 7, y: 0}
+        - {x: 15, y: 8}
+        - {x: 15, y: 31}
+        - {x: 14, y: 32}
+    - name: skelly anim_29
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 48
+        width: 32
+        height: 48
+      alignment: 9
+      pivot: {x: 1.0135803, y: -0.0065841675}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -11.43457, y: 40.31604}
+        - {x: -19.43457, y: 34.31604}
+        - {x: -21.43457, y: 20.31604}
+        - {x: -21.43457, y: 5.31604}
+        - {x: -20.43457, y: 0.31604004}
+        - {x: -8.43457, y: 0.31604004}
+        - {x: -2.4345703, y: 16.31604}
+        - {x: -2.4345703, y: 40.31604}
+    - name: skelly anim_30
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 48
+        width: 32
+        height: 48
+      alignment: 9
+      pivot: {x: 0.80246925, y: -0.0065841675}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -11.679016, y: 35.31604}
+        - {x: -14.679016, y: 34.31604}
+        - {x: -16.679016, y: 31.31604}
+        - {x: -16.679016, y: 0.31604004}
+        - {x: -0.6790161, y: 0.31604004}
+        - {x: 5.320984, y: 9.31604}
+        - {x: 5.320984, y: 31.31604}
+        - {x: -0.6790161, y: 35.31604}
+    - name: skelly anim_31
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 48
+        width: 32
+        height: 48
+      alignment: 9
+      pivot: {x: 0.34814835, y: 0.0000006357829}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -2.140747, y: 34.99997}
+        - {x: -9.140747, y: 32.99997}
+        - {x: -10.140747, y: 29.99997}
+        - {x: -10.140747, y: 10.9999695}
+        - {x: -2.140747, y: -0.000030517578}
+        - {x: 9.859253, y: -0.000030517578}
+        - {x: 9.859253, y: 34.99997}
+    - name: skelly anim_32
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 48
+        width: 32
+        height: 48
+      alignment: 9
+      pivot: {x: 0.4567902, y: -0.013168097}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -1.6172867, y: 33.63207}
+        - {x: -5.6172867, y: 32.63207}
+        - {x: -6.6172867, y: 29.632069}
+        - {x: -6.6172867, y: 13.632069}
+        - {x: 0.38271332, y: 7.6320686}
+        - {x: 10.382713, y: 7.6320686}
+        - {x: 10.382713, y: 33.63207}
+    - name: skelly anim_33
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 48
+        width: 32
+        height: 48
+      alignment: 9
+      pivot: {x: 0.4962964, y: 0.0000006357829}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -4.881485, y: 33.99997}
+        - {x: -6.881485, y: 31.99997}
+        - {x: -6.881485, y: 11.9999695}
+        - {x: 2.118515, y: 2.9999695}
+        - {x: 10.118515, y: 2.9999695}
+        - {x: 11.118515, y: 8.9999695}
+        - {x: 11.118515, y: 32.99997}
+        - {x: 9.118515, y: 33.99997}
+    - name: skelly anim_34
+      rect:
+        serializedVersion: 2
+        x: 160
+        y: 48
+        width: 32
+        height: 48
+      alignment: 9
+      pivot: {x: 0.5259261, y: 0.0065849624}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -0.8296356, y: 32.68392}
+        - {x: -5.8296356, y: 30.683922}
+        - {x: -5.8296356, y: 5.683922}
+        - {x: -2.8296356, y: -0.3160782}
+        - {x: 10.170364, y: -0.3160782}
+        - {x: 11.170364, y: 8.683922}
+        - {x: 11.170364, y: 32.68392}
+    - name: skelly anim_35
+      rect:
+        serializedVersion: 2
+        x: 192
+        y: 48
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -5, y: 23}
+        - {x: -7, y: 22}
+        - {x: -8, y: 10}
+        - {x: -8, y: 0}
+        - {x: 10, y: 0}
+        - {x: 10, y: 4}
+        - {x: 5, y: 23}
+    - name: skelly anim_36
+      rect:
+        serializedVersion: 2
+        x: 224
+        y: 48
+        width: 32
+        height: 48
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 6, y: 29}
+        - {x: -1, y: 29}
+        - {x: -5, y: 28}
+        - {x: -6, y: 10}
+        - {x: -6, y: 0}
+        - {x: 9, y: 0}
+        - {x: 9, y: 7}
+        - {x: 7, y: 27}
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

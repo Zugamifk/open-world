@@ -60,7 +60,7 @@ namespace Shrines
 
             Tile t = world.grid.surface[(int)player.position.x];
             
-            player.SetPosition(t.gridPosition);
+            player.SetPosition(t.gridPosition + Vector2i.up*10);
         }
 
         void OnApplicationQuit()

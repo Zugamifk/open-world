@@ -13,6 +13,8 @@ namespace Shrines
         MovementControl controller;
         public Rigidbody2D rigidbody;
 
+        public GameObject gibs;
+
         float jumpPower;
         bool jumping;
         ScriptedPlaybackBehaviour jumpBehaviour;
@@ -64,6 +66,19 @@ namespace Shrines
         {
             position = pos;
             rigidbody.position = pos;
+        }
+
+        public void Die()
+        {
+            animator.enabled = false; 
+            graphicsRoot.gameObject.SetActive(false);
+            collider.enabled = false;
+            rigidbody.Sleep();
+
+            var go = (GameObject)Instantiate(gibs, graphicsRoot.transform.position, graphicsRoot.transform.rotation);
+            var g = go.GetComponent<Gibs>();
+            g.power = 2500;
+            go.transform.SetParent(transform, true);
         }
 
         void Update()

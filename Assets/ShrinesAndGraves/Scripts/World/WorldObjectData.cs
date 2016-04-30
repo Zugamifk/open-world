@@ -7,6 +7,9 @@ namespace Shrines
     {
 
         public Sprite[] sprites;
+        public bool isTrigger;
+        [Layer]
+        public int sortinglayer;
 
         public Sprite GetSprite()
         {

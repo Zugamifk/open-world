@@ -7,14 +7,18 @@ namespace Shrines
     {
         HazardData hazardData;
 
-        public Hazard(HazardData d, Vector2f16 pos) : base(d, pos, true)
+        public Hazard(HazardData d, Vector2f16 pos) : base(d, pos)
         {
             hazardData = d;
         }
 
         public override void OnTriggerEnter(WorldObject wo)
         {
-            Debug.Log("HAZARD!");
+            var po = wo as PlayerObject;
+            if (po != null)
+            {
+                po.Die();
+            }
         }
 
     }

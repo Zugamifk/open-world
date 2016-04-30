@@ -175,6 +175,15 @@ namespace Shrines
             }
         }
 
+        public void Removeentity(Entity e)
+        {
+            var g = GetTiles(e.rect, TileArray);
+            for (int i = 0; i < g; i++)
+            {
+                TileArray[i].contained.Remove(e);
+            }
+        }
+
         public void UpdateSurfaces(Recti rect)
         {
             for (int x = rect.xMin; x < rect.xMax; x++)

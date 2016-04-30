@@ -11,7 +11,8 @@ namespace Shrines
         
         protected Entity m_Entity;
 
-        new protected SpriteRenderer m_renderer;
+        protected SpriteRenderer m_renderer;
+        protected Transform m_rendererTransform;
 
         new protected Collider2D collider;
 
@@ -71,7 +72,8 @@ namespace Shrines
             if (m_renderer == null)
             {
                 var sgo = new GameObject("sprite");
-                sgo.transform.SetParent(transform, false);
+                m_rendererTransform = sgo.transform;
+                m_rendererTransform.SetParent(transform, false);
                 m_renderer = sgo.AddComponent<SpriteRenderer>();
             }
             else
@@ -82,6 +84,11 @@ namespace Shrines
             if (e != null && entity.data != null)
             {
                 m_renderer.sprite = entity.data.GetSprite();
+            }
+
+            if (m_renderer.sprite != null)
+            {
+                m_rendererTransform.localPosition = m_renderer.sprite.pivot / m_renderer.sprite.pixelsPerUnit;
             }
 
             gameObject.transform.position = e.position;
@@ -124,7 +131,19 @@ namespace Shrines
             {
                 m_Entity.viewObject = null;
             }
+            
             m_Entity = null;
+        }
+
+        protected void SetRotation(float angle)
+        {
+            m_rendererTransform.Rotate(0, 0, angle);
+        }
+
+        protected void SetRenderer(SpriteRenderer renderer)
+        {
+            m_renderer = renderer;
+            m_rendererTransform = renderer.GetComponent<Transform>();
         }
 
         void OnTriggerEnter2D(Collider2D other)

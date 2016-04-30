@@ -53,6 +53,10 @@ namespace Shrines
             if (tile != null && tile.tileData!=null)
             {
                 m_renderer.sprite = tile.tileData.GetSprite(tile, m_renderer.sortingLayerID);
+                if (m_renderer.sprite != null)
+                {
+                    m_rendererTransform.localPosition = m_renderer.sprite.pivot/m_renderer.sprite.pixelsPerUnit;
+                }
             }
             else ResetGameobject();
             transform.position = tile.position;

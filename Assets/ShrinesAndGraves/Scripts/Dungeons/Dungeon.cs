@@ -15,6 +15,11 @@ namespace Shrines
         public int maxExits;
         public int buffer = 10;
 
+        public HazardData spikesData;
+
+        public List<Room> rooms = new List<Room>();
+        
+
         Queue<Room.Exit> freeExits;
 
         public override void Fill(Grid g)
@@ -83,6 +88,11 @@ namespace Shrines
                     }
                 }
             }
+
+            foreach (var room in rooms)
+            {
+                CleanRoomEntities(room, g);
+            }
         }
 
         Room AddExtensionRoom(Grid g, Room r, Room.Side s)
@@ -114,10 +124,10 @@ namespace Shrines
             switch (s)
             {
                 case Room.Side.LEFT:
-                    r.position = new Vector2i(entranceHall.position.x - r.size.x, entranceHall.position.y - entranceRoomexit.interval.y);
+                    r.position = new Vector2i(entranceHall.position.x - r.size.x, entranceHall.position.y - entranceRoomexit.interval.x);
                     break;
                 case Room.Side.RIGHT:
-                    r.position = new Vector2i(entranceHall.position.x + entranceHall.size.x, entranceHall.position.y - entranceRoomexit.interval.y);
+                    r.position = new Vector2i(entranceHall.position.x + entranceHall.size.x, entranceHall.position.y - entranceRoomexit.interval.x);
                     break;
                 case Room.Side.TOP:
                     r.position = new Vector2i(entranceHall.position.x - entranceRoomexit.interval.x, entranceHall.position.y + entranceHall.size.y);
@@ -129,6 +139,18 @@ namespace Shrines
                     break;
             }
 
+            for (int i = 0; i < r.size.x; i++)
+            {
+                var x = r.position.x + i;
+                var y = r.position.y;
+                var ground = g.GetTile(x, y - 1);
+                if (ground.collides)
+                {
+                    var spike = new Hazard(spikesData, new Vector2f16(x, y));
+                    g.AddEntity(spike);
+                    r.entities.Add(spike);
+                }
+            }
             SetRoom(g, entranceHall);
             SetRoom(g, r);
 
@@ -150,10 +172,31 @@ namespace Shrines
         {
             
             g.SetTileData(r.rect, environment.tileTypes[1]);
+            rooms.Add(r);
 
             var areaRect = new Recti(r.position - buffer, r.size + buffer * 2);
             RegionUtility.FillGroundTiles(g, areaRect, environment.tileTypes[0]);
             RegionUtility.UpdateDepths(g, areaRect, r.rect);
+        }
+
+        void CleanRoomEntities(Room r, Grid g)
+        {
+            var tr = new List<Entity>();
+            foreach (var e in r.entities)
+            {
+                var x = e.position.x;
+                var y = e.position.y;
+                var t = g.GetTile(x, y - 1);
+                if (t == null || !t.collides)
+                {
+                    g.Removeentity(e);
+                    tr.Add(e);
+                }
+            }
+            foreach (var e in tr)
+            {
+                r.entities.Remove(e);
+            }
         }
     }
 }

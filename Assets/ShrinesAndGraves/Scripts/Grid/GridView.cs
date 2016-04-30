@@ -237,7 +237,10 @@ namespace Shrines
 
             foreach (var e in tile.contained)
             {
-                if (activeEntities.ContainsKey(e)) continue;
+                if (activeEntities.ContainsKey(e) || 
+                    (e.data != null && e.data.sortinglayer != layer)
+                ) continue;
+
                 var wo = objectPool.Dequeue();
                 wo.InitializeGameobject(e);
                 wo.transform.SetParent(root, true);

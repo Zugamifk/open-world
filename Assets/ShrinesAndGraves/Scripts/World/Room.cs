@@ -17,12 +17,14 @@ namespace Shrines
         public class Exit
         {
             public Side side;
-            public Vector2i interval; 
+            public Vector2i interval;
+            public Room connected;
         }
 
         public Vector2i position;
         public Vector2i size;
         public List<Exit> exits = new List<Exit>();
+        public List<Entity> entities = new List<Entity>();
 
         public Recti rect
         {

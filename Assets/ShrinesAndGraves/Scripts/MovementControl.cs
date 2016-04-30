@@ -194,7 +194,8 @@ namespace Shrines
                 onLedgeGrab.Invoke();
             }
             StartCoroutine(DelayedBlockInput(.2f));
-            transform.position = handSensor.lastTrigger.transform.position - (Vector3)handsCollider.transform.localPosition;
+            var handOffset = handsCollider.transform.position - transform.position;
+            transform.position = handSensor.lastTrigger.transform.position - handOffset;
             SetMoveMode(MoveMode.Climbing);
             SetColliders(false);
         }
