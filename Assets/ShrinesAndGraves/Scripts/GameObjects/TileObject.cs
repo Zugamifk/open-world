@@ -12,6 +12,7 @@ namespace Shrines
 
         public Tile tile;
         public BoxCollider2D leftLedge, rightLedge;
+        public PlatformEffector2D platformEffector;
 
         public override void InitializeRenderers(Entity e)
         {
@@ -43,6 +44,15 @@ namespace Shrines
             lt = go.AddComponent<LedgeTrigger>();
             lt.tileObject = this;
 
+            platformEffector = gameObject.GetOrAddComponent<PlatformEffector2D>();
+            platformEffector.useColliderMask = false;
+            platformEffector.useOneWay = true;
+            platformEffector.useOneWayGrouping = true;
+            platformEffector.surfaceArc = 170;
+            platformEffector.useSideBounce = false;
+            platformEffector.useSideFriction = false;
+            platformEffector.enabled = false;
+
             SetTile(e as Tile);
         }
 
@@ -50,15 +60,20 @@ namespace Shrines
         {
             this.tile = tile;
 
-            if (tile != null && tile.tileData!=null)
+            if (tile != null && tile.tileData != null)
             {
                 m_renderer.sprite = tile.tileData.GetSprite(tile, m_renderer.sortingLayerID);
                 if (m_renderer.sprite != null)
                 {
-                    m_rendererTransform.localPosition = m_renderer.sprite.pivot/m_renderer.sprite.pixelsPerUnit;
+                    m_rendererTransform.localPosition = m_renderer.sprite.pivot / m_renderer.sprite.pixelsPerUnit;
                 }
             }
-            else ResetGameobject();
+            else
+            {
+                ResetGameobject();
+                return;
+            }
+
             transform.position = tile.position;
 
             if (collider == null) return;
@@ -66,13 +81,13 @@ namespace Shrines
             {
                 EnableLedges();
                 collider.enabled = tile.surface != Tile.Surface.All;
+                if (tile.tileData.isPlatform)
+                {
+                    platformEffector.enabled = true;
+                    collider.usedByEffector = true;
+                }
             }
-            else
-            {
-                collider.enabled = false;
-                rightLedge.enabled = false;
-                leftLedge.enabled = false;
-            }
+            else ResetColliders();
         }
 
         void EnableLedges()
@@ -99,7 +114,17 @@ namespace Shrines
         public override void ResetGameobject()
         {
             base.ResetGameobject();
+            ResetColliders();
             tile = null;
+        }
+
+        public void ResetColliders()
+        {
+            collider.enabled = false;
+            collider.usedByEffector = false;
+            rightLedge.enabled = false;
+            leftLedge.enabled = false;
+            platformEffector.enabled = false;
         }
     }
 }

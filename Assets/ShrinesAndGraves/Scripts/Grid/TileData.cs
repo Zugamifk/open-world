@@ -73,7 +73,10 @@ namespace Shrines
         [SerializeField]
         public DepthLayer[] depthlayers;
         public SpriteLayer[] defaultSprites;
+        public TileData defaultTile;
         public bool collides;
+        [Tooltip("Use one-way collisions based on up direction?")]
+        public bool isPlatform;
 
         void OnEnable()
         {
@@ -133,7 +136,7 @@ namespace Shrines
             }
             if (!graphicLookup.TryGetValue(layer, out _sprites))
             {
-                return null;
+                goto __getDefaultGraphic;
             }
 
             g = _sprites[tile.surfaceBits];
@@ -186,6 +189,12 @@ namespace Shrines
                     g = defaultSprites[i];
                     goto __testGraphic;
                 }
+            }
+
+        __getDefaultGraphic:
+            if (defaultTile != null)
+            {
+                return defaultTile.GetSprite(tile, layer);
             }
             return null;
         __testGraphic:

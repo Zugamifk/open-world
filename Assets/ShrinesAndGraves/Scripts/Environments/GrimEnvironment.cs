@@ -12,7 +12,7 @@ namespace Shrines
                 var x = Random.value * grid.width;
                 var y = grid.surface[(int)x].gridPosition.y;
                 var cloud = new Entity(
-                    GetWorldObjetData("cloud"), 
+                    GetWorldObjectData("cloud"), 
                     new Vector2f16(x, Random.RandomRange(x, Random.Range(y+25, y+75)))
                 );
                 grid.AddEntity(cloud);

@@ -17,7 +17,10 @@ namespace Shrines
             {
                 var child = transform.GetChild(i-1);
                 child.SetParent(transform.parent, true);
-                child.GetComponent<Rigidbody2D>().AddForce(Quaternion.AngleAxis(Random.Range(-45, 45), Vector3.forward) * Randomx.OnXYCircle * Random.value * power);
+                var rb = child.GetComponent<Rigidbody2D>();
+                var p = Random.value * power;
+                rb.AddForce(Randomx.OnXYCircle * p);
+                rb.AddTorque(p);
             }
         }
 

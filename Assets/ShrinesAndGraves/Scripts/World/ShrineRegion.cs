@@ -22,11 +22,11 @@ namespace Shrines
                     var tile = g.GetTile(x, y);
                     if (y <= surfHeight)
                     {
-                        tile.tileData = environment.tileTypes[0];
+                        tile.tileData = environment.GetTileData("ground");
                     }
                     else
                     {
-                        tile.tileData = environment.tileTypes[1];
+                        tile.tileData = environment.GetTileData("empty");
                     }
                     tile.altitude = y - surfHeight;
                 }

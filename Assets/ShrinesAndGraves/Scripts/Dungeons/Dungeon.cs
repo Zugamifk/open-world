@@ -139,6 +139,9 @@ namespace Shrines
                     break;
             }
 
+            SetRoom(g, entranceHall);
+            SetRoom(g, r);
+
             for (int i = 0; i < r.size.x; i++)
             {
                 var x = r.position.x + i;
@@ -151,8 +154,26 @@ namespace Shrines
                     r.entities.Add(spike);
                 }
             }
-            SetRoom(g, entranceHall);
-            SetRoom(g, r);
+
+            int P = Random.Range(1, 5);
+            for (int p = 0; p < P; p++)
+            {
+                int L = Random.Range(3, 12);
+                int y = Random.Range(4, r.size.y - 3);
+                int x = Random.Range(0, r.size.x);
+                for (int l = 0; l < L; l++)
+                {
+                    var t = g.GetTile(r.position.x+ x + l, r.position.y+y);
+                    if (!t.collides)
+                    {
+                        t.SetData(environment.GetTileData("platform"));
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
 
             return r;
         }
@@ -171,11 +192,11 @@ namespace Shrines
         public void SetRoom(Grid g, Room r)
         {
             
-            g.SetTileData(r.rect, environment.tileTypes[1]);
+            g.SetTileData(r.rect, environment.GetTileData("empty"));
             rooms.Add(r);
 
             var areaRect = new Recti(r.position - buffer, r.size + buffer * 2);
-            RegionUtility.FillGroundTiles(g, areaRect, environment.tileTypes[0]);
+            RegionUtility.FillGroundTiles(g, areaRect, environment.GetTileData("ground"));
             RegionUtility.UpdateDepths(g, areaRect, r.rect);
         }
 

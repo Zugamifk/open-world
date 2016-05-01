@@ -16,7 +16,7 @@ namespace Shrines
             int I = g.GetTiles(rect, tiles);
             for (int i = 0; i < I; i++)
             {
-                if (tiles[i] != null && tiles[i].collides)
+                if (tiles[i] != null && tiles[i].collides && !tiles[i].tileData.isPlatform)
                 {
                     tiles[i].SetData(tile);
                 }

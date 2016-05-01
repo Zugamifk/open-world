@@ -22,11 +22,11 @@ namespace Shrines
                     TileData data = null;
                     if (y <= surfaceHeight + g)
                     {
-                        data = environment.tileTypes[0];
+                        data = environment.GetTileData("ground");
                     }
                     else
                     {
-                        data = environment.tileTypes[1];
+                        data = environment.GetTileData("empty");
                     }
                     var tile = new Tile(x,y, data);
                     tile.altitude = y - surfaceHeight - g;
