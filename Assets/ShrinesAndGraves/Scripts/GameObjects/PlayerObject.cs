@@ -22,11 +22,15 @@ namespace Shrines
         // Use this for initialization
         public override void InitializeGameobject(Entity e)
         {
+            graphicsRoot.gameObject.SetActive(true);
+
             collider = gameObject.GetComponent<BoxCollider2D>();
 
             base.InitializeGameobject(e);
             
             collider.enabled = true;
+            rigidbody.isKinematic = false;
+            animator.enabled = true;
 
             jumpBehaviour = animator.GetBehaviour<ScriptedPlaybackBehaviour>();
 
@@ -80,6 +84,8 @@ namespace Shrines
             g.power = 1500;
             g.enabled = true;
             go.transform.SetParent(transform, true);
+
+            WorldManager.DelayedRestart();
         }
 
         void Update()

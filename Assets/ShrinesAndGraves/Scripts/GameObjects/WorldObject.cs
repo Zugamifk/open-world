@@ -96,6 +96,7 @@ namespace Shrines
 
         public virtual void InitializeGameobject(Entity e)
         {
+
             if (m_Entity != null)
             {
                 ResetGameobject();
@@ -126,7 +127,11 @@ namespace Shrines
 
         public virtual void ResetGameobject()
         {
-            m_renderer.enabled = false;
+            if (m_renderer != null)
+            {
+                m_renderer.enabled = false;
+            }
+
             if (m_Entity != null)
             {
                 m_Entity.viewObject = null;

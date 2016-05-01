@@ -119,7 +119,7 @@ namespace Shrines
             if (positionUpdate != null)
             {
                 // get new position
-                var newpos = BoundPosition(positionUpdate.Invoke());
+                var newpos = BoundPosition(transform.position);
                 var step = GetStep(position, newpos);
                 offset = new Vector2(viewCamera.orthographicSize * viewCamera.aspect + bufferSize, viewCamera.orthographicSize + bufferSize);
                 position = newpos;
@@ -127,6 +127,19 @@ namespace Shrines
                 UpdateTiles();
                 
             }
+        }
+
+        void OnDisable()
+        {
+            for (int x = bottomLeftTile.x; x < bottomLeftTile.x + width; x++)
+            {
+                for (int y = bottomLeftTile.y; y < bottomLeftTile.y + height; y++)
+                {
+                    var tile = grid.GetTile(x, y);
+                    ResetTile(tile);
+                }
+            }
+
         }
 
         void UpdateTiles()
