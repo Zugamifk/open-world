@@ -120,6 +120,7 @@ namespace Shrines
 
         public void ResetColliders()
         {
+            if (collider == null) return;
             collider.enabled = false;
             collider.usedByEffector = false;
             rightLedge.enabled = false;

@@ -84,4 +84,33 @@ public static class ArrayExtensions {
 			action(array[i], i);
 		}
 	}
+
+    /// 2D array operations
+    public static void ForEach<T> (
+        this T[,] array,
+        int length0, int length1,
+        Action<int, int, T> action
+    ) {
+        for(int x=0;x<length0; x++) {
+            for (int y = 0; y < length1; y++)
+            {
+                action.Invoke(x, y, array[x, y]);
+            }
+        }
+    }
+
+    public static void ForEach<T>(
+        this T[][] array,
+        int length0, int length1,
+        Action<int, int, T> action
+    )
+    {
+        for (int x = 0; x < length0; x++)
+        {
+            for (int y = 0; y < length1; y++)
+            {
+                action.Invoke(x, y, array[x][y]);
+            }
+        }
+    }
 }

@@ -22,6 +22,8 @@ namespace Shrines
 
         Queue<Room.Exit> freeExits;
 
+        MixedSquareTiling backgroundTiling;
+
         public override void Fill(Grid g)
         {
             var entrancePos = Random.Range(rect.xMin, rect.xMax);
@@ -193,6 +195,7 @@ namespace Shrines
         {
             
             g.SetTileData(r.rect, environment.GetTileData("empty"));
+
             rooms.Add(r);
 
             var areaRect = new Recti(r.position - buffer, r.size + buffer * 2);

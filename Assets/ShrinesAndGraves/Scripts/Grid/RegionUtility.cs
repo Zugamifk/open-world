@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using Extensions;
 
 namespace Shrines
@@ -63,6 +64,34 @@ namespace Shrines
                         tiles[i].altitude = Mathf.Max(-Mathf.Max(dis.x, dis.y), tiles[i].altitude);
                     }
                 }
+            }
+        }
+
+        public static void SetTiling(Grid g, Recti rect, List<Vector3i> tiles, Vector2i[] sizes)
+        {
+            for (int ti = 0; ti < tiles.Count; ti++)
+            {
+                var bl = rect.position;
+                var shape = tiles[ti];
+                var tp = bl + (Vector2i)shape;
+                var gt = g.GetTile(tp);
+
+                for (int y = tp.y; y < sizes[shape.z].y + tp.y; y++)
+                {
+                    for (int x = tp.x; x < sizes[shape.z].x + tp.x; x++)
+                    {
+                        var t = g.GetTile(x, y);
+                        if (t != null)
+                        {
+                            var gmd = t.graphicMetadata;
+                            gmd.dontDraw = true;
+                            gmd.tileGraphicSize = sizes[shape.z];
+                            gmd.tileWithgraphic = gt;
+                        }
+                    }
+                }
+                gt.graphicMetadata.tileGraphicSize = sizes[shape.z];
+                gt.graphicMetadata.dontDraw = false;
             }
         }
     }

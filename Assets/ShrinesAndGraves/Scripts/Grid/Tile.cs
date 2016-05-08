@@ -46,6 +46,8 @@ namespace Shrines
         public int altitude;
         public List<Entity> contained = new List<Entity>();
 
+        public TileGraphicMetaData graphicMetadata;
+
         public static Tile Null
         {
             get
@@ -59,6 +61,7 @@ namespace Shrines
             this.position = new Vector2(x,y);
             tileData = data;
             gridPosition = new Vector2i(x, y);
+            graphicMetadata = new TileGraphicMetaData();
         }
 
         public bool collides

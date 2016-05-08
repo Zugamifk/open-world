@@ -27,7 +27,8 @@ namespace Shrines
             surface = new Tile[w];
         }
 
-        public static Grid PerlinNoise(int width, int height, TileData[] types) {
+        public static Grid PerlinNoise(int width, int height, TileData[] types)
+        {
             var grid = new Grid(width, height);
             var noise = Math.FrequencyNoise1D(x => x, x => x * x, x => (1 - x) * (1 - x), 0.1f, 0.25f, 4);
             for (int x = 0; x < width; x++)

@@ -11,7 +11,7 @@ namespace Shrines
         [Layer]
         public int sortinglayer;
 
-        public Sprite GetSprite()
+        public virtual Sprite GetSprite()
         {
             return sprites.Random();
         }

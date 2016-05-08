@@ -30,6 +30,26 @@ public struct Vector2i {
         return new Vector2i((int)v.x, (int)v.y);
     }
 
+    public static explicit operator Vector3(Vector2i v)
+    {
+        return new Vector3(v.x, v.y, 0);
+    }
+
+    public static explicit operator Vector2i(Vector3i v)
+    {
+        return new Vector2i(v.x, v.y);
+    }
+
+    public static explicit operator Vector3i(Vector2i v)
+    {
+        return new Vector3i(v.x, v.y, 0);
+    }
+
+    public static explicit operator Vector2i(Vector3 v)
+    {
+        return new Vector2i((int)v.x, (int)v.y);
+    }
+
     public static Vector2i operator +(Vector2i a, Vector2i b)
     {
         return new Vector2i(a.x + b.x, a.y + b.y);
