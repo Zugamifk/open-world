@@ -6,34 +6,72 @@ namespace Shrines
 {
     public class TileGraphicData : ScriptableObject
     {
+
         [System.Serializable]
-        public class SpriteLayer
+        public class SpriteShape
         {
-            [Layer]
-            public int layer;
+            [Tooltip("the AABB for this shape")]
             public Vector2i dimensions = Vector2i.one;
+            [Tooltip("offset for the AABB, when deciding if this choice is a valid choice for a tiling")]
+            public Vector2i offset;
+            [Tooltip ("what increments in the grid this tile can appear on")]
+            public Vector2i step;
             public Sprite[] sprites;
+
+            public bool CanPosition(Vector2i pos)
+            {
+                return (pos + offset) % step == 0;
+            }
         }
 
         [System.Serializable]
-        public class Graphic
+        public class SpriteLayer
+        {
+            public Grid.Layer layer;
+            public SpriteShape[] shapes;
+            public int defaultShape;
+
+            public Vector2i dimensions
+            {
+                get
+                {
+                    if (shapes.Length == 0) return Vector2i.one;
+                    return shapes[defaultShape].dimensions;
+                }
+            }
+
+            public Sprite[] sprites
+            {
+                get
+                {
+                    if (shapes.Length == 0) return null;
+                    return shapes[defaultShape].sprites;
+                }
+            }
+        }
+
+        /// <summary>
+        /// For tiles on the 'surface' ie, adjacent to a non-colliding tile
+        /// </summary>
+        [System.Serializable]
+        public class SurfaceGraphic
         {
             public Tile.Surface surface;
             public SpriteLayer[] sprites;
 
-            public Sprite GetSprite(int layer)
-            {
-                for (int i = 0; i < sprites.Length; i++)
-                {
-                    if (sprites[i].layer == layer)
-                    {
-                        return sprites[i].sprites.Random();
-                    }
-                }
-                return null;
-            }
+            //public Sprite GetSprite(int layer)
+            //{
+            //    for (int i = 0; i < sprites.Length; i++)
+            //    {
+            //        if (sprites[i].layer == layer)
+            //        {
+            //            return sprites[i].sprites.Random();
+            //        }
+            //    }
+            //    return null;
+            //}
 
-            public static bool operator ==(Graphic a, Graphic b) {
+            public static bool operator ==(SurfaceGraphic a, SurfaceGraphic b) {
                 if(object.ReferenceEquals(a, b)) 
                 {
                     return true;
@@ -52,12 +90,15 @@ namespace Shrines
                 }
             }
 
-            public static bool operator !=(Graphic a, Graphic b)
+            public static bool operator !=(SurfaceGraphic a, SurfaceGraphic b)
             {
                 return !(a == b);
             }
         }
 
+        /// <summary>
+        /// for tiles surrounded by other tiles
+        /// </summary>
         [System.Serializable]
         public class DepthLayer
         {
@@ -65,11 +106,11 @@ namespace Shrines
             public int depth;
         }
 
-        Dictionary<int, SpriteLayer[]> graphicLookup = new Dictionary<int, SpriteLayer[]>();
-        Dictionary<int, List<DepthLayer>> depthGraphicLookup = new Dictionary<int, List<DepthLayer>>();
+        SpriteLayer[][] graphicLookup = new SpriteLayer[(int)Grid.Layer.Count][];
+        List<DepthLayer>[] depthGraphicLookup = new List<DepthLayer>[(int)Grid.Layer.Count];
 
         [SerializeField]
-        public Graphic[] graphics;
+        public SurfaceGraphic[] graphics;
         [SerializeField]
         public DepthLayer[] depthlayers;
         public SpriteLayer[] defaultSprites;
@@ -82,12 +123,14 @@ namespace Shrines
             {
                 for(int j=0;j<graphics[i].sprites.Length;j++) {
                     var ss = graphics[i].sprites[j];
-                    if (!graphicLookup.TryGetValue(ss.layer, out gs))
+                    gs = graphicLookup[(int)ss.layer];
+                    if (gs==null)
                     {
                         gs = new SpriteLayer[(int)Tile.Surface.ValueCount];
-                        graphicLookup.Add(ss.layer, gs);
+                        graphicLookup[(int)ss.layer] = gs;
                     }
                     gs[(int)graphics[i].surface] = ss;
+                    gs = null;
                 }
             }
 
@@ -95,24 +138,27 @@ namespace Shrines
             for (int i = 0; i < depthlayers.Length; i++)
             {
                 var ss = depthlayers[i];
-                if (!depthGraphicLookup.TryGetValue(ss.sprites.layer, out ds))
+                ds = depthGraphicLookup[(int)ss.sprites.layer];
+                if (ds==null)
                 {
                     ds = new List<DepthLayer>();
-                    depthGraphicLookup.Add(ss.sprites.layer, ds);
+                    depthGraphicLookup[(int)ss.sprites.layer] = ds;
                 }
                 ds.Add(ss);
+                ds = null;
             }
         }
 
         SpriteLayer[] _sprites;
         List<DepthLayer> _depthSprites;
-        public Sprite GetSprite(Tile tile, int layer)
+        public Sprite GetSprite(Tile tile, Grid.Layer layer)
         {
             SpriteLayer g = null;
             var all = (byte)(~tile.surfaceBits) == 0;
             if (all)
             {
-                if (depthGraphicLookup.TryGetValue(layer, out _depthSprites))
+                _depthSprites = depthGraphicLookup[(int)layer];
+                if (_depthSprites!=null && _depthSprites.Count > 0)
                 {
                     for (int i = 0; i < _depthSprites.Count; i++)
                     {
@@ -131,7 +177,9 @@ namespace Shrines
                     }
                 }
             }
-            if (!graphicLookup.TryGetValue(layer, out _sprites))
+
+            _sprites = graphicLookup[(int)layer];
+            if (_sprites==null)
             {
                 goto __getDefaultGraphic;
             }
@@ -179,6 +227,7 @@ namespace Shrines
                 }
             }
 
+        __getDefaultGraphic:
             for (int i = 0; i < defaultSprites.Length; i++)
             {
                 if (defaultSprites[i].layer == layer)
@@ -188,11 +237,11 @@ namespace Shrines
                 }
             }
 
-        __getDefaultGraphic:
             if (defaultTile != null)
             {
                 return defaultTile.GetSprite(tile, layer);
             }
+
             return null;
         __testGraphic:
             if (g.dimensions != 1 && tile.gridPosition % g.dimensions != 0)

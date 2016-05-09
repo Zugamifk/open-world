@@ -130,6 +130,34 @@ public struct Vector2i {
         return !(a == b);
     }
 
+
+    public int Get30BitZCurveValue()
+    {
+        var xBias = x + 512;
+        var yBias = y + 512;
+
+        var interleaved = 0;
+
+        for (int i = 0; i < 10; i++)
+        {
+            interleaved |=
+                      (xBias & 1 << i) << i * 2
+                    | (yBias & 1 << i) << (i * 2 + 1);
+        }
+
+        return interleaved;
+    }
+
+    public int CompareTo(Vector3i other)
+    {
+        return Get30BitZCurveValue().CompareTo(other.Get30BitZCurveValue());
+    }
+
+    public override int GetHashCode()
+    {
+        return Get30BitZCurveValue();
+    }
+
     public override string ToString()
     {
         return string.Format("({0}, {1})", x, y);

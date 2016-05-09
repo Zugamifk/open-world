@@ -19,9 +19,11 @@ namespace Shrines
         Transform root;
         [SerializeField]
         int objectPoolSize;
+        [SerializeField]
+        Grid.Layer layer;
         [SerializeField, Layer]
-        int layer;
-        [SerializeField, Tooltip("Sorting oder in layer")]
+        int sortingLayer;
+        [SerializeField, Tooltip("Sorting order in layer")]
         int sortingOrder;
         [SerializeField, Tooltip("should this view initialize colliders and other components?")]
         bool renderersOnly;
@@ -101,8 +103,9 @@ namespace Shrines
                     {
                         to.InitializeGameobject(te);
                     }
-                    to.renderer.sortingLayerID = layer;
+                    to.renderer.sortingLayerID = sortingLayer;
                     to.renderer.sortingOrder = sortingOrder;
+                    to.layer = layer;
                     tile.transform.SetParent(root, false);
                     var pos = new Vector3i(x, y, 0);
                     tile.transform.localPosition = pos;
@@ -233,6 +236,7 @@ namespace Shrines
                 WorldObject wo;
                 if (activeEntities.TryGetValue(e, out wo))
                 {
+                    if (wo == null) return;
                     ReturnToPool(wo);
                     wo.ResetGameobject();
                     activeEntities.Remove(e);
@@ -250,8 +254,8 @@ namespace Shrines
 
             foreach (var e in tile.contained)
             {
-                if (activeEntities.ContainsKey(e) || 
-                    (e.data != null && e.data.sortinglayer != layer)
+                if (activeEntities.ContainsKey(e) ||
+                    (e.data != null && e.data.layer != layer)
                 ) continue;
 
                 var wo = objectPool.Dequeue();

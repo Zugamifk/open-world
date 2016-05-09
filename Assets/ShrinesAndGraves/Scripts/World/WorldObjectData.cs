@@ -8,8 +8,7 @@ namespace Shrines
 
         public Sprite[] sprites;
         public bool isTrigger;
-        [Layer]
-        public int sortinglayer;
+        public Grid.Layer layer;
 
         public virtual Sprite GetSprite()
         {

@@ -161,4 +161,12 @@ public static class Linqx {
         var shuffledList = list.Select(x => new { Number = r.Next(), Item = x }).OrderBy(x => x.Number).Select(x => x.Item);
         return shuffledList.ToList();
     }
+
+    public static IEnumerable<T> Generate<T>(Func<T> generator)
+    {
+        while (true)
+        {
+            yield return generator();
+        }
+    }
 }

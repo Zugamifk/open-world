@@ -16,16 +16,16 @@ namespace Shrines
         /// <param name="bounds"></param>
         /// <returns></returns>
         static BitArray _setTiles;
-        public void TileRect(Recti rect, Vector2i[] sizes, List<Vector3i> tiles)
+        public void TileRect(Grid g, Recti rect, TileGraphicData.SpriteShape[] shapes)
         {
-            if (_setTiles == null || _setTiles.Length < rect.width * rect.height)
+            if (_setTiles == null || _setTiles.Length < rect.width * rect.height*2)
             {
-                _setTiles = new BitArray(rect.width * rect.height);
+                _setTiles = new BitArray(rect.width * rect.height*2);
             }
 
             _setTiles.SetAll(false);
 
-            int choices = sizes.Length;
+            int choices = shapes.Length;
 
             /// fill rect left to right, bottom to top
             for (int y = 0; y < rect.height; y++)
@@ -34,35 +34,46 @@ namespace Shrines
                 {
                     if (_setTiles[y * rect.width + x]) continue;
                     int i;
+                    var pos = new Vector2i(x, y);
                     for (i = Random.Range(0, choices); i >= 0;)
                     {
-                        for (int tx = x; tx < sizes[i].x + x; tx++)
+                        if (shapes[i].CanPosition(pos))
                         {
-                            for (int ty = y; ty < sizes[i].y + y; ty++)
+                            for (int tx = x; tx < shapes[i].dimensions.x + x; tx++)
                             {
-                                if (_setTiles[ty * rect.width + tx]) goto __checkNextChoice;
+                                for (int ty = y; ty < shapes[i].dimensions.y + y; ty++)
+                                {
+                                    if (_setTiles[ty * rect.width + tx]) goto __checkNextChoice;
+                                }
                             }
-                        }
 
-                        break;
+                            break;
+                        }
                         __checkNextChoice:
                         i--;
                     }
-                    if (i < 0)
+                    if (i >= 0)
                     {
-                        Debug.LogError("Couldn't find a tile to fit out of these choices: " + string.Join(", ", sizes.Select(s => s.ToString()).ToArray()));
-                        return;
-                    }
-                    else
-                    {
-                        for (int tx = x; tx < sizes[i].x + x; tx++)
+                        var gt = g.GetTile(rect.position.x+x,rect.position.y+y);
+                        for (int tx = x; tx < shapes[i].dimensions.x + x; tx++)
                         {
-                            for (int ty = y; ty < sizes[i].y + y; ty++)
+                            for (int ty = y; ty < shapes[i].dimensions.y + y; ty++)
                             {
                                 _setTiles[ty * rect.width + tx] = true;
+
+                                var t = g.GetTile(rect.position.x+tx, rect.position.y+ty);
+                                if (t != null)
+                                {
+                                    var gmd = t.graphicMetadata.graphicCache[Grid.Layer.Background];
+                                    gmd.dontDraw = true;
+                                    gmd.tileGraphicSize = shapes[i].dimensions;
+                                    gmd.tileWithgraphic = gt;
+                                }
                             }
                         }
-                        tiles.Add(new Vector3i(x,y,i));
+                        var gtmd = gt.graphicMetadata.graphicCache[Grid.Layer.Background];
+                        gtmd.dontDraw = false;
+                        gtmd.graphicOverride = shapes[i].sprites.Random();
                     }
                 }
             }

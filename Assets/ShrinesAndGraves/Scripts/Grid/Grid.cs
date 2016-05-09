@@ -8,6 +8,14 @@ namespace Shrines
     [System.Serializable]
     public class Grid
     {
+        public enum Layer
+        {
+            Terrain,
+            Background,
+            Foreground,
+            Count
+        }
+
         Tile[,] tiles;
 
         public static Tile[] TileArray = new Tile[1024];

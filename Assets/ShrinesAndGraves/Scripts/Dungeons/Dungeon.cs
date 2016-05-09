@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Extensions;
+using System.Linq;
 
 namespace Shrines
 {
@@ -22,7 +23,7 @@ namespace Shrines
 
         Queue<Room.Exit> freeExits;
 
-        MixedSquareTiling backgroundTiling;
+        MixedSquareTiling backgroundTiling = new MixedSquareTiling();
 
         public override void Fill(Grid g)
         {
@@ -199,6 +200,16 @@ namespace Shrines
             rooms.Add(r);
 
             var areaRect = new Recti(r.position - buffer, r.size + buffer * 2);
+            var layers = environment.GetTileData("empty").graphics.defaultSprites;
+            TileGraphicData.SpriteShape[] shapes = null;
+            for (int i = 0; i < layers.Length; i++)
+            {
+                if (layers[i].layer == Grid.Layer.Background)
+                {
+                    backgroundTiling.TileRect(g, areaRect, layers[i].shapes);
+                    break;
+                }
+            }
             RegionUtility.FillGroundTiles(g, areaRect, environment.GetTileData("ground"));
             RegionUtility.UpdateDepths(g, areaRect, r.rect);
         }

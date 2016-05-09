@@ -67,8 +67,23 @@ namespace Shrines
             }
         }
 
-        public static void SetTiling(Grid g, Recti rect, List<Vector3i> tiles, Vector2i[] sizes)
+        public static void SetTiling(Grid g, Recti rect, List<Vector3i> tiles, Vector2i[] sizes, TileData tile)
         {
+            var gl = tile.graphics.defaultSprites;
+            TileGraphicData.SpriteShape[] shapes = null;
+            for (int i = 0; i < gl.Length; i++)
+            {
+                if (gl[i].layer == Grid.Layer.Background)
+                {
+                    shapes = gl[i].shapes;
+                }
+            }
+
+            if(shapes == null) {
+                Debug.LogError("Can not tile grid! No tiles in "+tile.graphics.ToString()+" for Background layer!");
+                return;
+            }
+
             for (int ti = 0; ti < tiles.Count; ti++)
             {
                 var bl = rect.position;
@@ -83,15 +98,27 @@ namespace Shrines
                         var t = g.GetTile(x, y);
                         if (t != null)
                         {
-                            var gmd = t.graphicMetadata;
+                            var gmd = t.graphicMetadata.graphicCache[Grid.Layer.Background];
                             gmd.dontDraw = true;
                             gmd.tileGraphicSize = sizes[shape.z];
                             gmd.tileWithgraphic = gt;
                         }
                     }
                 }
-                gt.graphicMetadata.tileGraphicSize = sizes[shape.z];
-                gt.graphicMetadata.dontDraw = false;
+                var gtmd = gt.graphicMetadata.graphicCache[Grid.Layer.Background];
+                gtmd.tileGraphicSize = sizes[shape.z];
+                gtmd.dontDraw = false;
+
+                Sprite s = null;
+                for (int i = 0; i < shapes.Length; i++)
+                {
+                    if (shapes[i].dimensions == sizes[shape.z] && 
+                        gt.gridPosition % shapes[i].dimensions == shapes[i].offset)
+                    {
+                        s = shapes[i].sprites.Random();
+                    }
+                }
+                gtmd.graphicOverride = s;
             }
         }
     }
