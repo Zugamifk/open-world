@@ -10,10 +10,14 @@ namespace Shrines
         public AnimationCurve distanceSpeedGain;
         public float minFollowSpeed;
         public float maxFollowSpeed;
+        public Camera camera;
+        public float cameraScale;
 
         // Update is called once per frame
         void Update()
         {
+            camera.orthographicSize = cameraScale * 0.5f * Screen.height / 16f;
+
             if (!followRoot.gameObject.activeInHierarchy) return;
             var to = followRoot.position - transform.position;
             var dir = to.normalized;

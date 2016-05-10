@@ -62,7 +62,9 @@ namespace Shrines
             controller.onLedgeClimb += () => {
                 animator.SetTrigger("ledge climb");
             };
-            
+
+            InputManager.RegisterButtonDownCallback(InputKey.BUTTON1, Die);
+
         }
 
         /** Sets the position, ignoring game rules */

@@ -10,6 +10,17 @@ namespace Shrines
         public class GraphicCache
         {
             /// <summary>
+            /// check if this tile has been set with a graphic yet
+            /// </summary>
+            public bool hasOverride
+            {
+                get
+                {
+                    return dontDraw || graphicOverride != null;
+                }
+            }
+
+            /// <summary>
             /// don't give this tile a sprite
             /// </summary>
             public bool dontDraw;

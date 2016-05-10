@@ -181,6 +181,8 @@ namespace Shrines {
             var defaultSprite = layer.FindPropertyRelative("defaultShape");
             for (int s = 0; s < shapes.arraySize; s++)
             {
+                var contextRect = EditorGUILayout.BeginVertical();
+
                 EditorGUI.indentLevel++;
                 var shape = shapes.GetArrayElementAtIndex(s);
                 var tiles = shape.FindPropertyRelative("sprites");
@@ -263,7 +265,6 @@ namespace Shrines {
                     defaultSprite.intValue = s;
                 }
                 GUILayout.FlexibleSpace();
-
                 if (GUILayout.Button("Delete Shape"))
                 {
                     shapes.DeleteArrayElementAtIndex(s);
@@ -273,7 +274,44 @@ namespace Shrines {
                 EditorGUILayout.EndHorizontal();
 
                 EditorGUI.indentLevel--;
+
+                EditorGUILayout.EndVertical();
+                DoShapeContextMenu(contextRect, shape, s, shapes);
             }
+        }
+
+        void DoShapeContextMenu(Rect rect, SerializedProperty prop, int arrayIndex, SerializedProperty arrayProp)
+        {
+            Event currentEvent = Event.current;
+
+            if (currentEvent.type == EventType.ContextClick)
+            {
+                Vector2 mousePos = currentEvent.mousePosition;
+                if (rect.Contains(mousePos))
+                {
+                    // Now create the menu, add items and show it
+                    GenericMenu menu = new GenericMenu();
+                    menu.AddItem(new GUIContent("Move Up"), arrayIndex > 0, () => MoveElement(arrayProp, arrayIndex, -1));
+                    menu.AddItem(new GUIContent("Move Down"), arrayIndex < arrayProp.arraySize - 1, () => MoveElement(arrayProp, arrayIndex, 1));
+                    menu.AddSeparator("");
+                    menu.AddItem(new GUIContent("Delete Shape"), true, ()=>DeleteElement(arrayProp, arrayIndex));
+                    menu.ShowAsContext();
+                    currentEvent.Use();
+                }
+            }
+        }
+
+        void MoveElement(SerializedProperty prop, int index, int step)
+        {
+            Debug.Log("Move element " + index + " of " + prop.displayName + " to " + (index + step));
+            prop.MoveArrayElement(index, index + step);
+            serializedObject.ApplyModifiedProperties();
+        }
+
+        void DeleteElement(SerializedProperty array, int index)
+        {
+            array.DeleteArrayElementAtIndex(index);
+            serializedObject.ApplyModifiedProperties();
         }
 
     }

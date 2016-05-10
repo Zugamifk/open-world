@@ -34,7 +34,10 @@ namespace Extensions.Managers
             "Vertical",
             "Mouse X",
             "Mouse Y",
-            "Submit"
+            "Submit",
+            "Fire1",
+            "Fire2",
+            "Fire3"
         };
 
         private static InputManager instance;

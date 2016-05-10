@@ -202,8 +202,8 @@ MonoBehaviour:
         x: 0
         y: 0
       step:
-        x: 0
-        y: 0
+        x: 1
+        y: 1
       sprites:
       - {fileID: 21300030, guid: dfe7f9364dddafd499c9a6153cd40773, type: 3}
     defaultShape: 0

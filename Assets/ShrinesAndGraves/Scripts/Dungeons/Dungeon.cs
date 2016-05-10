@@ -206,7 +206,7 @@ namespace Shrines
             {
                 if (layers[i].layer == Grid.Layer.Background)
                 {
-                    backgroundTiling.TileRect(g, areaRect, layers[i].shapes);
+                    backgroundTiling.TileRect(g, areaRect, layers[i].sortedShapes);
                     break;
                 }
             }

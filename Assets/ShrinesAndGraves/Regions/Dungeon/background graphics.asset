@@ -17,20 +17,6 @@ MonoBehaviour:
   - layer: 1
     shapes:
     - dimensions:
-        x: 2
-        y: 2
-      offset:
-        x: 0
-        y: 0
-      step:
-        x: 2
-        y: 2
-      sprites:
-      - {fileID: 21300000, guid: ef311ef1728069d45b11d776e8be1b01, type: 3}
-      - {fileID: 21300002, guid: ef311ef1728069d45b11d776e8be1b01, type: 3}
-      - {fileID: 21300004, guid: ef311ef1728069d45b11d776e8be1b01, type: 3}
-      - {fileID: 21300006, guid: ef311ef1728069d45b11d776e8be1b01, type: 3}
-    - dimensions:
         x: 1
         y: 1
       offset:
@@ -78,6 +64,20 @@ MonoBehaviour:
       sprites:
       - {fileID: 21300014, guid: ef311ef1728069d45b11d776e8be1b01, type: 3}
       - {fileID: 21300018, guid: ef311ef1728069d45b11d776e8be1b01, type: 3}
+    - dimensions:
+        x: 2
+        y: 2
+      offset:
+        x: 0
+        y: 0
+      step:
+        x: 2
+        y: 2
+      sprites:
+      - {fileID: 21300000, guid: ef311ef1728069d45b11d776e8be1b01, type: 3}
+      - {fileID: 21300002, guid: ef311ef1728069d45b11d776e8be1b01, type: 3}
+      - {fileID: 21300004, guid: ef311ef1728069d45b11d776e8be1b01, type: 3}
+      - {fileID: 21300006, guid: ef311ef1728069d45b11d776e8be1b01, type: 3}
     - dimensions:
         x: 2
         y: 4

@@ -20,7 +20,7 @@ namespace Shrines
 
             public bool CanPosition(Vector2i pos)
             {
-                return (pos + offset) % step == 0;
+                return (pos - offset) % step == 0;
             }
         }
 
@@ -30,6 +30,53 @@ namespace Shrines
             public Grid.Layer layer;
             public SpriteShape[] shapes;
             public int defaultShape;
+
+            [System.NonSerialized]
+            public List<List<SpriteShape>> sortedShapes = new List<List<SpriteShape>>();
+
+            public void Init()
+            {
+                for (int s = 0; s < shapes.Length; s++)
+                {
+                    var shape = shapes[s];
+                    List<SpriteShape> list = null;
+                    int ss = 0;
+                    for (; ss < sortedShapes.Count; ss++)
+                    {
+                        var sl = sortedShapes[ss];
+                        if (sl.Count > 0){
+                            if(sl[0].dimensions == shape.dimensions)
+                            {
+                                list = sl;
+                                break;
+                            } else if(sl[0].dimensions.x > shape.dimensions.x ||
+                                (sl[0].dimensions.x == shape.dimensions.x && sl[0].dimensions.y > shape.dimensions.y)) {
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            Debug.LogError("Empty list found in sorted shapes! This shoul never happen!");
+                            sortedShapes.RemoveAt(ss);
+                            ss--;
+                        }
+                    }
+
+                    if (list == null)
+                    {
+                        list = new List<SpriteShape>();
+                        sortedShapes.Insert(ss, list);
+                    }
+
+                    list.Add(shape);
+                }
+
+                //Debug.Log("*******************************************************");
+                //for (int i = 0; i < sortedShapes.Count; i++)
+                //{
+                //    Debug.Log(sortedShapes[i][0].dimensions);
+                //}
+            }
 
             public Vector2i dimensions
             {
@@ -128,9 +175,13 @@ namespace Shrines
                     {
                         gs = new SpriteLayer[(int)Tile.Surface.ValueCount];
                         graphicLookup[(int)ss.layer] = gs;
+
+
                     }
                     gs[(int)graphics[i].surface] = ss;
                     gs = null;
+
+                    ss.Init();
                 }
             }
 
@@ -146,6 +197,13 @@ namespace Shrines
                 }
                 ds.Add(ss);
                 ds = null;
+
+                ss.sprites.Init();
+            }
+
+            for (int i = 0; i < defaultSprites.Length; i++)
+            {
+                defaultSprites[i].Init();
             }
         }
 
