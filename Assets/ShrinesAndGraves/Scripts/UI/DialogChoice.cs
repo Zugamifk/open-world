@@ -37,12 +37,16 @@ namespace Shrines
         void Awake()
         {
             arrowStep = choiceArrow.sizeDelta.y;
+            for (int i = 0; i < choices.Length; i++)
+            {
+                choices[i].Init();
+            }
         }
 
         public void ShowChoices(int def = 0, params string[] strings)
         {
             Clear();
-            for (int i = 0; i < choices.Length; i++)
+            for (int i = 0; i < strings.Length; i++)
             {
                 choices[i].root.gameObject.SetActive(true);
                 choices[i].SetText(strings[i]);

@@ -57,7 +57,7 @@ namespace Shrines
                 animator.SetTrigger("ledge climb");
             };
 
-            InputManager.RegisterButtonDownCallback(InputKey.BUTTON1, Die);
+            InputManager.RegisterButtonDownCallback(InputKey.BUTTON3, Die);
 
         }
 

@@ -132,6 +132,14 @@ namespace Shrines
             }
         }
 
+        void OnEnable()
+        {
+            offset = new Vector2(viewCamera.orthographicSize * viewCamera.aspect + bufferSize, viewCamera.orthographicSize + bufferSize);
+
+            position = Vector2.zero;
+            bottomLeftTile = position - offset;
+        }
+
         void OnDisable()
         {
             for (int x = bottomLeftTile.x; x < bottomLeftTile.x + width; x++)
