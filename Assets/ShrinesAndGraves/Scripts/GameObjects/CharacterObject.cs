@@ -59,7 +59,7 @@ namespace Shrines {
 
             if (gibs != null)
             {
-                var go = (GameObject)Instantiate(gibs, graphicsRoot.transform.position, graphicsRoot.transform.rotation);
+                var go = WorldManager.SpawnObject(gibs, graphicsRoot.transform.position, graphicsRoot.transform.rotation);
                 var g = go.GetComponent<Gibs>();
                 g.power = 1500;
                 g.enabled = true;

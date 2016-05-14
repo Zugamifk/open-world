@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d7a4a7dd630e1541b77e5ad2228d720, type: 3}
+  m_Name: seer
+  m_EditorClassIdentifier: 
+  sprites:
+  - {fileID: 21300000, guid: 23add4f9ef11bf3478667b0954257fa8, type: 3}
+  isTrigger: 1
+  layer: 0
+  graphicsPrefab: {fileID: 196190, guid: 726aef06a95aa7742bc039916d1114d3, type: 2}
+  canMove: 0
+  hitpoints: 5
+  canInteract: 1
+  dialog: {fileID: 11400000, guid: c116eff449097ae4c8ce1462b7b0394f, type: 2}

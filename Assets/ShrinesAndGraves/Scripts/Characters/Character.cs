@@ -8,6 +8,8 @@ namespace Shrines
         public bool canInteract;
         public CharacterData characterData;
 
+        bool talking = false;
+
         public Character()
             : base()
         {
@@ -34,7 +36,11 @@ namespace Shrines
 
         public virtual void StartConversation(PlayerObject po)
         {
-
+            if (!talking && characterData!=null && characterData.dialog != null)
+            {
+                po.StartCoroutine(UIManager.Instance.ShowDialog(characterData.dialog, ()=>talking = false));
+                talking = true;
+            }
         }
     }
 }

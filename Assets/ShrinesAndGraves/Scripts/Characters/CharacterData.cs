@@ -11,5 +11,7 @@ namespace Shrines
         public int hitpoints;
 
         public bool canInteract;
+
+        public DialogTree dialog;
     }
 }

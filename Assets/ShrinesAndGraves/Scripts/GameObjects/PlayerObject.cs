@@ -92,13 +92,16 @@ namespace Shrines
                 }
             }
 
-            if (jumping)
+            if (animator.enabled)
             {
-                jumpBehaviour.time = Mathf.InverseLerp(jumpPower, -jumpPower, m_rigidbody.velocity.y);
-            }
-            else
-            {
-                animator.SetFloat("speed", Mathf.Abs(speed));
+                if (jumping)
+                {
+                    jumpBehaviour.time = Mathf.InverseLerp(jumpPower, -jumpPower, m_rigidbody.velocity.y);
+                }
+                else
+                {
+                    animator.SetFloat("speed", Mathf.Abs(speed));
+                }
             }
         }
     }

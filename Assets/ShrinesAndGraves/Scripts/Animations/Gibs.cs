@@ -16,17 +16,11 @@ namespace Shrines
             for (int i = I; i > 0; i--)
             {
                 var child = transform.GetChild(i-1);
-                child.SetParent(transform.parent, true);
                 var rb = child.GetComponent<Rigidbody2D>();
                 var p = Random.value * power;
                 rb.AddForce(Randomx.OnXYCircle * p);
                 rb.AddTorque(p);
             }
-        }
-
-        void LateUpdate()
-        {
-            Destroy(gameObject);
         }
     }
 }

@@ -1,9 +1,14 @@
 fileFormatVersion: 2
 guid: 23add4f9ef11bf3478667b0954257fa8
-timeCreated: 1462925572
+timeCreated: 1463229526
 licenseType: Free
 TextureImporter:
-  fileIDToRecycleName: {}
+  fileIDToRecycleName:
+    21300000: seer_0
+    21300002: seer_1
+    21300004: seer_2
+    21300006: seer_3
+    21300008: seer_4
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
@@ -38,7 +43,7 @@ TextureImporter:
   rGBM: 0
   compressionQuality: 50
   allowsAlphaSplitting: 0
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -49,7 +54,104 @@ TextureImporter:
   textureType: 8
   buildTargetSettings: []
   spriteSheet:
-    sprites: []
+    sprites:
+    - name: seer_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 2, y: 6}
+        - {x: -4, y: 6}
+        - {x: -11, y: -1}
+        - {x: -11, y: -16}
+        - {x: 8, y: -16}
+        - {x: 11, y: -12}
+        - {x: 11, y: -7}
+        - {x: 6, y: 4}
+    - name: seer_1
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 2, y: 6}
+        - {x: -3, y: 6}
+        - {x: -11, y: -6}
+        - {x: -11, y: -15}
+        - {x: -10, y: -16}
+        - {x: 8, y: -16}
+        - {x: 11, y: -12}
+        - {x: 11, y: -6}
+        - {x: 7, y: 5}
+    - name: seer_2
+      rect:
+        serializedVersion: 2
+        x: 65
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 2, y: 6}
+        - {x: -3, y: 6}
+        - {x: -11, y: -6}
+        - {x: -11, y: -15}
+        - {x: -10, y: -16}
+        - {x: 8, y: -16}
+        - {x: 11, y: -12}
+        - {x: 11, y: -6}
+        - {x: 7, y: 5}
+    - name: seer_3
+      rect:
+        serializedVersion: 2
+        x: 98
+        y: 32
+        width: 30
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 3, y: 6}
+        - {x: -2, y: 6}
+        - {x: -10, y: -6}
+        - {x: -10, y: -15}
+        - {x: -9, y: -16}
+        - {x: 9, y: -16}
+        - {x: 12, y: -12}
+        - {x: 12, y: -6}
+        - {x: 8, y: 5}
+    - name: seer_4
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -11, y: -8}
+        - {x: -11, y: -16}
+        - {x: 11, y: -16}
+        - {x: 11, y: -3}
+        - {x: 5, y: 6}
+        - {x: -3, y: 6}
+        - {x: -8, y: 4}
     outline: []
   spritePackingTag: 
   userData: 

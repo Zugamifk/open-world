@@ -32,7 +32,6 @@ namespace Shrines
                 return;
             }
 
-            Debug.Log(choices);
             /// fill rect left to right, bottom to top
             for (int y = 0; y < rect.height; y++)
             {

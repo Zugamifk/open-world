@@ -70,6 +70,6 @@ namespace Shrines
             this.rect = new Rect(position, sprite.Size());
         }
 
-        public virtual void OnTriggerEnter(WorldObject wo) { }
+        public virtual void OnTriggerEnter(WorldObject wo) { Debug.Log("nooo!"); }
     }
 }

@@ -19,6 +19,12 @@ MonoBehaviour:
     size:
       x: 100
       y: 50
+  objectSpawns:
+  - key: seer
+    data: {fileID: 11400000, guid: ec55b3dfe347fc346ae830f9d0e4c404, type: 2}
+    spawnPosition:
+      x: 0
+      y: 0
   heights:
     serializedVersion: 2
     m_Curve:
