@@ -1112,6 +1112,33 @@ MonoBehaviour:
     width: 0
     height: 0
     surface: []
+--- !u!1 &1086477768
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1086477769}
+  m_Layer: 0
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1086477769
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1086477768}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 495.19766, y: 365.27, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
 --- !u!1 &1170124758
 GameObject:
   m_ObjectHideFlags: 0
@@ -1144,7 +1171,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 1022824284}
   graphicsRoot: {fileID: 1022824282}
-  rigidbody: {fileID: 1170124764}
   gibs: {fileID: 194974, guid: d03820684770d8a47802831113d5301e, type: 2}
 --- !u!4 &1170124760
 Transform:
@@ -1520,6 +1546,7 @@ MonoBehaviour:
     m_RotationOrder: 0
   minFollowSpeed: 0
   maxFollowSpeed: 25
+  camera: {fileID: 120450261}
   cameraScale: 1
 --- !u!114 &1756777480 stripped
 MonoBehaviour:

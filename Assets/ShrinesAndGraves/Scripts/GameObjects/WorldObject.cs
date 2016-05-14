@@ -11,8 +11,11 @@ namespace Shrines
         
         protected Entity m_Entity;
 
+        // the default renderer to use, saved here when overriding with a prefab
+        SpriteRenderer m_baseRenderer;
         protected SpriteRenderer m_renderer;
         protected Transform m_rendererTransform;
+        protected Rigidbody2D m_rigidbody;
 
         new protected Collider2D collider;
 
@@ -75,6 +78,7 @@ namespace Shrines
                 m_rendererTransform = sgo.transform;
                 m_rendererTransform.SetParent(transform, false);
                 m_renderer = sgo.AddComponent<SpriteRenderer>();
+                m_baseRenderer = m_renderer;
             }
             else
             {
@@ -104,6 +108,8 @@ namespace Shrines
 
             InitializeRenderers(e);
 
+            gameObject.name = e.name;
+
             if (collider == null)
             {
                 var bc = gameObject.GetOrAddComponent<BoxCollider2D>();
@@ -111,17 +117,22 @@ namespace Shrines
                 collider = bc;
             }
 
-            if (e.IsTrigger)
+            if (m_rigidbody == null)
+            {
+                var rb = gameObject.GetOrAddComponent<Rigidbody2D>();
+                m_rigidbody = rb;
+            }
+
+            m_rigidbody.isKinematic = !e.canMove;
+
+            if (e.collides)
             {
                 collider.enabled = true;
-                collider.isTrigger = true;
-                OnEnter += e.OnTriggerEnter;
-            }
-            else
-            {
-                collider.enabled = false;
-                collider.isTrigger = false;
-                OnEnter = null;
+                if (e.IsTrigger)
+                {
+                    collider.isTrigger = true;
+                    OnEnter += e.OnTriggerEnter;
+                }
             }
         }
 
@@ -136,7 +147,25 @@ namespace Shrines
             {
                 m_Entity.viewObject = null;
             }
-            
+
+            if (m_baseRenderer != m_renderer)
+            {
+                Destroy(m_renderer.gameObject);
+                m_renderer = m_baseRenderer;
+            }
+
+            if (collider != null)
+            {
+                collider.enabled = false;
+                collider.isTrigger = false;
+                OnEnter = null;
+            }
+
+            if (m_rigidbody != null)
+            {
+                m_rigidbody.isKinematic = true;
+            }
+
             m_Entity = null;
         }
 
@@ -145,10 +174,18 @@ namespace Shrines
             m_rendererTransform.Rotate(0, 0, angle);
         }
 
-        protected void SetRenderer(SpriteRenderer renderer)
+        protected virtual void SetRenderer(SpriteRenderer renderer)
         {
             m_renderer = renderer;
             m_rendererTransform = renderer.GetComponent<Transform>();
+        }
+
+        protected virtual void SetRenderer(GameObject go)
+        {
+            go.transform.SetParent(m_rendererTransform.parent, false);
+            m_renderer.enabled = false;
+            m_rendererTransform = go.transform;
+            m_renderer = go.GetComponent<SpriteRenderer>();
         }
 
         void OnTriggerEnter2D(Collider2D other)

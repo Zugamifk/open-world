@@ -35,12 +35,33 @@ namespace Shrines
             }
         }
 
+        public bool canMove
+        {
+            get;
+            protected set;
+        }
+
+        bool _collides;
+        public bool collides
+        {
+            get
+            {
+                return _collides || IsTrigger;
+            }
+            set
+            {
+                _collides = value;
+            }
+        }
+
         [System.NonSerialized]
         public WorldObject viewObject;
 
-        public Entity() { }
+        public Entity() {
+            canMove = false;
+        }
 
-        public Entity(WorldObjectData data, Vector2f16 position)
+        public Entity(WorldObjectData data, Vector2f16 position) : this()
         {
             this.data = data;
             name = data.name;

@@ -4,16 +4,10 @@ using Extensions.Managers;
 
 namespace Shrines
 {
-    public class PlayerObject : WorldObject
+    public class PlayerObject : CharacterObject
     {
 
-        public Animator animator;
-        public Transform graphicsRoot;
-
         MovementControl controller;
-        public Rigidbody2D rigidbody;
-
-        public GameObject gibs;
 
         float jumpPower;
         bool jumping;
@@ -29,7 +23,7 @@ namespace Shrines
             base.InitializeGameobject(e);
             
             collider.enabled = true;
-            rigidbody.isKinematic = false;
+            m_rigidbody.isKinematic = false;
             animator.enabled = true;
 
             jumpBehaviour = animator.GetBehaviour<ScriptedPlaybackBehaviour>();
@@ -42,7 +36,7 @@ namespace Shrines
                 animator.SetTrigger("jump");
                 animator.ResetTrigger("land");
                 animator.ResetTrigger("fall");
-                jumpPower = rigidbody.velocity.y;
+                jumpPower = m_rigidbody.velocity.y;
                 jumping = true;
             };
             controller.onLand += () =>
@@ -71,30 +65,21 @@ namespace Shrines
         public void SetPosition(Vector2f16 pos)
         {
             position = pos;
-            rigidbody.position = pos;
+            m_rigidbody.position = pos;
         }
 
-        public void Die()
+        public override void Die()
         {
-            animator.enabled = false; 
-            graphicsRoot.gameObject.SetActive(false);
-            collider.enabled = false;
-            rigidbody.isKinematic = true;
-
-            var go = (GameObject)Instantiate(gibs, graphicsRoot.transform.position, graphicsRoot.transform.rotation);
-            var g = go.GetComponent<Gibs>();
-            g.power = 1500;
-            g.enabled = true;
-            go.transform.SetParent(transform, true);
+            base.Die();
 
             WorldManager.DelayedRestart();
         }
 
         void Update()
         {
-            position = rigidbody.position;
+            position = m_rigidbody.position;
 
-            var speed = rigidbody.velocity.x;
+            var speed = m_rigidbody.velocity.x;
             if (Mathf.Abs(speed) > 0.05f)
             {
                 if (speed < 0)
@@ -109,7 +94,7 @@ namespace Shrines
 
             if (jumping)
             {
-                jumpBehaviour.time = Mathf.InverseLerp(jumpPower, -jumpPower, rigidbody.velocity.y);
+                jumpBehaviour.time = Mathf.InverseLerp(jumpPower, -jumpPower, m_rigidbody.velocity.y);
             }
             else
             {
