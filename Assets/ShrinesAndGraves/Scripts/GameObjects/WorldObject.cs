@@ -17,6 +17,7 @@ namespace Shrines
         protected Transform m_rendererTransform;
         protected Rigidbody2D m_rigidbody;
 
+
         new protected Collider2D collider;
 
         public Vector2 position
@@ -84,10 +85,19 @@ namespace Shrines
             {
                 m_renderer.enabled = true;
             }
+
             m_renderer.sharedMaterial = ResourceManager.Instance.spriteMaterial;
             if (e != null && entity.data != null)
             {
-                m_renderer.sprite = entity.data.GetSprite();
+                if (entity.data.graphicsPrefab != null)
+                {
+                    var graphics = (GameObject)Instantiate(entity.data.graphicsPrefab);
+                    SetRenderer(graphics);
+                }
+                else
+                {
+                    m_renderer.sprite = entity.data.GetSprite();
+                }
             }
 
             if (m_renderer.sprite != null)

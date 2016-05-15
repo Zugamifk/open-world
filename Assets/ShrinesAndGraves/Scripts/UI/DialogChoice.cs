@@ -52,6 +52,8 @@ namespace Shrines
                 choices[i].SetText(strings[i]);
             }
             current = def;
+            Select(def);
+            EventSystem.current.SetSelectedGameObject(choices[current].root.gameObject);
         }
 
         public void Clear()
@@ -73,8 +75,7 @@ namespace Shrines
         public void Select(int i)
         {
             current = i;
-            EventSystem.current.SetSelectedGameObject(choices[i].root.gameObject);
-            choiceArrow.anchoredPosition = new Vector2(0, i * arrowStep);
+            choiceArrow.anchoredPosition = new Vector2(0, -i * arrowStep);
         }
     }
 }

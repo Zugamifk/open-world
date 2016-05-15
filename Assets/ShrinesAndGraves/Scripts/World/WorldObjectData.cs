@@ -7,6 +7,9 @@ namespace Shrines
     {
 
         public Sprite[] sprites;
+        public GameObject graphicsPrefab;
+        public bool overrideSpriteSize;
+        public Vector2f16 overrideSize;
         public bool isTrigger;
         public Grid.Layer layer;
 

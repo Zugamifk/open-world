@@ -9,18 +9,21 @@ namespace Shrines {
 
         public static UIManager Instance;
 
+        bool showDialog;
         public IEnumerator ShowDialog(DialogTree dialog, System.Action onEndDialog = null)
         {
             defaultWindow.gameObject.SetActive(true);
+            showDialog = true;
             var node = dialog.Root;
             while (true)
             {
-                for (int i = 0; i < node.lines.Length; i++)
+                for (int i = 0; i < node.lines.Length && showDialog; i++)
                 {
                     defaultWindow.ShowText(node.lines[i].line);
                     yield return new WaitForSeconds(1);
                 }
-                if (node.branches.Length > 0)
+
+                if (showDialog && node.branches.Length > 0)
                 {
                     switch (node.branchType)
                     {
@@ -28,7 +31,7 @@ namespace Shrines {
                             {
                                 dialogChoice.gameObject.SetActive(true);
                                 dialogChoice.ShowChoices(0, node.keys);
-                                while (!dialogChoice.selected)
+                                while (!dialogChoice.selected && showDialog)
                                 {
                                     yield return 1;
                                 }
@@ -55,12 +58,18 @@ namespace Shrines {
                 {
                     break;
                 }
+                if (showDialog == false) break;
             }
             defaultWindow.gameObject.SetActive(false);
             if (onEndDialog != null)
             {
                 onEndDialog.Invoke();
             }
+        }
+
+        public void CloseDialog()
+        {
+            showDialog = false;
         }
 
         void Awake()

@@ -18,8 +18,6 @@ namespace Shrines
         [SerializeField]
         Transform root;
         [SerializeField]
-        int objectPoolSize;
-        [SerializeField]
         Grid.Layer layer;
         [SerializeField, Layer]
         int sortingLayer;
@@ -28,7 +26,6 @@ namespace Shrines
         [SerializeField, Tooltip("should this view initialize colliders and other components?")]
         bool renderersOnly;
 
-        Queue<WorldObject> objectPool;
         Queue<TileObject> tilePool;
 
         Dictionary<Entity, WorldObject> activeEntities;
@@ -56,18 +53,6 @@ namespace Shrines
         void Awake()
         {
             activeEntities = new Dictionary<Entity, WorldObject>();
-
-            var pool = new GameObject("Object Pool");
-            pool.transform.SetParent(transform, false);
-            poolRoot = pool.transform;
-            objectPool = new Queue<WorldObject>(objectPoolSize);
-            for (int i = 0; i < objectPoolSize; i++)
-            {
-                var o =  new GameObject("object");
-                o.transform.SetParent(poolRoot, false);
-                var wo = o.AddComponent<WorldObject>();
-                objectPool.Enqueue(wo);
-            }
 
             tilePool = new Queue<TileObject>();
 
@@ -266,9 +251,10 @@ namespace Shrines
                     (e.data != null && e.data.layer != layer)
                 ) continue;
 
-                var wo = objectPool.Dequeue();
+                var wo = e.GetObject();
                 wo.InitializeGameobject(e);
                 wo.transform.SetParent(root, true);
+                wo.gameObject.SetActive(true);
                 activeEntities.Add(e, wo);
             }
         }
@@ -281,7 +267,7 @@ namespace Shrines
             }
             else
             {
-                objectPool.Enqueue(wo);
+                ObjectManager.Instance.ReturnComponents(wo.gameObject);
             }
         }
     }

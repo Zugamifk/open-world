@@ -33,6 +33,5 @@ MonoBehaviour:
     - character: 
       line: aaaaaa
     branchType: 0
-    keys:
-    - i'm made of bones
-    branches: 00000000
+    keys: []
+    branches: 

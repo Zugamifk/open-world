@@ -67,7 +67,13 @@ namespace Shrines
             name = data.name;
             sprite = data.GetSprite();
             this.position = position;
-            this.rect = new Rect(position, sprite.Size());
+            var size = data.overrideSpriteSize ? (Vector2)data.overrideSize : sprite.Size();
+            this.rect = new Rect(position, size);
+        }
+
+        public virtual WorldObject GetObject()
+        {
+            return ObjectManager.Instance.GetPooledComponent<WorldObject>();
         }
 
         public virtual void OnTriggerEnter(WorldObject wo) { Debug.Log("nooo!"); }

@@ -22,16 +22,6 @@ namespace Shrines {
                 Debug.LogError("Can not initialize Character \'"+ gameObject.name +"\' with Entity of type " + e.GetType() + "!");
                 return;
             }
-
-            var data = character.characterData;
-            if (data != null)
-            {
-                if (data.graphicsPrefab != null)
-                {
-                    var graphics = (GameObject)Instantiate(data.graphicsPrefab);
-                    SetRenderer(graphics);
-                }
-            }
         }
 
         protected override void SetRenderer(GameObject go)

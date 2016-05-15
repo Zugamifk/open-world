@@ -26,9 +26,12 @@ namespace Shrines
         void OnEnable()
         {
             objects = new Dictionary<string, ObjectSpawn>();
-            foreach (var o in objectSpawns)
+            if (objectSpawns != null)
             {
-                objects.Add(o.key, o);
+                foreach (var o in objectSpawns)
+                {
+                    objects.Add(o.key, o);
+                }
             }
         }
 

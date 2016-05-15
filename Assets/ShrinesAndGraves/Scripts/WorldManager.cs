@@ -83,6 +83,7 @@ namespace Shrines
 
         public static void DelayedRestart()
         {
+            if (s_instance.restarting) return;
             s_instance.restarting = true;
             s_instance.StartCoroutine(s_instance._DelayedRestart());
         }
